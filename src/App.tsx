@@ -1,25 +1,38 @@
 import React from 'react';
-import logo from './logo.svg';
+// BrowserRouter é necessário para o sistema de rotas funcionar
+import { BrowserRouter, Routes, Route } from 'react-router-dom'; 
+import Home from "./pages/home";
+import Login from "./pages/login";
+import Register from "./pages/register";
+import Dashboard from './pages/dashboard';
+import { AuthProvider } from './contexts/authContext';
+import ForgotPassword from './pages/forgotpassword';
+import ResetPassword from './pages/resetpassword';
+import Profile from './pages/profile';
 import './App.css';
+
+// NOVO: Importe o componente Footer que você criou
+import Footer from './components/Footer'; 
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      {/* Envolva tudo com o AuthProvider */}
+      <AuthProvider>
+        <div className="App">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password/:token" element={<ResetPassword />} />
+            <Route path="/profile" element={<Profile />} />
+          </Routes>
+          <Footer />
+        </div>
+      </AuthProvider>
+    </BrowserRouter>
   );
 }
 

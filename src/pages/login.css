@@ -1,0 +1,193 @@
+/* ============================================== */
+/* === ESTRUTURA DA PÁGINA E DO BACKGROUND ==== */
+/* ============================================== */
+
+/* Container principal que ocupa a tela inteira */
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  position: relative; /* Essencial para o posicionamento do fundo */
+  overflow: hidden;   /* Evita que o fundo estourado crie barras de rolagem */
+  background-color: #0d1117; /* Fundo escuro para contrastar com os brilhos */
+}
+
+/* Seletor para o seu componente <HexagonBackground />.
+  Ele pega o primeiro elemento filho direto de .login-page
+  e o posiciona como um fundo absoluto.
+*/
+.login-page > div:first-child {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0; /* Coloca o fundo na camada de trás */
+}
+
+/* Wrapper do formulário */
+.login-container {
+  position: relative; /* Necessário para que o z-index funcione */
+  z-index: 1;         /* Coloca o container na camada da frente */
+  padding: 20px;
+}
+
+/* ============================================== */
+/* ======== ESTILOS DO CARD DE LOGIN ========== */
+/* ============================================== */
+
+/* Animação para o brilho da borda */
+@keyframes glowing-border {
+  0% {
+    box-shadow: 0 0 5px rgba(0, 191, 255, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(0, 191, 255, 0.8), 0 0 30px rgba(0, 191, 255, 0.6);
+  }
+  100% {
+    box-shadow: 0 0 5px rgba(0, 191, 255, 0.4);
+  }
+}
+
+.login-card {
+  /* Fundo totalmente transparente ou semi-transparente escuro */
+  background: rgba(10, 25, 47, 0.7); /* Fundo escuro e transparente */
+  backdrop-filter: blur(8px); /* Efeito de vidro fosco mais intenso */
+  border: 1px solid rgba(0, 191, 255, 0.3); /* Borda inicial sutil azul */
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 191, 255, 0.2); /* Sombra inicial sutil */
+  width: 100%;
+  max-width: 400px;
+  animation: glowing-border 3s infinite alternate; /* Aplica a animação */
+}
+
+.login-title {
+  text-align: center;
+  color: #00bfff; /* Cor do título azul brilhante */
+  margin-bottom: 30px;
+  font-size: 28px;
+  font-weight: 600;
+  text-shadow: 0 0 10px rgba(0, 191, 255, 0.6); /* Sombra no texto */
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Animação para o brilho da borda dos inputs ao focar */
+@keyframes input-glowing-border {
+  0% {
+    border-color: rgba(0, 191, 255, 0.3);
+    box-shadow: 0 0 0px rgba(0, 191, 255, 0);
+  }
+  50% {
+    border-color: rgba(0, 191, 255, 0.8);
+    box-shadow: 0 0 10px rgba(0, 191, 255, 0.5);
+  }
+  100% {
+    border-color: rgba(0, 191, 255, 0.3);
+    box-shadow: 0 0 0px rgba(0, 191, 255, 0);
+  }
+}
+
+.login-input {
+  padding: 15px;
+  border: 2px solid rgba(0, 191, 255, 0.3); /* Borda inicial azul sutil */
+  border-radius: 8px;
+  font-size: 16px;
+  outline: none;
+  background-color: rgba(15, 35, 60, 0.7); /* Fundo do input escuro transparente */
+  color: #e0f2f7; /* Cor do texto claro */
+  transition: all 0.3s ease;
+}
+
+.login-input:focus {
+  border-color: #00bfff; /* Borda mais forte ao focar */
+  box-shadow: 0 0 15px rgba(0, 191, 255, 0.6); /* Brilho ao focar */
+  animation: input-glowing-border 1.5s infinite alternate; /* Animação ao focar */
+}
+
+.login-input::placeholder {
+  color: #8899a6; /* Cor do placeholder mais clara */
+}
+
+.login-button {
+  padding: 15px;
+  background: linear-gradient(135deg, #007bff 0%, #00bfff 100%); /* Gradiente azul */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 0 10px rgba(0, 191, 255, 0.4); /* Sombra inicial */
+}
+
+.login-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 20px rgba(0, 191, 255, 0.6), 0 0 30px rgba(0, 191, 255, 0.4); /* Brilho maior no hover */
+}
+
+.login-button:disabled {
+  background: #444; /* Cor escura para desabilitado */
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.login-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.login-links {
+  text-align: center;
+  margin-top: 25px;
+}
+
+.login-links p {
+  margin: 10px 0;
+  color: #a0b2c2; /* Cor mais clara para o texto */
+}
+
+.login-link {
+  color: #00bfff; /* Cor do link azul vibrante */
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+.login-link:hover {
+  color: #00e5ff;
+  text-decoration: underline;
+  text-shadow: 0 0 8px rgba(0, 191, 255, 0.8); /* Brilho no link ao passar o mouse */
+}
+
+/* ============================================== */
+/* ============== RESPONSIVIDADE ============== */
+/* ============================================== */
+
+@media (max-width: 480px) {
+  .login-card {
+    padding: 30px 20px;
+    background: rgba(10, 25, 47, 0.9); /* Um pouco menos transparente em mobile */
+  }
+
+  .login-title {
+    font-size: 24px;
+  }
+
+  .login-input,
+  .login-button {
+    padding: 12px;
+  }
+}

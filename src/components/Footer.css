@@ -1,0 +1,69 @@
+/* src/components/Footer.css */
+
+.site-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #0d1117;
+  padding: 8px 20px; /* Diminuí um pouco o padding vertical */
+  z-index: 1000;
+  border-top: 1px solid #00bfff;
+
+  /* --- CORREÇÕES PRINCIPAIS --- */
+  box-sizing: border-box; /* Garante que o padding não aumente a largura/altura total */
+  
+  /* Flexbox para alinhar os itens */
+  display: flex; 
+  align-items: center; /* Centraliza verticalmente */
+  justify-content: space-between; /* Distribui o espaço entre os itens */
+}
+
+.site-footer a {
+  color: #a0b2c2;
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+  flex-grow: 1; 
+  text-align: center;
+  margin: 0 15px; /* Adiciona margem para não colar nas imagens */
+}
+
+.site-footer a:hover {
+  color: #00e5ff;
+  text-shadow: 0 0 5px rgba(0, 191, 255, 0.8);
+}
+
+.footer-logo,
+.footer-flag {
+  height: 30px; /* Define uma altura fixa */
+  width: auto;
+  flex-shrink: 0;
+  
+  /* --- CORREÇÃO IMPORTANTE --- */
+  display: block; /* Remove qualquer espaçamento extra que a tag <img> possa ter */
+}
+
+/* Responsividade mais simples e segura */
+@media (max-width: 650px) {
+  .site-footer a {
+    /* Esconde o texto longo em telas pequenas para evitar quebra de linha */
+    font-size: 0; 
+  }
+
+  /* Mostra apenas a sigla em telas pequenas */
+  .site-footer a::after {
+    content: "IFSertãoPE";
+    font-size: 14px;
+  }
+
+  .site-footer {
+    padding: 8px 15px;
+  }
+}
+
+@media (max-width: 400px) {
+    .site-footer a {
+        display: none; /* Em telas muito pequenas, esconde o texto */
+    }
+}

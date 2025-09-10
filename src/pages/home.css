@@ -1,0 +1,161 @@
+/* src/pages/home.css */
+
+/* Keyframes para a rotação da imagem (efeito pseudo-3D) */
+@keyframes spin-pseudo-3d {
+  from {
+    transform: rotateY(0deg);
+  }
+  to {
+    transform: rotateY(360deg);
+  }
+}
+
+/* Keyframes para o brilho sutil da imagem */
+@keyframes pulse-glow-img {
+  from {
+    filter: drop-shadow(0 0 10px rgba(0, 191, 255, 0.4));
+    opacity: 0.8;
+  }
+  to {
+    filter: drop-shadow(0 0 20px rgba(0, 191, 255, 0.8));
+    opacity: 1;
+  }
+}
+
+.home-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+  background-color: #0d1117;
+  color: #e0f2f7;
+}
+
+.home-container > div:first-child { /* HexagonBackground */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.home-content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 20px;
+  max-width: 650px;
+}
+
+.home-content h1 {
+  font-size: 3.5rem;
+  color: #00bfff;
+  margin-bottom: 15px;
+  text-shadow: 0 0 15px rgba(0, 191, 255, 0.7);
+  letter-spacing: 1px;
+}
+
+.home-content p {
+  font-size: 1.2rem;
+  color: #a0b2c2;
+  margin-bottom: 30px;
+}
+
+/* ESTILO ATUALIZADO PARA A IMAGEM DA LOGO */
+.home-hexagon-logo {
+  width: 150px;
+  height: auto;
+  margin: 0 auto 40px auto;
+  
+  /* Duas animações: uma para girar e outra para brilhar */
+  animation: 
+    spin-pseudo-3d 20s infinite linear, /* Rotação lenta de 20 segundos */
+    pulse-glow-img 3s infinite alternate; /* Brilho pulsante de 3 segundos */
+}
+
+
+/* --- O RESTANTE DO CÓDIGO PERMANECE O MESMO --- */
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 40px;
+}
+
+.btn-primary, .btn-secondary {
+  padding: 14px 28px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #007bff 0%, #00bfff 100%);
+  color: white;
+  box-shadow: 0 0 10px rgba(0, 191, 255, 0.4);
+}
+
+.btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 191, 255, 0.6), 0 0 40px rgba(0, 191, 255, 0.5);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: #00bfff;
+  border: 1px solid #00bfff;
+  box-shadow: 0 0 8px rgba(0, 191, 255, 0.3);
+}
+
+.btn-secondary:hover {
+  transform: translateY(-3px);
+  background: rgba(0, 191, 255, 0.1);
+  box-shadow: 0 8px 25px rgba(0, 191, 255, 0.4), 0 0 30px rgba(0, 191, 255, 0.4);
+}
+
+
+@media (max-width: 768px) {
+  .home-content h1 {
+    font-size: 2.5rem;
+  }
+  .home-content p {
+    font-size: 1rem;
+  }
+  .home-hexagon-logo {
+    width: 120px;
+  }
+  .button-container {
+    flex-direction: column;
+    gap: 15px;
+  }
+  .btn-primary, .btn-secondary {
+    width: 80%;
+    margin: 0 auto;
+    padding: 12px 20px;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .home-content h1 {
+    font-size: 2rem;
+  }
+  .home-content p {
+    font-size: 0.9rem;
+  }
+  .home-hexagon-logo {
+    width: 100px;
+  }
+  .btn-primary, .btn-secondary {
+    width: 90%;
+  }
+}
