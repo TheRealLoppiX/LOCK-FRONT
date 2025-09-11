@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom'; // NOVO: Importa o componente Link
 import { useTheme } from '../contexts/ThemeContext';
 import './settings.css';
 
@@ -26,7 +27,10 @@ const Settings: React.FC = () => {
           <h2>Conta</h2>
           <div className="settings-option">
             <p>Alterar Senha</p>
-            <button className="settings-btn">Alterar</button>
+            {/* ALTERADO: O botão agora está envolvido por um Link */}
+            <Link to="/forgot-password">
+              <button className="settings-btn">Alterar</button>
+            </Link>
           </div>
           <div className="settings-option">
             <p>Deletar Conta</p>
