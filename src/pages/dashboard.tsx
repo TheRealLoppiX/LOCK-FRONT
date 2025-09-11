@@ -27,7 +27,9 @@ const Dashboard: React.FC = () => {
     <div className="dashboard-container">
       <HexagonBackground />
 
-      {/* HEADER COMPLETO E CORRIGIDO */}
+      {/* =================================================================== */}
+      {/* ESTA É A SEÇÃO DO CABEÇALHO QUE ESTAVA FALTANDO */}
+      {/* =================================================================== */}
       <header className="dashboard-header">
         <div className="header-left">
           {user && (
@@ -54,6 +56,10 @@ const Dashboard: React.FC = () => {
           </button>
         </div>
       </header>
+      {/* =================================================================== */}
+      {/* FIM DA SEÇÃO DO CABEÇALHO */}
+      {/* =================================================================== */}
+
 
       <main className="dashboard-grid">
         {/* Card de Laboratórios Interativo */}
