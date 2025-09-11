@@ -1,5 +1,8 @@
 /* src/pages/home.css */
 
+/* NOVO: Importa as fontes modernas do Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap');
+
 /* Keyframes para a rotação da imagem (efeito pseudo-3D) */
 @keyframes spin-pseudo-3d {
   from {
@@ -31,6 +34,8 @@
   overflow: hidden;
   background-color: #0d1117;
   color: #e0f2f7;
+  /* ALTERADO: Define a fonte base para o componente */
+  font-family: 'Inter', sans-serif;
 }
 
 .home-container > div:first-child { /* HexagonBackground */
@@ -51,33 +56,31 @@
 }
 
 .home-content h1 {
-  font-size: 3.5rem;
+  /* ALTERADO: Aplica a nova fonte para títulos */
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 3.8rem; /* Aumentei um pouco para a nova fonte */
+  font-weight: 700; /* Deixa a fonte mais forte */
   color: #00bfff;
   margin-bottom: 15px;
   text-shadow: 0 0 15px rgba(0, 191, 255, 0.7);
-  letter-spacing: 1px;
+  letter-spacing: 0.5px; /* Ajustei o espaçamento */
 }
 
 .home-content p {
   font-size: 1.2rem;
   color: #a0b2c2;
   margin-bottom: 30px;
+  line-height: 1.6; /* Melhora a legibilidade */
 }
 
-/* ESTILO ATUALIZADO PARA A IMAGEM DA LOGO */
 .home-hexagon-logo {
   width: 150px;
   height: auto;
   margin: 0 auto 40px auto;
-  
-  /* Duas animações: uma para girar e outra para brilhar */
   animation: 
-    spin-pseudo-3d 20s infinite linear, /* Rotação lenta de 20 segundos */
-    pulse-glow-img 3s infinite alternate; /* Brilho pulsante de 3 segundos */
+    spin-pseudo-3d 20s infinite linear,
+    pulse-glow-img 3s infinite alternate;
 }
-
-
-/* --- O RESTANTE DO CÓDIGO PERMANECE O MESMO --- */
 
 .button-container {
   display: flex;
@@ -91,11 +94,13 @@
   border: none;
   border-radius: 8px;
   font-size: 1.1rem;
-  font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
   text-decoration: none;
   display: inline-block;
+  /* ALTERADO: Aplica a fonte dos títulos aos botões para consistência */
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 500;
 }
 
 .btn-primary {
@@ -125,7 +130,7 @@
 
 @media (max-width: 768px) {
   .home-content h1 {
-    font-size: 2.5rem;
+    font-size: 2.8rem;
   }
   .home-content p {
     font-size: 1rem;
@@ -147,7 +152,7 @@
 
 @media (max-width: 480px) {
   .home-content h1 {
-    font-size: 2rem;
+    font-size: 2.2rem;
   }
   .home-content p {
     font-size: 0.9rem;

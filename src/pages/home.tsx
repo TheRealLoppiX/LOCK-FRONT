@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import HexagonBackground from '../components/hexagonobg';
-import './home.css';
+import '../css/home.css';
 
 // VOLTE A USAR ESTA LINHA:
 // Lembre-se que salvamos a imagem limpa como 'hexagon-logo-limpo.png'

@@ -1,63 +1,50 @@
 import React, { useState, useEffect } from 'react';
-import './hexagonobg.css'; // O CSS que vamos alterar a seguir
+import './HexagonBackground.css';
 
-// Interface para definir as propriedades de cada hexágono
+// Define a aparência de cada hexágono
 interface Hexagon {
   id: number;
-  left: string;
-  size: number;
-  animationDuration: string;
-  animationDelay: string;
+  style: React.CSSProperties;
 }
 
 const HexagonBackground: React.FC = () => {
   const [hexagons, setHexagons] = useState<Hexagon[]>([]);
 
+  // ALTERADO: Aumente este número para gerar mais hexágonos!
+  const numHexagons = 40; 
+
   useEffect(() => {
-    // Cria um novo hexágono a cada 500ms (meio segundo)
-    const interval = setInterval(() => {
-      createHexagon();
-    }, 500);
+    const generateHexagons = () => {
+      const newHexagons: Hexagon[] = [];
+      for (let i = 0; i < numHexagons; i++) {
+        const size = 50 + Math.random() * 100; // Tamanho entre 50px e 150px
+        const duration = 10 + Math.random() * 15; // Duração entre 10s e 25s
+        const delay = Math.random() * 10; // Atraso de até 10s
 
-    // Limpa o intervalo quando o componente é desmontado para evitar vazamento de memória
-    return () => clearInterval(interval);
-  }, []);
-
-  const createHexagon = () => {
-    const id = Date.now() + Math.random();
-    const size = Math.random() * (120 - 30) + 30; // Tamanho entre 30px e 120px
-    const duration = Math.random() * (18 - 8) + 8; // Duração da animação entre 8s e 18s
-    
-    const newHexagon: Hexagon = {
-      id,
-      left: `${Math.random() * 95}%`, // Posição horizontal aleatória
-      size,
-      animationDuration: `${duration}s`,
-      animationDelay: `${Math.random() * 2}s`, // Atraso aleatório para não começarem juntos
+        newHexagons.push({
+          id: i,
+          style: {
+            left: `${Math.random() * 100}%`,
+            width: `${size}px`,
+            height: `${size}px`,
+            animationDuration: `${duration}s`,
+            animationDelay: `${delay}s`,
+          },
+        });
+      }
+      setHexagons(newHexagons);
     };
 
-    // Adiciona o novo hexágono à lista
-    setHexagons(currentHexagons => [...currentHexagons, newHexagon]);
-
-    // Remove o hexágono da lista depois que sua animação terminar
-    setTimeout(() => {
-      setHexagons(currentHexagons => currentHexagons.filter(hex => hex.id !== id));
-    }, duration * 1000 + 2000); // Adiciona um buffer de 2s
-  };
+    generateHexagons();
+  }, []); // O array vazio [] garante que isso rode apenas uma vez
 
   return (
     <div className="hexagon-background">
       {hexagons.map(hex => (
-        <div
-          key={hex.id}
-          className="rising-hexagon"
-          style={{
-            left: hex.left,
-            width: `${hex.size}px`,
-            height: `${hex.size * 0.866}px`, // Mantém a proporção do hexágono
-            animationDuration: hex.animationDuration,
-            animationDelay: hex.animationDelay,
-          }}
+        <div 
+          key={hex.id} 
+          className="rising-hexagon" 
+          style={hex.style} 
         />
       ))}
     </div>
