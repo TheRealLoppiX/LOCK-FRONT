@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/authContext';
 import HexagonBackground from '../components/hexagonobg';
-import '../css/dashboard';
+import './dashboard.css';
 // NOVO: Importe uma imagem de avatar padrão como fallback
 import defaultAvatar from '../assets/default-avatar.png';
 

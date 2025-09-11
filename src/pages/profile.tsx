@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/authContext';
 import HexagonBackground from '../components/hexagonobg';
-import '../css/profile.css'; 
+import './profile.css'; 
 import defaultAvatar from '../assets/default-avatar.png';
 
 const Profile: React.FC = () => {
