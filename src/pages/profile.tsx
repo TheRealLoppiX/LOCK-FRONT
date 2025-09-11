@@ -4,18 +4,15 @@ import { useAuth } from '../contexts/authContext';
 import './profile.css';
 
 const Profile: React.FC = () => {
-  // NOVO: Puxa o token e a função setUser do contexto de autenticação
   const { user, token, setUser } = useAuth();
   
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editField, setEditField] = useState<'name' | 'photo' | null>(null);
   
-  // Estados para guardar os novos valores
   const [newName, setNewName] = useState('');
   const [newPhotoUrl, setNewPhotoUrl] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  // Efeito para atualizar os inputs quando o modal abrir
   useEffect(() => {
     if (isModalOpen) {
       setNewName(user?.name || '');
@@ -29,13 +26,9 @@ const Profile: React.FC = () => {
     setEditField(null);
   };
 
-  // ===================================================================
-  // LÓGICA FINAL PARA CHAMAR A API E SALVAR AS ALTERAÇÕES
-  // ===================================================================
   const handleUpdate = async () => {
     setIsLoading(true);
 
-    // Só envia os campos que foram alterados
     const dataToUpdate: { name?: string; avatar_url?: string } = {};
     if (editField === 'name') dataToUpdate.name = newName;
     if (editField === 'photo') dataToUpdate.avatar_url = newPhotoUrl;
@@ -45,20 +38,18 @@ const Profile: React.FC = () => {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}` // Envia o token para a API saber quem você é
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(dataToUpdate)
       });
 
       if (!response.ok) {
-        // Lança um erro se a API retornar uma resposta de falha
         throw new Error('Falha ao atualizar o perfil.');
       }
 
       const result = await response.json();
       
-      // Atualiza o usuário no contexto global para refletir a mudança em toda a aplicação
-      setUser(result.user); 
+      setUser(result.user);
       
       alert('Perfil atualizado com sucesso!');
       handleCloseModal();
