@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './HexagonBackground.css';
+import './hexagonobg.css';
 
 // Define a aparência de cada hexágono
 interface Hexagon {
