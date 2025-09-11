@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import HexagonBackground from '../components/hexagonobg'; // Verifique o caminho
 import './home.css';
-import logo from '../assets/logo.png'; // Verifique o caminho
+import logo from '../assets/Logo lock.png'; // Verifique o caminho
 
 const Home: React.FC = () => {
   // NOVO: Lógica para o efeito de digitação
