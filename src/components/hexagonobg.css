@@ -47,6 +47,6 @@
 
   animation-name: rise;
   animation-timing-function: linear;
-  animation-iteration-count: 1;
+  animation-iteration-count: infinite;
   animation-fill-mode: forwards;
 }
