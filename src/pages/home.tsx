@@ -1,31 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import HexagonBackground from '../components/hexagonobg'; // Verifique o caminho
+import HexagonBackground from '../components/hexagonobg';
 import './home.css';
-import logo from '../assets/Logo lock.png'; // Verifique o caminho
+import logo from '../assets/logo.png';
 
 const Home: React.FC = () => {
-  // NOVO: Lógica para o efeito de digitação
   const fullText = "Seu Laboratório Online de Cibersegurança";
   const [typedText, setTypedText] = useState('');
 
+  // ===================================================================
+  // LÓGICA DE DIGITAÇÃO CORRIGIDA
+  // ===================================================================
   useEffect(() => {
-    // Garante que o texto comece vazio e digite novamente a cada visita na página
+    // Garante que o texto comece vazio antes de iniciar
     setTypedText(''); 
     
-    let i = 0;
     const intervalId = setInterval(() => {
-      if (i < fullText.length) {
-        setTypedText(prev => prev + fullText.charAt(i));
-        i++;
-      } else {
-        clearInterval(intervalId);
-      }
+      // Usa o estado atual para determinar o próximo caractere
+      setTypedText(currentTypedText => {
+        // Se o texto atual ainda não atingiu o tamanho do texto completo
+        if (currentTypedText.length < fullText.length) {
+          // Retorna o texto atual + o próximo caractere
+          return fullText.substring(0, currentTypedText.length + 1);
+        } else {
+          // Para o intervalo quando o texto estiver completo
+          clearInterval(intervalId);
+          return currentTypedText;
+        }
+      });
     }, 100); // Velocidade da digitação (100ms por letra)
 
-    // Limpa o intervalo se o componente for desmontado
+    // Limpa o intervalo se o componente for desmontado (boa prática)
     return () => clearInterval(intervalId);
   }, []); // O array vazio [] faz isso rodar apenas uma vez quando o componente monta
+  // ===================================================================
 
   return (
     <div className="home-container">
@@ -34,10 +42,9 @@ const Home: React.FC = () => {
         <img src={logo} alt="Lock Hexagon Logo" className="home-hexagon-logo" />
         <h1>LOCK</h1>
         
-        {/* ALTERADO: O parágrafo agora usa o texto digitado */}
         <p>
           {typedText}
-          <span className="typing-cursor"></span> {/* Cursor que pisca */}
+          <span className="typing-cursor"></span>
         </p>
         
         <div className="button-container">
