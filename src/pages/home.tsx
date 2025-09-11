@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import HexagonBackground from '../components/hexagonobg';
 import './home.css';
-import logo from '../assets/logo.png';
+import logo from '../assets/Logo lock.png';
 
 const Home: React.FC = () => {
   const fullText = "Seu Laboratório Online de Cibersegurança";
