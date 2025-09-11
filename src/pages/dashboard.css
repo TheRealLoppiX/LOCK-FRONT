@@ -1,16 +1,13 @@
-/* Animação de brilho para as bordas dos cards */
-@keyframes glowing-card-border {
-  from { border-color: rgba(0, 191, 255, 0.3); box-shadow: 0 0 10px rgba(0, 191, 255, 0.2); }
-  to { border-color: rgba(0, 191, 255, 0.7); box-shadow: 0 0 20px rgba(0, 191, 255, 0.5); }
-}
+/* src/pages/dashboard.css */
 
 /* --- Layout Geral --- */
 .dashboard-container {
   min-height: 100vh;
-  background-color: #000;
-  color: #a0b2c2;
   padding: 40px;
   box-sizing: border-box;
+  /* ALTERADO: Usa variáveis de tema */
+  background-color: var(--background-primary);
+  color: var(--text-secondary);
 }
 
 /* --- Cabeçalho --- */
@@ -19,20 +16,64 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 50px;
-  position: relative; /* Para ficar acima do fundo animado */
+  position: relative;
   z-index: 2;
 }
 
+/* NOVO: Divisões para o layout do header */
+.header-left, .header-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+/* NOVO: Estilos para a foto de perfil */
+.profile-avatar-link {
+  display: block;
+}
+
+.profile-avatar {
+  width: 45px;  /* Tamanho menor */
+  height: 45px; /* Tamanho menor */
+  border-radius: 50%; /* Bordas redondas */
+  object-fit: cover;
+  border: 2px solid var(--accent-color);
+  transition: transform 0.3s ease;
+}
+
+.profile-avatar:hover {
+  transform: scale(1.1);
+}
+
 .welcome-message h1 {
-  color: #fff;
+  font-family: 'Space Grotesk', sans-serif;
+  color: var(--text-primary);
   font-size: 2.5rem;
   margin: 0;
   text-shadow: 0 0 8px rgba(0, 191, 255, 0.5);
 }
 
 .welcome-message p {
+  font-family: 'Inter', sans-serif;
   font-size: 1.1rem;
   margin: 5px 0 0;
+}
+
+/* NOVO: Estilos para o ícone de engrenagem */
+.settings-icon-link {
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+}
+
+.settings-icon {
+  font-size: 1.6rem;
+  transition: all 0.4s ease;
+}
+
+.settings-icon:hover {
+  color: var(--accent-color);
+  transform: rotate(120deg);
 }
 
 .logout-btn {
@@ -62,50 +103,32 @@
 }
 
 .dashboard-card {
-  background: linear-gradient(145deg, rgba(13, 17, 23, 0.7), rgba(10, 25, 47, 0.8));
+  /* ALTERADO: Usa variáveis de tema */
+  background: var(--background-secondary);
+  border: 1px solid var(--border-color);
   backdrop-filter: blur(8px);
-  border: 1px solid rgba(0, 191, 255, 0.3);
   border-radius: 15px;
   padding: 30px;
   text-decoration: none;
-  color: #a0b2c2;
+  color: var(--text-secondary);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   min-height: 220px;
   transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
   position: relative;
-  overflow: hidden; /* Para o efeito de brilho */
+  overflow: hidden;
 }
 
-/* Efeito de brilho que segue o mouse (opcional, mas legal) */
-.dashboard-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(circle at 50% 50%, rgba(0, 191, 255, 0.2), transparent 70%);
-  opacity: 0;
-  transition: opacity 0.5s ease;
-  transform: scale(0);
-}
-
-.dashboard-card:hover::before {
-  opacity: 1;
-  transform: scale(3);
-}
-
-
+/* ... O resto do seu CSS de cards pode continuar, mas garanta que as cores usem variáveis ... */
 .dashboard-card:hover {
   transform: translateY(-10px);
-  border-color: rgba(0, 191, 255, 0.7);
+  border-color: var(--accent-color);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
 .card-content h2 {
-  color: #fff;
+  color: var(--text-primary);
   font-size: 1.8rem;
   margin: 0 0 10px 0;
 }
@@ -114,13 +137,13 @@
   font-size: 1rem;
   line-height: 1.6;
   margin: 0;
-  flex-grow: 1; /* Empurra o "Acessar" para baixo */
+  flex-grow: 1;
 }
 
 .card-action {
   display: block;
   margin-top: 20px;
-  color: #00bfff;
+  color: var(--accent-color);
   font-weight: 600;
   transition: letter-spacing 0.3s ease;
 }
@@ -131,16 +154,48 @@
 
 /* --- Responsividade --- */
 @media (max-width: 768px) {
-  .dashboard-container {
-    padding: 20px;
-  }
+  .dashboard-container { padding: 20px; }
   .dashboard-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 20px;
-    margin-bottom: 30px;
+    flex-direction: row; /* Mantém na mesma linha */
+    gap: 15px;
+    margin-bottom: 40px;
   }
-  .welcome-message h1 {
-    font-size: 2rem;
-  }
+  .welcome-message h1 { font-size: 2rem; }
+  .welcome-message p { display: none; } /* Esconde o parágrafo em telas menores */
+}
+.dashboard-card.lab {
+  cursor: pointer;
+}
+
+/* Container do conteúdo expandido. Começa escondido. */
+.card-expanded-content {
+  max-height: 0; /* Começa com altura zero */
+  overflow: hidden; /* Esconde o conteúdo que transborda */
+  transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out; /* Animação suave */
+  padding: 0 10px; /* Padding vertical zero no início */
+  border-top: 1px solid transparent; /* Borda divisória que aparecerá */
+}
+
+/* Estilo para quando o card está com a classe 'expanded' */
+.dashboard-card.expanded .card-expanded-content {
+  max-height: 200px; /* Altura máxima que o conteúdo pode ter */
+  padding: 20px 10px 10px; /* Adiciona padding quando expandido */
+  border-top-color: var(--border-color); /* Mostra a borda divisória */
+}
+
+/* Estilo para cada link de laboratório dentro do conteúdo expandido */
+.lab-option {
+  display: block;
+  text-decoration: none;
+  color: var(--text-secondary);
+  padding: 12px 15px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  background-color: rgba(0,0,0,0.2);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.lab-option:hover {
+  background-color: var(--accent-color);
+  color: #fff;
 }

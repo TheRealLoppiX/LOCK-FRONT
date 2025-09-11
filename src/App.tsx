@@ -9,6 +9,7 @@ import { AuthProvider } from './contexts/authContext';
 import ForgotPassword from './pages/forgotpassword';
 import ResetPassword from './pages/resetpassword';
 import Profile from './pages/profile';
+import Settings from './pages/settings';
 import './App.css';
 
 // NOVO: Importe o componente Footer que você criou
@@ -28,6 +29,7 @@ function App() {
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password/:token" element={<ResetPassword />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/settings" element={<Settings />} />
           </Routes>
           <Footer />
         </div>

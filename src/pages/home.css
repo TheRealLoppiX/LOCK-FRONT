@@ -1,28 +1,18 @@
 /* src/pages/home.css */
 
-/* NOVO: Importa as fontes modernas do Google Fonts */
+/* NOVO: Importa a fonte VT323 (estilo terminal) do Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+/* Mantive as outras fontes para o resto da página */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap');
 
-/* Keyframes para a rotação da imagem (efeito pseudo-3D) */
-@keyframes spin-pseudo-3d {
-  from {
-    transform: rotateY(0deg);
-  }
-  to {
-    transform: rotateY(360deg);
-  }
-}
 
-/* Keyframes para o brilho sutil da imagem */
-@keyframes pulse-glow-img {
-  from {
-    filter: drop-shadow(0 0 10px rgba(0, 191, 255, 0.4));
-    opacity: 0.8;
-  }
-  to {
-    filter: drop-shadow(0 0 20px rgba(0, 191, 255, 0.8));
-    opacity: 1;
-  }
+/* Keyframes existentes */
+@keyframes spin-pseudo-3d { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
+@keyframes pulse-glow-img { from { filter: drop-shadow(0 0 10px rgba(0, 191, 255, 0.4)); opacity: 0.8; } to { filter: drop-shadow(0 0 20px rgba(0, 191, 255, 0.8)); opacity: 1; } }
+
+/* NOVO: Keyframe para o cursor piscando */
+@keyframes blink {
+  50% { opacity: 0; }
 }
 
 .home-container {
@@ -34,7 +24,6 @@
   overflow: hidden;
   background-color: #0d1117;
   color: #e0f2f7;
-  /* ALTERADO: Define a fonte base para o componente */
   font-family: 'Inter', sans-serif;
 }
 
@@ -56,21 +45,38 @@
 }
 
 .home-content h1 {
-  /* ALTERADO: Aplica a nova fonte para títulos */
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 3.8rem; /* Aumentei um pouco para a nova fonte */
-  font-weight: 700; /* Deixa a fonte mais forte */
+  font-size: 3.8rem;
+  font-weight: 700;
   color: #00bfff;
   margin-bottom: 15px;
   text-shadow: 0 0 15px rgba(0, 191, 255, 0.7);
-  letter-spacing: 0.5px; /* Ajustei o espaçamento */
+  letter-spacing: 0.5px;
 }
 
+/* ALTERADO: Estilo do parágrafo para parecer um terminal */
 .home-content p {
-  font-size: 1.2rem;
-  color: #a0b2c2;
+  font-family: 'VT323', monospace; /* Aplica a fonte do CMD */
+  font-size: 1.8rem; /* Tamanho maior para a fonte de terminal */
+  color: #39FF14; /* Cor verde-limão clássica de terminais */
   margin-bottom: 30px;
-  line-height: 1.6; /* Melhora a legibilidade */
+  text-shadow: 0 0 5px #39FF14; /* Leve brilho verde */
+  height: 54px; /* Define uma altura fixa para evitar "pulos" de layout */
+  text-align: left; /* Alinha à esquerda para simular um console */
+  display: inline-block; /* Ajusta o container ao tamanho do texto */
+  white-space: nowrap; /* Impede a quebra de linha durante a digitação */
+}
+
+/* NOVO: Estilo para o cursor piscando */
+.typing-cursor {
+  display: inline-block;
+  width: 10px;
+  height: 1.8rem; /* Mesma altura da fonte */
+  background-color: #39FF14;
+  margin-left: 5px;
+  animation: blink 1s infinite; /* Aplica a animação de piscar */
+  box-shadow: 0 0 5px #39FF14;
+  vertical-align: bottom; /* Alinha o cursor com a base do texto */
 }
 
 .home-hexagon-logo {
@@ -89,6 +95,7 @@
   margin-top: 40px;
 }
 
+/* O resto do CSS permanece o mesmo... */
 .btn-primary, .btn-secondary {
   padding: 14px 28px;
   border: none;
@@ -98,7 +105,6 @@
   transition: all 0.3s ease;
   text-decoration: none;
   display: inline-block;
-  /* ALTERADO: Aplica a fonte dos títulos aos botões para consistência */
   font-family: 'Space Grotesk', sans-serif;
   font-weight: 500;
 }
@@ -127,40 +133,35 @@
   box-shadow: 0 8px 25px rgba(0, 191, 255, 0.4), 0 0 30px rgba(0, 191, 255, 0.4);
 }
 
-
 @media (max-width: 768px) {
-  .home-content h1 {
-    font-size: 2.8rem;
-  }
+  .home-content h1 { font-size: 2.8rem; }
+  .home-hexagon-logo { width: 120px; }
+  .button-container { flex-direction: column; gap: 15px; }
+  .btn-primary, .btn-secondary { width: 80%; margin: 0 auto; padding: 12px 20px; font-size: 1rem; }
+  
+  /* ALTERADO: Ajustes para o texto de terminal em telas menores */
   .home-content p {
-    font-size: 1rem;
+    font-size: 1.4rem;
+    height: 32px; /* Altura ajustada */
   }
-  .home-hexagon-logo {
-    width: 120px;
-  }
-  .button-container {
-    flex-direction: column;
-    gap: 15px;
-  }
-  .btn-primary, .btn-secondary {
-    width: 80%;
-    margin: 0 auto;
-    padding: 12px 20px;
-    font-size: 1rem;
+  .typing-cursor {
+    height: 1.4rem;
   }
 }
 
 @media (max-width: 480px) {
-  .home-content h1 {
-    font-size: 2.2rem;
-  }
+  .home-content h1 { font-size: 2.2rem; }
+  .home-hexagon-logo { width: 100px; }
+  .btn-primary, .btn-secondary { width: 90%; }
+  
+  /* ALTERADO: Ajustes para o texto de terminal em telas muito pequenas */
   .home-content p {
-    font-size: 0.9rem;
+    font-size: 1.2rem;
+    height: 28px; /* Altura ajustada */
+    white-space: normal; /* Permite quebra de linha se necessário */
+    text-align: center; /* Centraliza se quebrar a linha */
   }
-  .home-hexagon-logo {
-    width: 100px;
-  }
-  .btn-primary, .btn-secondary {
-    width: 90%;
+  .typing-cursor {
+    height: 1.2rem;
   }
 }

@@ -1,13 +1,28 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* Adicione este código ao seu index.css */
+
+/* Tema Padrão (Escuro) */
+:root {
+  --background-primary: #0d1117;
+  --background-secondary: #161b22;
+  --text-primary: #e0f2f7;
+  --text-secondary: #a0b2c2;
+  --accent-color: #00bfff;
+  --border-color: rgba(0, 191, 255, 0.3);
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+/* Tema Claro (quando o body tiver o atributo data-theme="light") */
+[data-theme="light"] {
+  --background-primary: #ffffff;
+  --background-secondary: #f0f2f5;
+  --text-primary: #1c1e21;
+  --text-secondary: #65676b;
+  --accent-color: #007bff;
+  --border-color: #ddd;
+}
+
+/* Aplicação global básica */
+body {
+  background-color: var(--background-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
