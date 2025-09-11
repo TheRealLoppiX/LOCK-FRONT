@@ -1,23 +1,24 @@
-import React, { useState } from 'react'; // NOVO: Importa o useState
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../contexts/authContext';
-import HexagonBackground from '../components/hexagonobg';
-import { FaCog } from 'react-icons/fa';
+import { useAuth } from '../contexts/authContext'; // Verifique se o caminho do seu AuthContext está correto
+import HexagonBackground from '../components/hexagonobg'; // Verifique se o caminho está correto
+import { FaCog } from 'react-icons/fa'; // Ícone de engrenagem
 import './dashboard.css';
-import defaultAvatar from '../assets/default-avatar.png';
+import defaultAvatar from '../assets/default-avatar.png'; // Verifique se o caminho está correto
 
 const Dashboard: React.FC = () => {
   const { user, logout } = useAuth();
-  // NOVO: Estado para controlar qual card está expandido. 'null' significa nenhum.
+  // Estado para controlar o card expansível
   const [expandedCard, setExpandedCard] = useState<string | null>(null);
 
   const handleLogout = () => { logout(); };
 
-  // NOVO: Função para abrir/fechar o card de laboratórios
+  // Função para abrir/fechar o card de laboratórios
   const toggleLabsCard = () => {
     setExpandedCard(prev => (prev === 'labs' ? null : 'labs'));
   };
 
+  // Lógica para construir a URL do avatar com base no nome do usuário
   const avatarUrl = user?.avatar_url?.includes('dicebear.com')
     ? `${user.avatar_url}?seed=${user.name}`
     : user?.avatar_url;
@@ -26,12 +27,36 @@ const Dashboard: React.FC = () => {
     <div className="dashboard-container">
       <HexagonBackground />
 
+      {/* HEADER COMPLETO E CORRIGIDO */}
       <header className="dashboard-header">
-        {/* ... seu header continua igual ... */}
+        <div className="header-left">
+          {user && (
+            <Link to="/profile" className="profile-avatar-link">
+              <img
+                src={avatarUrl || defaultAvatar}
+                alt={`Foto de perfil de ${user.name}`}
+                className="profile-avatar"
+              />
+            </Link>
+          )}
+          <div className="welcome-message">
+            <h1>LOCK</h1>
+            <p>Bem-vindo(a), {user ? user.name : 'Visitante'}!</p>
+          </div>
+        </div>
+        
+        <div className="header-right">
+          <Link to="/settings" className="settings-icon-link">
+            <FaCog className="settings-icon" />
+          </Link>
+          <button onClick={handleLogout} className="logout-btn">
+            Sair
+          </button>
+        </div>
       </header>
 
       <main className="dashboard-grid">
-        {/* ALTERADO: O card de Laboratórios agora é uma div interativa */}
+        {/* Card de Laboratórios Interativo */}
         <div 
           className={`dashboard-card lab ${expandedCard === 'labs' ? 'expanded' : ''}`}
           onClick={toggleLabsCard}
@@ -40,26 +65,21 @@ const Dashboard: React.FC = () => {
             <h2>Laboratórios</h2>
             <p>Ambientes práticos para testes de cibersegurança.</p>
             <span className="card-action">
-              {expandedCard === 'labs' ? 'Fechar' : 'Expandir'}
+              {expandedCard === 'labs' ? 'Fechar ▲' : 'Expandir ▼'}
             </span>
           </div>
 
-          {/* NOVO: Conteúdo que aparece quando o card está expandido */}
           <div className="card-expanded-content">
             <Link to="/labs/burp-suite" className="lab-option">
-              <span className="lab-icon">
-                {/* Você pode adicionar ícones aqui no futuro */}
-              </span>
               Burp Suite
             </Link>
             <Link to="/labs/tcpdump" className="lab-option">
-              <span className="lab-icon"></span>
               TCPDump
             </Link>
           </div>
         </div>
 
-        {/* O card de Cursos permanece como um Link normal */}
+        {/* Card de Cursos como Link normal */}
         <Link to="#" className="dashboard-card courses">
           <div className="card-content">
             <h2>Cursos</h2>
