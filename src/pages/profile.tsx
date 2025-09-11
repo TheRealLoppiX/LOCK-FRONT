@@ -1,38 +1,82 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/authContext';
-import './profile.css'; // Usaremos um novo CSS para esta página
+import './profile.css';
 
 const Profile: React.FC = () => {
-  const { user } = useAuth();
+  // NOVO: Puxa o token e a função setUser do contexto de autenticação
+  const { user, token, setUser } = useAuth();
   
-  // Estados para controlar os modais
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editField, setEditField] = useState<'name' | 'photo' | null>(null);
   
   // Estados para guardar os novos valores
-  const [newName, setNewName] = useState(user?.name || '');
-  const [newPhotoUrl, setNewPhotoUrl] = useState(user?.avatar_url || '');
+  const [newName, setNewName] = useState('');
+  const [newPhotoUrl, setNewPhotoUrl] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Efeito para atualizar os inputs quando o modal abrir
+  useEffect(() => {
+    if (isModalOpen) {
+      setNewName(user?.name || '');
+      setNewPhotoUrl(user?.avatar_url || '');
+    }
+  }, [isModalOpen, user]);
   
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    setEditField(null); // Reseta o campo de edição ao fechar
+    setEditField(null);
   };
 
-  const handleUpdate = () => {
-    // AQUI VIRÁ A LÓGICA PARA CHAMAR A API
-    console.log("Salvar alterações:", { newName, newPhotoUrl });
-    alert("Funcionalidade de salvar ainda não implementada.");
-    handleCloseModal();
+  // ===================================================================
+  // LÓGICA FINAL PARA CHAMAR A API E SALVAR AS ALTERAÇÕES
+  // ===================================================================
+  const handleUpdate = async () => {
+    setIsLoading(true);
+
+    // Só envia os campos que foram alterados
+    const dataToUpdate: { name?: string; avatar_url?: string } = {};
+    if (editField === 'name') dataToUpdate.name = newName;
+    if (editField === 'photo') dataToUpdate.avatar_url = newPhotoUrl;
+
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/profile/update`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}` // Envia o token para a API saber quem você é
+        },
+        body: JSON.stringify(dataToUpdate)
+      });
+
+      if (!response.ok) {
+        // Lança um erro se a API retornar uma resposta de falha
+        throw new Error('Falha ao atualizar o perfil.');
+      }
+
+      const result = await response.json();
+      
+      // Atualiza o usuário no contexto global para refletir a mudança em toda a aplicação
+      setUser(result.user); 
+      
+      alert('Perfil atualizado com sucesso!');
+      handleCloseModal();
+
+    } catch (error) {
+      console.error(error);
+      alert('Ocorreu um erro ao atualizar o perfil. Verifique os dados e tente novamente.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
+  // Função para renderizar o conteúdo do modal
   const renderModalContent = () => {
-    // Se nenhum campo foi escolhido, mostra as opções
     if (!editField) {
       return (
         <>
-          <h3>O que você quer editar?</h3>
+          <h3>O que você deseja editar?</h3>
           <div className="modal-options">
             <button onClick={() => setEditField('name')}>Nome</button>
             <button onClick={() => setEditField('photo')}>Foto</button>
@@ -41,7 +85,6 @@ const Profile: React.FC = () => {
       );
     }
 
-    // Se escolheu 'name', mostra o input de nome
     if (editField === 'name') {
       return (
         <>
@@ -52,12 +95,13 @@ const Profile: React.FC = () => {
             onChange={(e) => setNewName(e.target.value)} 
             placeholder="Novo nome de usuário" 
           />
-          <button onClick={handleUpdate}>Salvar Nome</button>
+          <button onClick={handleUpdate} disabled={isLoading}>
+            {isLoading ? 'Salvando...' : 'Salvar Nome'}
+          </button>
         </>
       );
     }
     
-    // Se escolheu 'photo', mostra o input de foto
     if (editField === 'photo') {
       return (
         <>
@@ -68,7 +112,9 @@ const Profile: React.FC = () => {
             onChange={(e) => setNewPhotoUrl(e.target.value)} 
             placeholder="https://exemplo.com/imagem.png"
           />
-          <button onClick={handleUpdate}>Salvar Foto</button>
+          <button onClick={handleUpdate} disabled={isLoading}>
+            {isLoading ? 'Salvando...' : 'Salvar Foto'}
+          </button>
         </>
       );
     }
@@ -95,7 +141,6 @@ const Profile: React.FC = () => {
         </div>
       </div>
 
-      {/* O Modal (só aparece quando isModalOpen é true) */}
       {isModalOpen && (
         <div className="modal-overlay" onClick={handleCloseModal}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>

@@ -9,59 +9,67 @@ interface User {
   avatar_url?: string;
 }
 
-// Define o que o nosso contexto vai fornecer
+// ALTERADO: Define o que o nosso contexto vai fornecer
 interface AuthContextType {
   user: User | null;
+  token: string | null; // NOVO: para guardar o token JWT
   isAuthenticated: boolean;
-  login: (userData: User) => void;
+  login: (userData: User, token: string) => void; // ALTERADO: login agora recebe o token
   logout: () => void;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>; // NOVO: para atualizar o user
 }
 
-// Cria o contexto
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Cria o Provedor do contexto
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [token, setToken] = useState<string | null>(null); // NOVO: estado para o token
   const navigate = useNavigate();
 
-  // Efeito que roda quando a aplicação carrega
   useEffect(() => {
-    // Tenta carregar os dados do usuário do localStorage
     const storedUser = localStorage.getItem('lock-user');
-    if (storedUser) {
+    const storedToken = localStorage.getItem('lock-token'); // NOVO: carrega o token
+    
+    if (storedUser && storedToken) {
       setUser(JSON.parse(storedUser));
+      setToken(storedToken);
     }
   }, []);
 
-  // Função de login
-  const login = (userData: User) => {
-    // Salva os dados do usuário no localStorage
+  // ALTERADO: Função de login agora também salva o token
+  const login = (userData: User, receivedToken: string) => {
     localStorage.setItem('lock-user', JSON.stringify(userData));
-    // Atualiza o estado do usuário
+    localStorage.setItem('lock-token', receivedToken); // NOVO: salva o token
     setUser(userData);
-    // Redireciona para a dashboard
+    setToken(receivedToken); // NOVO: atualiza o estado do token
     navigate('/dashboard');
   };
 
-  // Função de logout
   const logout = () => {
-    // Remove os dados do usuário do localStorage
     localStorage.removeItem('lock-user');
-    // Limpa o estado do usuário
+    localStorage.removeItem('lock-token'); // NOVO: remove o token
     setUser(null);
-    // Redireciona para a página de login
+    setToken(null); // NOVO: limpa o estado do token
     navigate('/login');
   };
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated: !!user, login, logout }}>
+    // ALTERADO: Fornece o token e o setUser para os componentes filhos
+    <AuthContext.Provider 
+      value={{ 
+        user, 
+        token, 
+        setUser, 
+        isAuthenticated: !!user && !!token, // Mais seguro verificar ambos
+        login, 
+        logout 
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
 };
 
-// Hook customizado para facilitar o uso do contexto
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {

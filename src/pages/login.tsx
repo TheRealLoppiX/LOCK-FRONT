@@ -25,7 +25,7 @@ export default function Login() {
       const data = await response.json();
 
       if (response.ok) {
-        login(data.user);
+        login(data.user, data.token);
       } else {
         alert(data.error || "Falha no login");
       }
