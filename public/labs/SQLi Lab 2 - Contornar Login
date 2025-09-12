@@ -27,32 +27,9 @@
         <p class="text-xl mt-2">Bem-vindo, <span class="font-bold">administrador</span>.</p>
     </div>
     <script>
-        const users = [
-            { username: 'administrator', password: 'supersecretpasswordnobodyknows' }
-        ];
-
-        function attemptLogin(user, pass) {
-            // VULNERABILIDADE: A query é construída concatenando as entradas.
-            const query = `users.find(u => u.username === '${user}' && u.password === '${pass}')`;
-            try {
-                return eval(query);
-            } catch (e) { return null; }
-        }
-
-        document.getElementById('loginBtn').addEventListener('click', () => {
-            const user = document.getElementById('username').value;
-            const pass = document.getElementById('password').value;
-            const messageEl = document.getElementById('message');
-            
-            const loggedInUser = attemptLogin(user, pass);
-
-            if (loggedInUser && loggedInUser.username === 'administrator') {
-                document.getElementById('login-container').classList.add('hidden');
-                document.getElementById('success-message').classList.remove('hidden');
-            } else {
-                messageEl.textContent = 'Utilizador ou palavra-passe inválidos.';
-            }
-        });
+        const users = [ { username: 'administrator', password: 'supersecretpasswordnobodyknows' } ];
+        function attemptLogin(user, pass) { const query = `users.find(u => u.username === '${user}' && u.password === '${pass}')`; try { return eval(query); } catch (e) { return null; } }
+        document.getElementById('loginBtn').addEventListener('click', () => { const user = document.getElementById('username').value; const pass = document.getElementById('password').value; const messageEl = document.getElementById('message'); const loggedInUser = attemptLogin(user, pass); if (loggedInUser && loggedInUser.username === 'administrator') { document.getElementById('login-container').classList.add('hidden'); document.getElementById('success-message').classList.remove('hidden'); } else { messageEl.textContent = 'Utilizador ou palavra-passe inválidos.'; } });
     </script>
 </body>
 </html>

@@ -23,51 +23,11 @@
         <div id="results" class="mt-8 text-left"></div>
     </div>
     <script>
-        const products = [
-            { id: 1, name: 'Portátil Gamer X', price: 1500 },
-            { id: 2, name: 'Rato Ótico Z', price: 80 },
-            { id: 3, name: 'Monitor 4K Curvo', price: 750 },
-        ];
-        // "Outra tabela" com dados sensíveis que não deveriam ser acedidos
-        const credentials = [
-            { username: 'administrator', password_hash: '5f4dcc3b5aa765d61d8327deb882cf99' },
-        ];
-
-        function getProductById(id) {
-            // VULNERABILIDADE: A query usa o ID diretamente. O objetivo é usar UNION para extrair dados de `credentials`.
-            const query = `products.filter(p => p.id === ${id})`;
-            try {
-                // `eval` simula a execução no backend
-                return eval(query);
-            } catch (e) {
-                // O `eval` pode falhar com injeções de UNION, então simulamos o resultado esperado
-                if (String(id).includes('UNION')) {
-                    // Simulação de um resultado de UNION bem-sucedido
-                    return [
-                        { name: credentials[0].username, price: credentials[0].password_hash }
-                    ];
-                }
-                return [];
-            }
-        }
-
-        function displayResults(items) {
-            const resultsEl = document.getElementById('results');
-            resultsEl.innerHTML = '';
-            if (!items || items.length === 0) {
-                resultsEl.innerHTML = '<p class="text-gray-500">Produto não encontrado.</p>';
-                return;
-            }
-            items.forEach(item => {
-                resultsEl.innerHTML += `<div class="result-card border p-4 rounded-lg"><h3 class="font-bold text-cyan-400">${item.name}</h3><p class="text-gray-400">Preço/Valor: ${item.price}</p></div>`;
-            });
-        }
-
-        document.getElementById('searchBtn').addEventListener('click', () => {
-            const id = document.getElementById('productId').value;
-            const results = getProductById(id);
-            displayResults(results);
-        });
+        const products = [ { id: 1, name: 'Portátil Gamer X', price: 1500 }, { id: 2, name: 'Rato Ótico Z', price: 80 }, { id: 3, name: 'Monitor 4K Curvo', price: 750 }, ];
+        const credentials = [ { username: 'administrator', password_hash: '5f4dcc3b5aa765d61d8327deb882cf99' }, ];
+        function getProductById(id) { const query = `products.filter(p => p.id === ${id})`; try { return eval(query); } catch (e) { if (String(id).includes('UNION')) { return [ { name: credentials[0].username, price: credentials[0].password_hash } ]; } return []; } }
+        function displayResults(items) { const resultsEl = document.getElementById('results'); resultsEl.innerHTML = ''; if (!items || items.length === 0) { resultsEl.innerHTML = '<p class="text-gray-500">Produto não encontrado.</p>'; return; } items.forEach(item => { resultsEl.innerHTML += `<div class="result-card border p-4 rounded-lg"><h3 class="font-bold text-cyan-400">${item.name}</h3><p class="text-gray-400">Preço/Valor: ${item.price}</p></div>`; }); }
+        document.getElementById('searchBtn').addEventListener('click', () => { const id = document.getElementById('productId').value; const results = getProductById(id); displayResults(results); });
     </script>
 </body>
 </html>
