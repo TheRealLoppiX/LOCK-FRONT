@@ -1,66 +1,46 @@
-/* auth.css
-  Este arquivo centraliza o estilo para as páginas de:
-  - Login
-  - Register
-  - ForgotPassword
-  - ResetPassword
-  Ele utiliza as variáveis de tema definidas no seu index.css.
-*/
+/* src/pages/auth.css */
 
-/* --- Estrutura Principal da Página --- */
 .auth-page {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
+  padding: 20px;
+  /* ALTERADO: Removida a cor de fundo para que o HexagonBackground seja visível */
+  /* background-color: var(--background-primary); */
   position: relative;
   overflow: hidden;
-  padding: 20px;
-  background-color: var(--background-primary);
 }
 
-/* Container para o formulário */
+/* Esta regra garante que o HexagonBackground, que é o primeiro
+  filho de .auth-page, se posicione corretamente como fundo.
+  Nenhuma alteração necessária aqui.
+*/
+.auth-page > div:first-child {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
 .auth-card {
-  position: relative;
-  z-index: 1;
   width: 100%;
   max-width: 400px;
   padding: 40px;
   background-color: var(--background-secondary);
   border: 1px solid var(--border-color);
   border-radius: 12px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
   text-align: center;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+  position: relative;
+  z-index: 1; /* Garante que o card fique na frente do fundo */
 }
-
-/* Animação de brilho (opcional, mas mantém o estilo) */
-@keyframes glowing-border {
-  from {
-    box-shadow: 0 0 5px rgba(0, 191, 255, 0.4);
-    border-color: rgba(0, 191, 255, 0.3);
-  }
-  to {
-    box-shadow: 0 0 20px rgba(0, 191, 255, 0.6);
-    border-color: rgba(0, 191, 255, 0.7);
-  }
-}
-
-/* Aplica a animação de brilho apenas no tema escuro */
-[data-theme="dark"] .auth-card {
-  animation: glowing-border 3s infinite alternate;
-}
-
-/* --- Elementos do Formulário --- */
 
 .auth-card h1 {
   font-family: 'Space Grotesk', sans-serif;
   color: var(--accent-color);
-  margin-bottom: 10px;
-  font-size: 2rem;
-}
-
-.auth-card .auth-subtitle {
-  color: var(--text-secondary);
   margin-bottom: 30px;
 }
 
@@ -78,13 +58,6 @@
   background-color: var(--background-primary);
   color: var(--text-primary);
   font-size: 1rem;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.auth-input:focus {
-  outline: none;
-  border-color: var(--accent-color);
-  box-shadow: 0 0 10px rgba(0, 191, 255, 0.3);
 }
 
 .auth-input::placeholder {
@@ -96,16 +69,15 @@
   border-radius: 8px;
   border: none;
   background-color: var(--accent-color);
-  color: #fff; /* Texto do botão principal fica melhor branco nos dois temas */
+  color: #fff;
   font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.2s ease;
 }
 
 .auth-button:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(0, 191, 255, 0.4);
+  transform: scale(1.02);
 }
 
 .auth-button:disabled {
@@ -113,16 +85,14 @@
   cursor: not-allowed;
 }
 
-/* --- Links Abaixo do Formulário --- */
-
 .auth-links {
-  margin-top: 25px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 15px;
+  margin-top: 25px;
 }
 
-.auth-links p, .auth-links a {
+.auth-links a {
   color: var(--text-secondary);
   text-decoration: none;
 }
@@ -131,3 +101,4 @@
   color: var(--accent-color);
   text-decoration: underline;
 }
+
