@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/authContext';
 import HexagonBackground from '../components/hexagonobg';
-import './BurpSuiteLabs.css';
+import './labs/BurpSuiteLabs.css';
 
 // Estrutura de dados para os laboratórios
 const labs = [
