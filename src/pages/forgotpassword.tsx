@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import HexagonBackground from '../components/hexagonobg';
-import './login.css'; // Reutilizando o CSS de login
+import './auth.css'; // Reutilizando o CSS de login
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');

@@ -5,9 +5,9 @@
   min-height: 100vh;
   padding: 40px;
   box-sizing: border-box;
-  /* ALTERADO: Usa variáveis de tema */
   background-color: var(--background-primary);
   color: var(--text-secondary);
+  transition: background-color 0.3s ease; /* Adiciona transição suave */
 }
 
 /* --- Cabeçalho --- */
@@ -20,22 +20,20 @@
   z-index: 2;
 }
 
-/* NOVO: Divisões para o layout do header */
 .header-left, .header-right {
   display: flex;
   align-items: center;
   gap: 20px;
 }
 
-/* NOVO: Estilos para a foto de perfil */
 .profile-avatar-link {
   display: block;
 }
 
 .profile-avatar {
-  width: 45px;  /* Tamanho menor */
-  height: 45px; /* Tamanho menor */
-  border-radius: 50%; /* Bordas redondas */
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
   object-fit: cover;
   border: 2px solid var(--accent-color);
   transition: transform 0.3s ease;
@@ -59,7 +57,6 @@
   margin: 5px 0 0;
 }
 
-/* NOVO: Estilos para o ícone de engrenagem */
 .settings-icon-link {
   color: var(--text-secondary);
   display: flex;
@@ -78,7 +75,7 @@
 
 .logout-btn {
   background: transparent;
-  color: #ff4d4d;
+  color: #ff4d4d; /* Cor de perigo mantida intencionalmente */
   border: 1px solid #ff4d4d;
   padding: 10px 20px;
   border-radius: 8px;
@@ -103,7 +100,6 @@
 }
 
 .dashboard-card {
-  /* ALTERADO: Usa variáveis de tema */
   background: var(--background-secondary);
   border: 1px solid var(--border-color);
   backdrop-filter: blur(8px);
@@ -120,11 +116,10 @@
   overflow: hidden;
 }
 
-/* ... O resto do seu CSS de cards pode continuar, mas garanta que as cores usem variáveis ... */
 .dashboard-card:hover {
   transform: translateY(-10px);
   border-color: var(--accent-color);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
 .card-content h2 {
@@ -152,38 +147,25 @@
   letter-spacing: 1px;
 }
 
-/* --- Responsividade --- */
-@media (max-width: 768px) {
-  .dashboard-container { padding: 20px; }
-  .dashboard-header {
-    flex-direction: row; /* Mantém na mesma linha */
-    gap: 15px;
-    margin-bottom: 40px;
-  }
-  .welcome-message h1 { font-size: 2rem; }
-  .welcome-message p { display: none; } /* Esconde o parágrafo em telas menores */
-}
+/* --- Estilos do Card Expansível --- */
 .dashboard-card.lab {
   cursor: pointer;
 }
 
-/* Container do conteúdo expandido. Começa escondido. */
 .card-expanded-content {
-  max-height: 0; /* Começa com altura zero */
-  overflow: hidden; /* Esconde o conteúdo que transborda */
-  transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out; /* Animação suave */
-  padding: 0 10px; /* Padding vertical zero no início */
-  border-top: 1px solid transparent; /* Borda divisória que aparecerá */
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out;
+  padding: 0 10px;
+  border-top: 1px solid transparent;
 }
 
-/* Estilo para quando o card está com a classe 'expanded' */
 .dashboard-card.expanded .card-expanded-content {
-  max-height: 200px; /* Altura máxima que o conteúdo pode ter */
-  padding: 20px 10px 10px; /* Adiciona padding quando expandido */
-  border-top-color: var(--border-color); /* Mostra a borda divisória */
+  max-height: 200px;
+  padding: 20px 10px 10px;
+  border-top-color: var(--border-color);
 }
 
-/* Estilo para cada link de laboratório dentro do conteúdo expandido */
 .lab-option {
   display: block;
   text-decoration: none;
@@ -191,11 +173,23 @@
   padding: 12px 15px;
   margin-bottom: 10px;
   border-radius: 8px;
-  background-color: rgba(0,0,0,0.2);
+  background-color: var(--background-primary); /* Usa variável */
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .lab-option:hover {
   background-color: var(--accent-color);
-  color: #fff;
+  color: var(--background-primary); /* Garante contraste no hover */
+}
+
+/* --- Responsividade --- */
+@media (max-width: 768px) {
+  .dashboard-container { padding: 20px; }
+  .dashboard-header {
+    flex-direction: row;
+    gap: 15px;
+    margin-bottom: 40px;
+  }
+  .welcome-message h1 { font-size: 2rem; }
+  .welcome-message p { display: none; }
 }

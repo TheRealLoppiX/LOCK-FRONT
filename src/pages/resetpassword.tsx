@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import HexagonBackground from '../components/hexagonobg';
-import './login.css';
+import './auth.css';
 
 const ResetPassword = () => {
   const { token } = useParams<{ token: string }>(); // Pega o token da URL

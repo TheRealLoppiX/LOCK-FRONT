@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useAuth } from "../contexts/authContext";
 import { Link } from "react-router-dom";
 import HexagonBackground from "../components/hexagonobg";
-import "./login.css";
+import "./auth.css";
 
 export default function Login() {
   const { login } = useAuth();

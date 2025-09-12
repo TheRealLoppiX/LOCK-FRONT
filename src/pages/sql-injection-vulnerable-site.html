@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pesquisa de Produtos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Estilo para simular o tema do seu site */
+        body {
+            background-color: #0d1117;
+            color: #e0f2f7;
+            font-family: 'Inter', sans-serif;
+        }
+        .search-container {
+            border-color: #00bfff;
+        }
+        .search-input {
+            background-color: #161b22;
+            border-color: rgba(0, 191, 255, 0.3);
+        }
+        .search-btn {
+            background-color: #00bfff;
+        }
+        .product-card {
+            background-color: #161b22;
+            border-color: rgba(0, 191, 255, 0.2);
+        }
+    </style>
+</head>
+<body class="p-8">
+
+    <div class="max-w-2xl mx-auto text-center">
+        <h1 class="text-3xl font-bold text-cyan-400 mb-4">Loja de Eletrónicos Confidencial</h1>
+        <p class="text-gray-400 mb-6">Use o nosso motor de pesquisa para encontrar os produtos que procura.</p>
+        
+        <!-- Formulário de Pesquisa -->
+        <div class="search-container border-2 p-6 rounded-lg shadow-lg shadow-cyan-500/20">
+            <div class="flex flex-col sm:flex-row gap-4">
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    placeholder="Ex: Portátil" 
+                    class="search-input w-full px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                >
+                <button id="searchBtn" class="search-btn text-white font-bold px-6 py-2 rounded-md hover:bg-cyan-600 transition-colors">
+                    Pesquisar
+                </button>
+            </div>
+        </div>
+
+        <!-- Área de Resultados -->
+        <div id="results" class="mt-8 text-left">
+            <h2 class="text-2xl font-semibold mb-4 border-b border-gray-700 pb-2">Resultados da Pesquisa:</h2>
+            <div id="results-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Os produtos serão inseridos aqui -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- SIMULAÇÃO DO BACKEND E BASE DE DADOS ---
+
+        // 1. A nossa "base de dados" de produtos.
+        // Note que alguns produtos estão marcados como 'released: false' (não lançados).
+        const products = [
+            { id: 1, name: 'Portátil Gamer X', category: 'Portátil', released: true },
+            { id: 2, name: 'Rato Ótico Z', category: 'Periférico', released: true },
+            { id: 3, name: 'Monitor 4K Curvo', category: 'Monitor', released: true },
+            { id: 4, name: 'Teclado Mecânico RGB', category: 'Periférico', released: true },
+            { id: 5, name: 'Protótipo de Holo-display', category: 'Confidencial', released: false },
+            { id: 6, name: 'CPU Quântica (Teste)', category: 'Confidencial', released: false }
+        ];
+
+        const searchInput = document.getElementById('searchInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const resultsList = document.getElementById('results-list');
+
+        // 2. A função de pesquisa VULNERÁVEL
+        function searchProducts(searchTerm) {
+            // A vulnerabilidade está aqui. O código constrói uma "query" concatenando
+            // diretamente a entrada do utilizador sem qualquer validação.
+            // Isto simula a vulnerabilidade de SQL Injection.
+            // A condição "p.released === true" é o que queremos contornar.
+            const query = `products.filter(p => p.category === '${searchTerm}' && p.released === true)`;
+            
+            let foundProducts = [];
+            try {
+                // O `eval` executa o código da string, simulando a execução da query no servidor.
+                // É aqui que a injeção acontece.
+                foundProducts = eval(query);
+            } catch (e) {
+                console.error("Erro na query simulada:", e);
+                return []; // Retorna vazio se a injeção quebrar a sintaxe
+            }
+            return foundProducts;
+        }
+
+        // 3. Função para mostrar os resultados na tela
+        function displayResults(items) {
+            resultsList.innerHTML = ''; // Limpa resultados antigos
+            if (!items || items.length === 0) {
+                resultsList.innerHTML = '<p class="text-gray-500">Nenhum produto encontrado.</p>';
+                return;
+            }
+
+            items.forEach(product => {
+                const card = `
+                    <div class="product-card border p-4 rounded-lg">
+                        <h3 class="font-bold text-cyan-400">${product.name}</h3>
+                        <p class="text-gray-400">Categoria: ${product.category}</p>
+                    </div>
+                `;
+                resultsList.innerHTML += card;
+            });
+        }
+
+        // Evento de clique no botão
+        searchBtn.addEventListener('click', () => {
+            const term = searchInput.value;
+            const results = searchProducts(term);
+            displayResults(results);
+        });
+
+        // Evento de Enter no input
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                searchBtn.click();
+            }
+        });
+
+    </script>
+</body>
+</html>
+```
+
+### 3. Instruções Finais
+
+1.  **Crie os Ficheiros:** Crie o ficheiro `SqlInjectionLab.tsx` na sua pasta `src/pages/labs/`. Crie também um ficheiro `LabPage.css` básico para estilizar o container do iframe.
+2.  **Coloque o HTML:** Crie uma pasta `labs` dentro da sua pasta `public` e coloque o `sql-injection-vulnerable-site.html` lá.
+3.  **Adicione a Rota:** No seu `App.tsx`, adicione a rota para o novo laboratório:
+    ```tsx
+    <Route path="/labs/sql-injection" element={<SqlInjectionLab />} />
+    

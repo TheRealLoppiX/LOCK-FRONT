@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import HexagonBackground from "../components/hexagonobg";
-import "./register.css"; // Este arquivo deve importar o login.css
+import "./auth.css"; // Este arquivo deve importar o login.css
 
 export default function Register() {
   const [name, setName] = useState("");

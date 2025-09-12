@@ -1,0 +1,126 @@
+/* src/pages/BurpSuiteLabs.css */
+
+.labs-page-container {
+  padding: 40px 20px;
+  min-height: 100vh;
+  background-color: var(--background-primary);
+  color: var(--text-primary);
+  display: flex;
+  justify-content: center;
+}
+
+.labs-content-wrapper {
+  width: 100%;
+  max-width: 900px;
+  position: relative;
+  z-index: 2;
+}
+
+.labs-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.labs-header h1 {
+  font-family: 'Space Grotesk', sans-serif;
+  color: var(--accent-color);
+  font-size: 2.8rem;
+  margin-bottom: 10px;
+}
+
+.labs-header p {
+  color: var(--text-secondary);
+  font-size: 1.2rem;
+}
+
+.back-to-dashboard-link {
+  display: inline-block;
+  margin-top: 20px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.back-to-dashboard-link:hover {
+  color: var(--accent-color);
+}
+
+.labs-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.lab-item {
+  background-color: var(--background-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  margin-bottom: 20px;
+  padding: 25px;
+  transition: all 0.3s ease;
+}
+
+.lab-item:not(.expandable) {
+  cursor: pointer;
+}
+
+.lab-item:not(.expandable):hover {
+  transform: translateY(-5px);
+  border-color: var(--accent-color);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+}
+
+.lab-item.expandable {
+  cursor: pointer;
+}
+
+.lab-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.lab-item h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: var(--text-primary);
+}
+
+.lab-item p {
+  margin-top: 10px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.expand-icon {
+  font-size: 2rem;
+  color: var(--accent-color);
+}
+
+.sub-labs-list {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease-in-out, margin-top 0.5s ease-in-out;
+  margin-top: 0;
+}
+
+.lab-item.expanded .sub-labs-list {
+  max-height: 300px; /* Altura suficiente para os sub-tópicos */
+  margin-top: 20px;
+}
+
+.sub-lab-item {
+  display: block;
+  background-color: var(--background-primary);
+  padding: 15px;
+  border-radius: 6px;
+  text-decoration: none;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+  border-left: 3px solid var(--accent-color);
+  transition: background-color 0.3s;
+}
+
+.sub-lab-item:hover {
+  background-color: rgba(0, 191, 255, 0.1);
+}
