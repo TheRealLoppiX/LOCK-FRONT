@@ -1,10 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../../contexts/authContext';
 import HexagonBackground from '../../components/hexagonobg';
+// CORRIGIDO: O nome do ficheiro CSS deve corresponder ao componente.
 import './SqlInjectionList.css'; 
-import { sqlInjectionLabs } from './LabData'; // Importa do nosso catálogo
+import { sqlInjectionLabs } from './LabData';
 
 const SqlInjectionList: React.FC = () => {
+  const { user } = useAuth();
+
   return (
     <div className="labs-page-container">
       <HexagonBackground />
@@ -21,7 +25,6 @@ const SqlInjectionList: React.FC = () => {
               key={lab.id} 
               to={lab.path} 
               className="lab-card"
-              // Passa os detalhes via state para uma navegação mais rápida
               state={{ lab }}
             >
               <div className="lab-card-content">
@@ -38,3 +41,4 @@ const SqlInjectionList: React.FC = () => {
 };
 
 export default SqlInjectionList;
+
