@@ -31,31 +31,31 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="login-page">
+    <div className="auth-page">
       <HexagonBackground />
-      <div className="login-container">
-        <div className="login-card">
-          <h1 className="login-title">Redefinir Senha</h1>
-          <p className="register-subtitle">Digite seu e-mail para receber o link de redefinição.</p>
-          <form onSubmit={handleSubmit} className="login-form">
+      <div className="auth-container">
+        <div className="auth-card">
+          <h1 className="auth-title">Redefinir Senha</h1>
+          <p className="auth-subtitle">Digite seu e-mail para receber o link de redefinição.</p>
+          <form onSubmit={handleSubmit} className="auth-form">
             <div className="input-group">
               <input
                 type="email"
                 placeholder="Seu e-mail"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="login-input"
+                className="auth-input"
                 required
               />
             </div>
-            <button type="submit" className="login-button" disabled={isLoading}>
+            <button type="submit" className="auth-button" disabled={isLoading}>
               {isLoading ? 'Enviando...' : 'Enviar Link'}
             </button>
           </form>
           {message && <p style={{ textAlign: 'center', marginTop: '20px' }}>{message}</p>}
-          <div className="login-links">
+          <div className="auth-links">
             <p>
-              <Link to="/login" className="login-link">← Voltar para o Login</Link>
+              <Link to="/login" className="auth-link">← Voltar para o Login</Link>
             </p>
           </div>
         </div>

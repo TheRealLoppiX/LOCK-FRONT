@@ -30,7 +30,7 @@ const ResetPassword = () => {
       setMessage(data.message || data.error);
 
       if(response.ok) {
-        setTimeout(() => navigate('/login'), 3000); // Redireciona para o login após 3s
+        setTimeout(() => navigate('/login'), 3000); // Redireciona para o auth após 3s
       }
 
     } catch (error) {
@@ -41,19 +41,19 @@ const ResetPassword = () => {
   };
 
   return (
-    <div className="login-page">
+    <div className="auth-page">
       <HexagonBackground />
-      <div className="login-container">
-        <div className="login-card">
-          <h1 className="login-title">Crie uma Nova Senha</h1>
-          <form onSubmit={handleSubmit} className="login-form">
+      <div className="auth-container">
+        <div className="auth-card">
+          <h1 className="auth-title">Crie uma Nova Senha</h1>
+          <form onSubmit={handleSubmit} className="auth-form">
             <div className="input-group">
               <input
                 type="password"
                 placeholder="Nova senha"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="login-input"
+                className="auth-input"
                 required
               />
             </div>
@@ -63,11 +63,11 @@ const ResetPassword = () => {
                 placeholder="Confirme a nova senha"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="login-input"
+                className="auth-input"
                 required
               />
             </div>
-            <button type="submit" className="login-button" disabled={isLoading}>
+            <button type="submit" className="auth-button" disabled={isLoading}>
               {isLoading ? 'Salvando...' : 'Salvar Nova Senha'}
             </button>
           </form>

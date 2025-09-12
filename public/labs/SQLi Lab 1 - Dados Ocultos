@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pesquisa de Produtos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #0d1117; color: #e0f2f7; }
+        .search-container { border-color: #00bfff; }
+        .search-input { background-color: #161b22; border-color: rgba(0, 191, 255, 0.3); }
+        .search-btn { background-color: #00bfff; }
+        .product-card { background-color: #161b22; border-color: rgba(0, 191, 255, 0.2); }
+    </style>
+</head>
+<body class="p-8">
+    <div class="max-w-2xl mx-auto text-center">
+        <h1 class="text-3xl font-bold text-cyan-400 mb-4">Loja de Eletrónicos</h1>
+        <div class="search-container border-2 p-6 rounded-lg shadow-lg shadow-cyan-500/20">
+            <select id="categorySelect" class="search-input w-full px-4 py-2 rounded-md mb-4">
+                <option value="Portátil">Portáteis</option>
+                <option value="Periférico">Periféricos</option>
+                <option value="Monitor">Monitores</option>
+            </select>
+            <button id="searchBtn" class="search-btn text-white font-bold px-6 py-2 rounded-md w-full">Pesquisar Categoria</button>
+        </div>
+        <div id="results" class="mt-8 text-left">
+            <h2 class="text-2xl font-semibold mb-4 border-b border-gray-700 pb-2">Resultados:</h2>
+            <div id="results-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+        </div>
+    </div>
+    <script>
+        const products = [
+            { id: 1, name: 'Portátil Gamer X', category: 'Portátil', released: true, description: 'Potência para os seus jogos.' },
+            { id: 2, name: 'Rato Ótico Z', category: 'Periférico', released: true, description: 'Precisão máxima.' },
+            { id: 3, name: 'Monitor 4K Curvo', category: 'Monitor', released: true, description: 'Imersão total.' },
+            { id: 4, name: 'Teclado Mecânico RGB', category: 'Periférico', released: true, description: 'Resposta tátil incrível.' },
+            { id: 5, name: 'Protótipo de Holo-display', category: 'Confidencial', released: false, description: 'Tecnologia do futuro, ainda não lançada.' },
+            { id: 6, name: 'CPU Quântica (Teste)', category: 'Confidencial', released: false, description: 'Apenas para testes internos.' }
+        ];
+
+        function searchProducts(category) {
+            // VULNERABILIDADE: A query é construída com a entrada do utilizador. O objetivo é contornar `p.released === true`.
+            const query = `products.filter(p => p.category === '${category}' && p.released === true)`;
+            try {
+                return eval(query);
+            } catch (e) { return []; }
+        }
+
+        function displayResults(items) {
+            const list = document.getElementById('results-list');
+            list.innerHTML = '';
+            if (!items || items.length === 0) {
+                list.innerHTML = '<p class="text-gray-500 col-span-2">Nenhum produto encontrado.</p>';
+                return;
+            }
+            items.forEach(product => {
+                list.innerHTML += `<div class="product-card border p-4 rounded-lg"><h3 class="font-bold text-cyan-400">${product.name}</h3><p class="text-gray-400">${product.description}</p></div>`;
+            });
+        }
+
+        document.getElementById('searchBtn').addEventListener('click', () => {
+            const category = document.getElementById('categorySelect').value;
+            const results = searchProducts(category);
+            displayResults(results);
+        });
+    </script>
+</body>
+</html>

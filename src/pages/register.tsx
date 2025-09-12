@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import HexagonBackground from "../components/hexagonobg";
-import "./auth.css"; // Este arquivo deve importar o login.css
+import "./auth.css"; // Este arquivo deve importar o auth.css
 
 export default function Register() {
   const [name, setName] = useState("");
@@ -50,22 +50,22 @@ export default function Register() {
   }
 
   return (
-    // ALTERADO: Usando as classes da página de login para reutilizar o estilo
-    <div className="login-page">
+    // ALTERADO: Usando as classes da página de auth para reutilizar o estilo
+    <div className="auth-page">
       <HexagonBackground />
-      <div className="login-container">
-        <div className="login-card">
-          <h1 className="login-title">Criar Conta</h1>
+      <div className="auth-container">
+        <div className="auth-card">
+          <h1 className="auth-title">Criar Conta</h1>
           <p className="register-subtitle">Preencha os dados para se cadastrar</p>
           
-          <form onSubmit={handleRegister} className="login-form">
+          <form onSubmit={handleRegister} className="auth-form">
             <div className="input-group">
               <input 
                 type="text" 
                 placeholder="Nome completo" 
                 value={name} 
                 onChange={(e) => setName(e.target.value)} 
-                className="login-input" // ALTERADO
+                className="auth-input" // ALTERADO
                 required
               />
             </div>
@@ -76,7 +76,7 @@ export default function Register() {
                 placeholder="Email" 
                 value={email} 
                 onChange={(e) => setEmail(e.target.value)} 
-                className="login-input" // ALTERADO
+                className="auth-input" // ALTERADO
                 required
               />
             </div>
@@ -87,7 +87,7 @@ export default function Register() {
                 placeholder="Senha (mínimo 6 caracteres)" 
                 value={password} 
                 onChange={(e) => setPassword(e.target.value)} 
-                className="login-input" // ALTERADO
+                className="auth-input" // ALTERADO
                 required
                 minLength={6}
               />
@@ -95,19 +95,19 @@ export default function Register() {
             
             <button 
               type="submit" 
-              className="login-button" // ALTERADO
+              className="auth-button" // ALTERADO
               disabled={isLoading}
             >
               {isLoading ? "Cadastrando..." : "Criar Conta"}
             </button>
           </form>
           
-          <div className="login-links"> {/* ALTERADO */}
+          <div className="auth-links"> {/* ALTERADO */}
             <p>
-              Já tem uma conta? <Link to="/login" className="login-link">Faça login</Link> {/* ALTERADO */}
+              Já tem uma conta? <Link to="/auth" className="auth-link">Faça auth</Link> {/* ALTERADO */}
             </p>
             <p>
-              <Link to="/" className="login-link">← Voltar para Home</Link> {/* ALTERADO */}
+              <Link to="/" className="auth-link">← Voltar para Home</Link> {/* ALTERADO */}
             </p>
           </div>
         </div>

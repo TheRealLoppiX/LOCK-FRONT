@@ -11,6 +11,8 @@ import ResetPassword from './pages/resetpassword';
 import Profile from './pages/profile';
 import Settings from './pages/settings';
 import BurpSuiteLabs from './pages/BurpSuiteLabs';
+import SqlInjectionList from './pages/labs/SqlInjectionList';
+import LabPage from './pages/labs/LabPage';
 import './App.css';
 
 // NOVO: Importe o componente Footer que você criou
@@ -30,6 +32,8 @@ function App() {
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password/:token" element={<ResetPassword />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/labs/sql-injection" element={<SqlInjectionList />} />
+            <Route path="/labs/sql-injection/:labId" element={<LabPage />} />
             <Route path="/settings" element={<Settings />} />
           </Routes>
           <Footer />

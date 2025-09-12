@@ -78,6 +78,9 @@ const Dashboard: React.FC = () => {
           <div className="card-expanded-content">
             <Link to="/labs/burp-suite" className="lab-option">
               Burp Suite
+              <Link to="/labs/sql-injection" className="lab-option">
+              SQL Injection
+              </Link>
             </Link>
             <Link to="/labs/tcpdump" className="lab-option">
               TCPDump

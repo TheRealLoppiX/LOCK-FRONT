@@ -1,0 +1,51 @@
+/* src/pages/labs/LabPage.css */
+
+.lab-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: var(--background-primary);
+  color: var(--text-primary);
+}
+
+.lab-header {
+  padding: 20px 40px;
+  background-color: var(--background-secondary);
+  border-bottom: 1px solid var(--border-color);
+  z-index: 10;
+}
+
+.lab-header h1 {
+  font-family: 'Space Grotesk', sans-serif;
+  color: var(--accent-color);
+  font-size: 2rem;
+  margin: 0 0 10px 0;
+}
+
+.lab-header p {
+  color: var(--text-secondary);
+  margin: 0 0 15px 0;
+  max-width: 800px;
+}
+
+.lab-header .back-link {
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.lab-header .back-link:hover {
+  color: var(--accent-color);
+}
+
+.lab-environment {
+  flex-grow: 1;
+  overflow: hidden; /* Garante que o iframe não cause scroll na página principal */
+}
+
+.lab-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+

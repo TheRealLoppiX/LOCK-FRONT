@@ -1,0 +1,90 @@
+/* src/pages/labs/SqlInjectionList.css */
+
+.labs-page-container {
+  min-height: 100vh;
+  padding: 40px;
+  box-sizing: border-box;
+  background-color: var(--background-primary);
+  color: var(--text-secondary);
+}
+
+.labs-content {
+  position: relative;
+  z-index: 2;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.labs-header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.labs-header h1 {
+  font-family: 'Space Grotesk', sans-serif;
+  color: var(--accent-color);
+  font-size: 3rem;
+  margin-bottom: 10px;
+}
+
+.labs-header p {
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+}
+
+.back-link {
+  display: inline-block;
+  margin-top: 20px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.back-link:hover {
+  color: var(--accent-color);
+}
+
+.labs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 30px;
+}
+
+.lab-card {
+  background: var(--background-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 25px;
+  text-decoration: none;
+  color: var(--text-secondary);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.lab-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 191, 255, 0.2);
+}
+
+.lab-card-content h2 {
+  color: var(--text-primary);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.5rem;
+  margin: 0 0 15px 0;
+}
+
+.lab-card-content p {
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 0;
+  flex-grow: 1;
+}
+
+.lab-action {
+  display: block;
+  margin-top: 20px;
+  color: var(--accent-color);
+  font-weight: 600;
+  text-align: right;
+}
