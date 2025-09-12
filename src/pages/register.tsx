@@ -104,7 +104,7 @@ export default function Register() {
           
           <div className="auth-links"> {/* ALTERADO */}
             <p>
-              Já tem uma conta? <Link to="/auth" className="auth-link">Faça auth</Link> {/* ALTERADO */}
+              Já tem uma conta? <Link to="/auth" className="auth-link">Faça Login</Link> {/* ALTERADO */}
             </p>
             <p>
               <Link to="/" className="auth-link">← Voltar para Home</Link> {/* ALTERADO */}
