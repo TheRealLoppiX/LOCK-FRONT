@@ -76,12 +76,12 @@ const Dashboard: React.FC = () => {
           </div>
 
           <div className="card-expanded-content">
-            <Link to="/labs/burp-suite" className="lab-option">
               Burp Suite
-              <Link to="/labs/sql-injection" className="lab-option">
-              SQL Injection
-              </Link>
-            </Link>
+              <div className="card-expanded-content">
+                <Link to="/labs/sql-injection" className="lab-option">
+                SQL Injection
+                </Link>
+              </div>
             <Link to="/labs/tcpdump" className="lab-option">
               TCPDump
             </Link>

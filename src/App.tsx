@@ -10,7 +10,6 @@ import ForgotPassword from './pages/forgotpassword';
 import ResetPassword from './pages/resetpassword';
 import Profile from './pages/profile';
 import Settings from './pages/settings';
-import BurpSuiteLabs from './pages/BurpSuiteLabs';
 import SqlInjectionList from './pages/labs/SqlInjectionList';
 import LabPage from './pages/labs/LabPage';
 import './App.css';

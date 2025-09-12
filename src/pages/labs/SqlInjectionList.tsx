@@ -1,33 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../../contexts/authContext';
 import HexagonBackground from '../../components/hexagonobg';
-import './BurpSuiteLabs.css'; // Vamos reutilizar e expandir este CSS
-
-const labs = [
-  { 
-    id: 'sqli-1', 
-    title: 'SQL Injection - Recuperar Dados Ocultos',
-    description: 'Use uma vulnerabilidade de SQL Injection para contornar um filtro e exibir todos os produtos da base de dados.',
-    path: '/labs/sql-injection/1'
-  },
-  { 
-    id: 'sqli-2', 
-    title: 'SQL Injection - Contornar Autenticação',
-    description: 'Explore uma falha de SQL Injection num formulário de login para aceder como o utilizador administrador.',
-    path: '/labs/sql-injection/2'
-  },
-  { 
-    id: 'sqli-3', 
-    title: 'SQL Injection - Ataque UNION',
-    description: 'Utilize um ataque UNION para extrair dados de uma "tabela" diferente e exibi-los na página.',
-    path: '/labs/sql-injection/3'
-  },
-];
+import './SqlInjectionList.css'; 
+import { sqlInjectionLabs } from './LabData'; // Importa do nosso catálogo
 
 const SqlInjectionList: React.FC = () => {
-  const { user } = useAuth();
-
   return (
     <div className="labs-page-container">
       <HexagonBackground />
@@ -39,8 +16,14 @@ const SqlInjectionList: React.FC = () => {
         </header>
 
         <main className="labs-grid">
-          {labs.map((lab) => (
-            <Link key={lab.id} to={lab.path} className="lab-card">
+          {sqlInjectionLabs.map((lab) => (
+            <Link 
+              key={lab.id} 
+              to={lab.path} 
+              className="lab-card"
+              // Passa os detalhes via state para uma navegação mais rápida
+              state={{ lab }}
+            >
               <div className="lab-card-content">
                 <h2>{lab.title}</h2>
                 <p>{lab.description}</p>
