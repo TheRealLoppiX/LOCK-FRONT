@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8"><title>Lab: DOM-based XSS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style> body { background-color: #0d1117; color: #e0f2f7; } .card { background-color: #161b22; border-color: #00bfff; } </style>
+</head>
+<body class="p-8">
+    <div class="max-w-xl mx-auto text-center">
+        <div class="card p-6 border-2 rounded-lg">
+            <h1 class="text-2xl font-bold text-cyan-400 mb-4">Seletor de Idioma</h1>
+            <p>O idioma selecionado é: <span id="lang-output" class="text-cyan-300 font-bold"></span></p>
+            <p class="text-sm text-gray-400 mt-4">Tente selecionar outro idioma, e.g., adicionando <code class="bg-gray-700 p-1 rounded">#ingles</code> na URL.</p>
+        </div>
+    </div>
+    <script>
+        function selectLanguage() {
+            // VULNERABILIDADE: O script lê da URL e escreve no DOM sem sanitização.
+            // O payload não chega ao servidor.
+            let lang = window.location.hash.substring(1);
+            if(!lang) { lang = 'Português'; }
+            document.getElementById('lang-output').innerHTML = lang;
+        }
+        window.addEventListener('hashchange', selectLanguage);
+        selectLanguage(); // Executa na carga inicial
+    </script>
+</body>
+</html>

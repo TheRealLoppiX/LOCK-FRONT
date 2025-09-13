@@ -12,6 +12,8 @@ import Profile from './pages/profile';
 import Settings from './pages/settings';
 import SqlInjectionList from './pages/labs/SqlInjectionList';
 import LabPage from './pages/labs/LabPage';
+import BruteForceList from './pages/labs/BruteForceList';
+import XSSList from './pages/labs/XSSList';
 import './App.css';
 
 // NOVO: Importe o componente Footer que você criou
@@ -34,6 +36,8 @@ function App() {
             <Route path="/labs/sql-injection" element={<SqlInjectionList />} />
             <Route path="/labs/sql-injection/:labId" element={<LabPage />} />
             <Route path="/settings" element={<Settings />} />
+             <Route path="/labs/xss" element={<XSSList />} />
+            <Route path="/labs/brute-force" element={<BruteForceList />} />
           </Routes>
           <Footer />
         </div>

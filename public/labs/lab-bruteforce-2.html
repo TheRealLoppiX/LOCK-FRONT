@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Lab: Login com CSRF</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style> body { background-color: #0d1117; color: #e0f2f7; } .login-card { background-color: #161b22; border-color: #00bfff; } .login-input { background-color: #0d1117; border-color: rgba(0, 191, 255, 0.3); } .login-btn { background-color: #00bfff; } </style>
+</head>
+<body class="flex items-center justify-center min-h-screen">
+    <div class="login-card w-full max-w-sm p-8 border-2 rounded-lg">
+        <h1 class="text-3xl font-bold text-cyan-400 mb-2 text-center">Acesso Seguro</h1>
+        <p class="text-center text-gray-400 mb-6">Utilizador: <span class="font-mono text-cyan-300">admin</span></p>
+        <div class="space-y-4">
+            <input type="text" id="username" value="admin" disabled class="login-input w-full p-3 rounded-md bg-gray-800 cursor-not-allowed">
+            <input type="password" id="password" placeholder="Palavra-passe" class="login-input w-full p-3 rounded-md">
+            <input type="hidden" id="csrf_token" value="">
+            <button id="loginBtn" class="login-btn w-full p-3 text-white font-bold rounded-md">Entrar</button>
+        </div>
+        <p id="message" class="mt-4 text-center h-6"></p>
+    </div>
+    <script>
+        function generateToken() { return Math.random().toString(36).substring(2); }
+        function refreshToken() { document.getElementById('csrf_token').value = generateToken(); }
+        
+        const correctPassword = 'lock';
+        document.getElementById('loginBtn').addEventListener('click', () => {
+            const pass = document.getElementById('password').value;
+            const token = document.getElementById('csrf_token').value;
+            const msg = document.getElementById('message');
+
+            msg.classList.remove('text-green-400');
+            msg.classList.add('text-red-400');
+
+            if (!token) {
+                msg.textContent = 'Token CSRF em falta. Recarregue a página.';
+                return;
+            }
+
+            if (pass === correctPassword) {
+                msg.textContent = 'Acesso Concedido!';
+                msg.classList.remove('text-red-400');
+                msg.classList.add('text-green-400');
+            } else {
+                msg.textContent = 'Palavra-passe ou Token inválidos.';
+            }
+            refreshToken(); // O token é sempre atualizado após cada tentativa
+        });
+        refreshToken(); // Gera o token inicial
+    </script>
+</body>
+</html>
