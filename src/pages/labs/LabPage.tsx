@@ -7,15 +7,12 @@ const LabPage: React.FC = () => {
   const location = useLocation();
   const { labId } = useParams<{ labId: string }>(); 
 
-  // Tenta obter os detalhes do laboratório do state da navegação
   let lab: Lab | undefined = location.state?.lab;
 
-  // Se não encontrar (página atualizada), procura no nosso catálogo
   if (!lab) {
     lab = sqlInjectionLabs.find(l => l.id === labId);
   }
 
-  // Se ainda assim não encontrar o laboratório, mostra uma mensagem de erro
   if (!lab) {
     return (
       <div className="lab-container">
@@ -36,12 +33,7 @@ const LabPage: React.FC = () => {
         <Link to="/labs/sql-injection" className="back-link">← Voltar para a lista</Link>
       </header>
       <div className="lab-environment">
-        <iframe
-          src={lab.iframeSrc}
-          title={lab.title}
-          className="lab-iframe"
-          sandbox="allow-scripts allow-forms"
-        />
+        <iframe src={lab.iframeSrc} title={lab.title} className="lab-iframe" sandbox="allow-scripts allow-forms" />
       </div>
     </div>
   );
