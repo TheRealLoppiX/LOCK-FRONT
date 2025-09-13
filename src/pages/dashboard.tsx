@@ -1,101 +1,106 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useAuth } from '../contexts/authContext'; // Verifique se o caminho do seu AuthContext está correto
-import HexagonBackground from '../components/hexagonobg'; // Verifique se o caminho está correto
-import { FaCog } from 'react-icons/fa'; // Ícone de engrenagem
+import { useAuth } from '../contexts/authContext';
+import { Link, useNavigate } from 'react-router-dom';
+import { Gear, SignOut } from '@phosphor-icons/react';
+import HexagonBackground from '../components/hexagonobg';
 import './dashboard.css';
-import defaultAvatar from '../assets/default-avatar.png'; // Verifique se o caminho está correto
+
+// Estrutura de dados para as ferramentas e seus laboratórios
+const tools = [
+  {
+    name: 'Burp Suite',
+    id: 'burp-suite',
+    topics: [
+      { name: 'SQL Injection', path: '/labs/sql-injection' },
+      { name: 'Brute Force', path: '/labs/brute-force' },
+      { name: 'XSS (Cross-Site Scripting)', path: '/labs/xss' },
+      // Adicione outros tópicos aqui no futuro
+    ]
+  },
+  {
+    name: 'TCPDump',
+    id: 'tcpdump',
+    topics: [] // Sem laboratórios ainda
+  }
+];
 
 const Dashboard: React.FC = () => {
   const { user, logout } = useAuth();
-  // Estado para controlar o card expansível
-  const [expandedCard, setExpandedCard] = useState<string | null>(null);
+  const navigate = useNavigate();
+  const [expandedTool, setExpandedTool] = useState<string | null>(null);
 
-  const handleLogout = () => { logout(); };
-
-  // Função para abrir/fechar o card de laboratórios
-  const toggleLabsCard = () => {
-    setExpandedCard(prev => (prev === 'labs' ? null : 'labs'));
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
   };
 
-  // Lógica para construir a URL do avatar com base no nome do usuário
-  const avatarUrl = user?.avatar_url?.includes('dicebear.com')
-    ? `${user.avatar_url}?seed=${user.name}`
-    : user?.avatar_url;
+  const toggleTool = (toolId: string) => {
+    setExpandedTool(prev => (prev === toolId ? null : toolId));
+  };
 
   return (
     <div className="dashboard-container">
       <HexagonBackground />
-
-      {/* =================================================================== */}
-      {/* ESTA É A SEÇÃO DO CABEÇALHO QUE ESTAVA FALTANDO */}
-      {/* =================================================================== */}
       <header className="dashboard-header">
         <div className="header-left">
-          {user && (
-            <Link to="/profile" className="profile-avatar-link">
-              <img
-                src={avatarUrl || defaultAvatar}
-                alt={`Foto de perfil de ${user.name}`}
-                className="profile-avatar"
-              />
-            </Link>
-          )}
+          <Link to="/profile" className="profile-avatar-link">
+            <img 
+              src={user?.avatar_url || `https://api.dicebear.com/8.x/initials/svg?seed=${user?.name}`} 
+              alt="Avatar do Utilizador" 
+              className="profile-avatar"
+            />
+          </Link>
           <div className="welcome-message">
-            <h1>LOCK</h1>
-            <p>Bem-vindo(a), {user ? user.name : 'Visitante'}!</p>
+            <h1>Bem-vindo, {user?.name}!</h1>
+            <p>Selecione um laboratório para começar.</p>
           </div>
         </div>
-        
         <div className="header-right">
-          <Link to="/settings" className="settings-icon-link">
-            <FaCog className="settings-icon" />
+          <Link to="/settings" className="settings-icon-link" title="Configurações">
+            <Gear className="settings-icon" />
           </Link>
-          <button onClick={handleLogout} className="logout-btn">
-            Sair
+          <button onClick={handleLogout} className="logout-btn" title="Sair">
+            <SignOut />
           </button>
         </div>
       </header>
-      {/* =================================================================== */}
-      {/* FIM DA SEÇÃO DO CABEÇALHO */}
-      {/* =================================================================== */}
-
 
       <main className="dashboard-grid">
-        {/* Card de Laboratórios Interativo */}
-        <div 
-          className={`dashboard-card lab ${expandedCard === 'labs' ? 'expanded' : ''}`}
-          onClick={toggleLabsCard}
-        >
+        {/* Card de Ferramentas (Novo) */}
+        <div className="dashboard-card tools-card">
           <div className="card-content">
-            <h2>Laboratórios</h2>
-            <p>Ambientes práticos para testes de cibersegurança.</p>
-            <span className="card-action">
-              {expandedCard === 'labs' ? 'Fechar ▲' : 'Expandir ▼'}
-            </span>
+            <h2>Ferramentas de Cibersegurança</h2>
+            <p>Selecione uma ferramenta para ver os laboratórios disponíveis.</p>
           </div>
-
-          <div className="card-expanded-content">
-              Burp Suite
-              <div className="card-expanded-content">
-                <Link to="/labs/sql-injection" className="lab-option">
-                SQL Injection
-                </Link>
+          <div className="tools-list">
+            {tools.map(tool => (
+              <div key={tool.id} className="tool-item">
+                <div 
+                  className={`tool-header ${tool.topics.length > 0 ? 'expandable' : ''}`}
+                  onClick={() => tool.topics.length > 0 && toggleTool(tool.id)}
+                >
+                  <span>{tool.name}</span>
+                  {tool.topics.length > 0 && (
+                    <span className="expand-icon">{expandedTool === tool.id ? '▲' : '▼'}</span>
+                  )}
+                </div>
+                <div className={`topics-list ${expandedTool === tool.id ? 'expanded' : ''}`}>
+                  {tool.topics.map(topic => (
+                    <Link key={topic.path} to={topic.path} className="topic-link">
+                      {topic.name}
+                    </Link>
+                  ))}
+                </div>
               </div>
-            <Link to="/labs/tcpdump" className="lab-option">
-              TCPDump
-            </Link>
+            ))}
           </div>
         </div>
 
-        {/* Card de Cursos como Link normal */}
-        <Link to="#" className="dashboard-card courses">
-          <div className="card-content">
-            <h2>Cursos</h2>
-            <p>Aprimore suas habilidades com nossos módulos de ensino.</p>
-            <span className="card-action">Explorar →</span>
-          </div>
-        </Link>
+        {/* Outros cards que você queira adicionar no futuro */}
+        <div className="dashboard-card placeholder-card">
+          <h2>Em Breve</h2>
+          <p>Novos laboratórios e ferramentas serão adicionados aqui.</p>
+        </div>
       </main>
     </div>
   );
