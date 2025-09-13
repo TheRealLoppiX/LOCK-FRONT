@@ -5,12 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel de Login</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body { background-color: #0d1117; color: #e0f2f7; }
-        .login-card { background-color: #161b22; border-color: #00bfff; }
-        .login-input { background-color: #0d1117; border-color: rgba(0, 191, 255, 0.3); }
-        .login-btn { background-color: #00bfff; }
-    </style>
+    <style> body { background-color: #0d1117; color: #e0f2f7; } .login-card { background-color: #161b22; border-color: #00bfff; } .login-input { background-color: #0d1117; border-color: rgba(0, 191, 255, 0.3); } .login-btn { background-color: #00bfff; } </style>
 </head>
 <body class="flex items-center justify-center min-h-screen">
     <div id="login-container" class="login-card w-full max-w-sm p-8 border-2 rounded-lg shadow-lg shadow-cyan-500/20">
@@ -29,7 +24,19 @@
     <script>
         const users = [ { username: 'administrator', password: 'supersecretpasswordnobodyknows' } ];
         function attemptLogin(user, pass) { const query = `users.find(u => u.username === '${user}' && u.password === '${pass}')`; try { return eval(query); } catch (e) { return null; } }
-        document.getElementById('loginBtn').addEventListener('click', () => { const user = document.getElementById('username').value; const pass = document.getElementById('password').value; const messageEl = document.getElementById('message'); const loggedInUser = attemptLogin(user, pass); if (loggedInUser && loggedInUser.username === 'administrator') { document.getElementById('login-container').classList.add('hidden'); document.getElementById('success-message').classList.remove('hidden'); } else { messageEl.textContent = 'Utilizador ou palavra-passe inválidos.'; } });
+        document.getElementById('loginBtn').addEventListener('click', () => {
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+            const messageEl = document.getElementById('message');
+            const loggedInUser = attemptLogin(user, pass);
+            if (loggedInUser && loggedInUser.username === 'administrator') {
+                document.getElementById('login-container').classList.add('hidden');
+                document.getElementById('success-message').classList.remove('hidden');
+                window.parent.postMessage({ type: 'labCompleted', labId: 'sql-injection-2' }, '*');
+            } else {
+                messageEl.textContent = 'Utilizador ou palavra-passe inválidos.';
+            }
+        });
     </script>
 </body>
 </html>

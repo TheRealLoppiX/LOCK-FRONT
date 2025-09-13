@@ -18,25 +18,24 @@
         </div>
     </div>
     <script>
-        // Simula uma base de dados no Local Storage
         const comments = JSON.parse(localStorage.getItem('xss-stored-comments')) || [];
         const commentsSection = document.getElementById('comments-section');
-
         function renderComments() {
             commentsSection.innerHTML = '<h2 class="text-xl font-semibold mb-4">Comentários:</h2>';
             comments.forEach(c => {
                 const commentEl = document.createElement('div');
                 commentEl.className = 'comment bg-gray-800 p-4 rounded-md mb-4 border-l-4';
-                // VULNERABILIDADE: O conteúdo é inserido diretamente no HTML sem sanitização
                 commentEl.innerHTML = `<strong class="text-cyan-400">${c.name}</strong><p class="mt-2 text-gray-300">${c.comment}</p>`;
                 commentsSection.appendChild(commentEl);
             });
         }
-
         document.getElementById('submitBtn').addEventListener('click', () => {
             const name = document.getElementById('nameInput').value;
             const comment = document.getElementById('commentInput').value;
             if (name && comment) {
+                if (comment.toLowerCase().includes('<script')) {
+                    window.parent.postMessage({ type: 'labCompleted', labId: 'xss-1' }, '*');
+                }
                 comments.push({ name, comment });
                 localStorage.setItem('xss-stored-comments', JSON.stringify(comments));
                 renderComments();

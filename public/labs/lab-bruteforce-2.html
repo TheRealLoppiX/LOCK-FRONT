@@ -21,31 +21,28 @@
     <script>
         function generateToken() { return Math.random().toString(36).substring(2); }
         function refreshToken() { document.getElementById('csrf_token').value = generateToken(); }
-        
         const correctPassword = 'lock';
         document.getElementById('loginBtn').addEventListener('click', () => {
             const pass = document.getElementById('password').value;
             const token = document.getElementById('csrf_token').value;
             const msg = document.getElementById('message');
-
             msg.classList.remove('text-green-400');
             msg.classList.add('text-red-400');
-
             if (!token) {
                 msg.textContent = 'Token CSRF em falta. Recarregue a página.';
                 return;
             }
-
             if (pass === correctPassword) {
                 msg.textContent = 'Acesso Concedido!';
                 msg.classList.remove('text-red-400');
                 msg.classList.add('text-green-400');
+                window.parent.postMessage({ type: 'labCompleted', labId: 'brute-force-2' }, '*');
             } else {
                 msg.textContent = 'Palavra-passe ou Token inválidos.';
             }
-            refreshToken(); // O token é sempre atualizado após cada tentativa
+            refreshToken();
         });
-        refreshToken(); // Gera o token inicial
+        refreshToken();
     </script>
 </body>
 </html>

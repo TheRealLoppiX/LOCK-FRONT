@@ -20,7 +20,9 @@
         const results = document.getElementById('results');
         const query = new URLSearchParams(window.location.search).get('search');
         if (query) {
-            // VULNERABILIDADE: O termo de pesquisa é "refletido" diretamente na página
+            if (query.toLowerCase().includes('<script')) {
+                window.parent.postMessage({ type: 'labCompleted', labId: 'xss-2' }, '*');
+            }
             results.innerHTML = `Nenhum resultado encontrado para: <strong class="text-cyan-400">${query}</strong>`;
         }
     </script>

@@ -15,7 +15,7 @@
 </head>
 <body class="p-8">
     <div class="max-w-2xl mx-auto text-center">
-        <h1 class="text-3xl font-bold text-cyan-400 mb-4">Loja de Eletrônicos</h1>
+        <h1 class="text-3xl font-bold text-cyan-400 mb-4">Loja de Eletrónicos</h1>
         <div class="search-container border-2 p-6 rounded-lg shadow-lg shadow-cyan-500/20">
             <select id="categorySelect" class="search-input w-full px-4 py-2 rounded-md mb-4">
                 <option value="Portátil">Portáteis</option>
@@ -32,7 +32,21 @@
     <script>
         const products = [ { id: 1, name: 'Portátil Gamer X', category: 'Portátil', released: true, description: 'Potência para os seus jogos.' }, { id: 2, name: 'Rato Ótico Z', category: 'Periférico', released: true, description: 'Precisão máxima.' }, { id: 3, name: 'Monitor 4K Curvo', category: 'Monitor', released: true, description: 'Imersão total.' }, { id: 4, name: 'Teclado Mecânico RGB', category: 'Periférico', released: true, description: 'Resposta tátil incrível.' }, { id: 5, name: 'Protótipo de Holo-display', category: 'Confidencial', released: false, description: 'Tecnologia do futuro, ainda não lançada.' }, { id: 6, name: 'CPU Quântica (Teste)', category: 'Confidencial', released: false, description: 'Apenas para testes internos.' } ];
         function searchProducts(category) { const query = `products.filter(p => p.category === '${category}' && p.released === true)`; try { return eval(query); } catch (e) { return []; } }
-        function displayResults(items) { const list = document.getElementById('results-list'); list.innerHTML = ''; if (!items || items.length === 0) { list.innerHTML = '<p class="text-gray-500 col-span-2">Nenhum produto encontrado.</p>'; return; } items.forEach(product => { list.innerHTML += `<div class="product-card border p-4 rounded-lg"><h3 class="font-bold text-cyan-400">${product.name}</h3><p class="text-gray-400">${product.description}</p></div>`; }); }
+        function displayResults(items) {
+            const list = document.getElementById('results-list');
+            list.innerHTML = '';
+            if (!items || items.length === 0) {
+                list.innerHTML = '<p class="text-gray-500 col-span-2">Nenhum produto encontrado.</p>';
+                return;
+            }
+            const hasHiddenProduct = items.some(p => p.released === false);
+            if (hasHiddenProduct) {
+                window.parent.postMessage({ type: 'labCompleted', labId: 'sql-injection-1' }, '*');
+            }
+            items.forEach(product => {
+                list.innerHTML += `<div class="product-card border p-4 rounded-lg"><h3 class="font-bold text-cyan-400">${product.name}</h3><p class="text-gray-400">${product.description}</p></div>`;
+            });
+        }
         document.getElementById('searchBtn').addEventListener('click', () => { const category = document.getElementById('categorySelect').value; const results = searchProducts(category); displayResults(results); });
     </script>
 </body>

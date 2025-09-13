@@ -15,14 +15,15 @@
     </div>
     <script>
         function selectLanguage() {
-            // VULNERABILIDADE: O script lê da URL e escreve no DOM sem sanitização.
-            // O payload não chega ao servidor.
             let lang = window.location.hash.substring(1);
             if(!lang) { lang = 'Português'; }
+            if (decodeURIComponent(lang).toLowerCase().includes('<script')) {
+                window.parent.postMessage({ type: 'labCompleted', labId: 'xss-3' }, '*');
+            }
             document.getElementById('lang-output').innerHTML = lang;
         }
         window.addEventListener('hashchange', selectLanguage);
-        selectLanguage(); // Executa na carga inicial
+        selectLanguage();
     </script>
 </body>
 </html>
