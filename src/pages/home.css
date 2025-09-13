@@ -1,9 +1,7 @@
-/* src/pages/home.css */
-
 @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap');
 
-/* Keyframes */
+/* Keyframes para as animações */
 @keyframes spin-pseudo-3d { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
 @keyframes pulse-glow-img { from { filter: drop-shadow(0 0 10px rgba(0, 191, 255, 0.4)); opacity: 0.8; } to { filter: drop-shadow(0 0 20px rgba(0, 191, 255, 0.8)); opacity: 1; } }
 @keyframes blink { 50% { opacity: 0; } }
@@ -20,7 +18,7 @@
   font-family: 'Inter', sans-serif;
 }
 
-.home-container > div:first-child { /* HexagonBackground */
+.home-container > div:first-child { /* Alvo para o HexagonBackground */
   position: absolute;
   top: 0;
   left: 0;
@@ -54,10 +52,10 @@
   color: #39FF14;
   margin-bottom: 30px;
   text-shadow: 0 0 5px #39FF14;
-  height: 54px;
+  height: 54px; /* Altura para evitar que o layout salte */
   text-align: left;
   display: inline-block;
-  white-space: nowrap;
+  white-space: nowrap; /* Impede que o texto quebre a linha durante a digitação */
 }
 
 .typing-cursor {
@@ -120,14 +118,6 @@
 
 .btn-secondary:hover {
   transform: translateY(-3px);
-  background: rgba(0, 191, 255, 0.1); /* Efeito de hover mantido */
+  background: rgba(0, 191, 255, 0.1);
   box-shadow: 0 8px 25px rgba(0, 191, 255, 0.4), 0 0 30px rgba(0, 191, 255, 0.4);
-}
-
-/* Media queries */
-@media (max-width: 768px) {
-  /* ... */
-}
-@media (max-width: 480px) {
-  /* ... */
 }
