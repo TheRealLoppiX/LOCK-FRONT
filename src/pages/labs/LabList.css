@@ -2,8 +2,6 @@
   min-height: 100vh;
   padding: 40px;
   box-sizing: border-box;
-  background-color: var(--background-primary);
-  color: var(--text-secondary);
 }
 
 .labs-content {
@@ -27,17 +25,7 @@
 
 .labs-header p {
   font-size: 1.1rem;
-}
-
-.back-link {
-  display: inline-block;
-  margin-top: 20px;
   color: var(--text-secondary);
-  text-decoration: none;
-}
-
-.back-link:hover {
-  color: var(--accent-color);
 }
 
 .labs-grid {
@@ -54,6 +42,7 @@
   text-decoration: none;
   color: var(--text-secondary);
   transition: transform 0.3s ease, border-color 0.3s ease;
+  display: block;
 }
 
 .lab-card:hover {
