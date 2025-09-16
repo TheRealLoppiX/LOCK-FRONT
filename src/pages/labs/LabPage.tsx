@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useAuth } from '../../contexts/authContext';
-import { sqlInjectionLabs, bruteForceLabs, xssLabs, Lab } from './LabData';
+import { sqlInjectionLabs, bruteForceLabs, xssLabs, Lab } from './LabData.ts';
 import HexagonBackground from '../../components/hexagonobg';
 import './LabPage.css';
 
