@@ -11,7 +11,7 @@ const SqlInjectionList: React.FC = () => (
       <header className="labs-header">
         <h1>Laboratórios: SQL Injection</h1>
         <p>Selecione um dos desafios abaixo para começar.</p>
-        <Link to="/dashboard" className="back-link">← Voltar para a Dashboard</Link>
+        <Link to="/SqlInjectionList" className="back-link">← Voltar para os Laboratórios</Link>
       </header>
       <main className="labs-grid">
         {sqlInjectionLabs.map((lab) => (

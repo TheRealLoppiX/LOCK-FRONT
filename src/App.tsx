@@ -36,8 +36,10 @@ function App() {
             <Route path="/labs/sql-injection" element={<SqlInjectionList />} />
             <Route path="/labs/sql-injection/:labId" element={<LabPage />} />
             <Route path="/settings" element={<Settings />} />
-             <Route path="/labs/xss" element={<XSSList />} />
+            <Route path="/labs/xss" element={<XSSList />} />
             <Route path="/labs/brute-force" element={<BruteForceList />} />
+            <Route path="/labs/xss/:labId" element={<LabPage />} />
+            <Route path="/labs/brute-force/:labId" element={<LabPage />} />
           </Routes>
           <Footer />
         </div>
