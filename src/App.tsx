@@ -10,10 +10,6 @@ import ForgotPassword from './pages/forgotpassword';
 import ResetPassword from './pages/resetpassword';
 import Profile from './pages/profile';
 import Settings from './pages/settings';
-import SqlInjectionList from './pages/labs/SqlInjectionList';
-import LabPage from './pages/labs/LabPage';
-import BruteForceList from './pages/labs/BruteForceList';
-import XSSList from './pages/labs/XSSList';
 import './App.css';
 
 // NOVO: Importe o componente Footer que você criou
@@ -33,13 +29,7 @@ function App() {
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password/:token" element={<ResetPassword />} />
             <Route path="/profile" element={<Profile />} />
-            <Route path="/labs/sql-injection" element={<SqlInjectionList />} />
-            <Route path="/labs/sql-injection/:labId" element={<LabPage />} />
             <Route path="/settings" element={<Settings />} />
-            <Route path="/labs/xss" element={<XSSList />} />
-            <Route path="/labs/brute-force" element={<BruteForceList />} />
-            <Route path="/labs/xss/:labId" element={<LabPage />} />
-            <Route path="/labs/brute-force/:labId" element={<LabPage />} />
           </Routes>
           <Footer />
         </div>
