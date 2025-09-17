@@ -8,9 +8,9 @@ export interface Lab {
 
 // Laboratórios de SQL INJECTION
 export const sqlInjectionLabs: Lab[] = [
-  { id: 'sqli-1', title: 'SQL Injection - Recuperar Dados Ocultos', description: 'Manipule a query para vazar dados.', path: './sql-injection/sqli-1.html', iframeSrc: './lab-sqli-1.html' },
-  { id: 'sqli-2', title: 'SQL Injection - Contornar Autenticação', description: 'Explore uma falha de login para acessar como "administrator".', path: './sql-injection/sqli-2.html', iframeSrc: './lab-sqli-2.html' },
-  { id: 'sqli-3', title: 'SQL Injection - Ataque UNION', description: 'Use um ataque UNION para extrair dados de outra tabela.', path: './sql-injection/sqli-3.html', iframeSrc: './lab-sqli-3.html' },
+  { id: 'sqli-1', title: 'SQL Injection - Recuperar Dados Ocultos', description: 'Manipule a query para vazar dados.', path: './sqli-1.html', iframeSrc: './lab-sqli-1.html' },
+  { id: 'sqli-2', title: 'SQL Injection - Contornar Autenticação', description: 'Explore uma falha de login para acessar como "administrator".', path: './sqli-2.html', iframeSrc: './lab-sqli-2.html' },
+  { id: 'sqli-3', title: 'SQL Injection - Ataque UNION', description: 'Use um ataque UNION para extrair dados de outra tabela.', path: './sqli-3.html', iframeSrc: './lab-sqli-3.html' },
 ];
 
 // Laboratórios de BRUTE FORCE
