@@ -268,3 +268,102 @@
   background-color: var(--accent-color-translucent);
   color: var(--text-primary);
 }
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    align-items: start;
+}
+
+.left-column, .right-column {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.dashboard-card {
+    background: var(--background-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.dashboard-card:hover {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 15px var(--accent-color-translucent);
+}
+
+.dropdown-header {
+    padding: 25px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.card-icon {
+    background-color: var(--accent-color-translucent);
+    color: var(--accent-color);
+    min-width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.card-content {
+    flex-grow: 1;
+}
+
+.card-content h2 {
+    color: var(--text-primary);
+    font-size: 1.6rem;
+    margin: 0 0 5px 0;
+}
+
+.card-content p {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+.caret-icon {
+    color: var(--accent-color);
+    font-size: 1.5rem;
+    transition: transform 0.3s ease;
+    margin-left: auto;
+}
+
+.caret-icon.open {
+    transform: rotate(180deg);
+}
+
+.dropdown-content {
+    padding: 0 25px 25px 25px;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.dropdown-item {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 1.1rem;
+    padding: 10px 15px;
+    border-radius: 8px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.dropdown-item:hover {
+    background-color: var(--accent-color-translucent);
+    color: var(--text-primary);
+}

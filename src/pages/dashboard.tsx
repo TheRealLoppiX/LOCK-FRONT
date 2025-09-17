@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { useAuth } from '../contexts/authContext';
 import { Link, useNavigate } from 'react-router-dom';
-import { CaretDown, Gear, SignOut, FilePdf, Article, Image as ImageIcon, Question } from '@phosphor-icons/react';
+import { 
+  CaretDown, Gear, SignOut, Flask, BookOpen, Exam, 
+  FilePdf, Article, Image as ImageIcon, Question 
+} from '@phosphor-icons/react';
 import HexagonBackground from '../components/hexagonobg';
 import './dashboard.css';
 
@@ -9,7 +12,6 @@ const Dashboard: React.FC = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   
-  // Três estados separados para controlar cada menu de forma independente
   const [isLabsOpen, setIsLabsOpen] = useState(false);
   const [isMaterialsOpen, setIsMaterialsOpen] = useState(false);
   const [isQuizzesOpen, setIsQuizzesOpen] = useState(false);
@@ -52,9 +54,10 @@ const Dashboard: React.FC = () => {
           {/* Card de Laboratórios */}
           <div className="dashboard-card">
             <div className="dropdown-header" onClick={() => setIsLabsOpen(!isLabsOpen)}>
+              <div className="card-icon"><Flask weight="bold" /></div>
               <div className="card-content">
                 <h2>Laboratórios</h2>
-                <p>Selecione uma categoria para ver os desafios.</p>
+                <p>Coloque seus conhecimentos em prática.</p>
               </div>
               <CaretDown weight="bold" className={`caret-icon ${isLabsOpen ? 'open' : ''}`} />
             </div>
@@ -70,9 +73,10 @@ const Dashboard: React.FC = () => {
           {/* Card de Quizzes */}
           <div className="dashboard-card">
             <div className="dropdown-header" onClick={() => setIsQuizzesOpen(!isQuizzesOpen)}>
+              <div className="card-icon"><Exam weight="bold" /></div>
               <div className="card-content">
                 <h2>Quizzes</h2>
-                <p>Teste seus conhecimentos com desafios teóricos.</p>
+                <p>Teste sua compreensão teórica dos temas.</p>
               </div>
               <CaretDown weight="bold" className={`caret-icon ${isQuizzesOpen ? 'open' : ''}`} />
             </div>
@@ -90,9 +94,10 @@ const Dashboard: React.FC = () => {
           {/* Card de Materiais de Estudo */}
           <div className="dashboard-card">
             <div className="dropdown-header" onClick={() => setIsMaterialsOpen(!isMaterialsOpen)}>
+              <div className="card-icon"><BookOpen weight="bold" /></div>
               <div className="card-content">
                 <h2>Materiais de Estudo</h2>
-                <p>Acesse guias e artigos para aprofundar seu conhecimento.</p>
+                <p>Acesse guias e artigos para aprofundar.</p>
               </div>
               <CaretDown weight="bold" className={`caret-icon ${isMaterialsOpen ? 'open' : ''}`} />
             </div>
@@ -100,7 +105,6 @@ const Dashboard: React.FC = () => {
               <div className="dropdown-content">
                 <a href="#" className="dropdown-item"><FilePdf size={20} /> Guia de SQL Injection (PDF)</a>
                 <a href="#" className="dropdown-item"><Article size={20} /> Entendendo XSS (Artigo)</a>
-                <a href="#" className="dropdown-item"><ImageIcon size={20} /> Infográfico de Phishing</a>
               </div>
             )}
           </div>
