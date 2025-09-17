@@ -190,3 +190,81 @@
     grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
     gap: 30px;
 }
+.dashboard-grid {
+    display: grid;
+    /* Duas colunas com tamanhos flexíveis, a primeira um pouco maior */
+    grid-template-columns: 1.2fr 0.8fr; 
+    gap: 30px;
+    align-items: start; /* Alinha os itens no topo de suas células */
+}
+
+/* Coluna da Esquerda: um container flex para empilhar os cards */
+.left-column {
+    display: flex;
+    flex-direction: column;
+    gap: 30px; /* Espaçamento entre o card de labs e o de quizzes */
+}
+
+.dashboard-card {
+  background: var(--background-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.dropdown-header {
+  padding: 25px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-content h2 {
+  color: var(--text-primary);
+  font-size: 1.6rem;
+  margin: 0 0 5px 0;
+}
+
+.card-content p {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.caret-icon {
+  color: var(--accent-color);
+  font-size: 1.5rem;
+  transition: transform 0.3s ease;
+}
+
+.caret-icon.open {
+  transform: rotate(180deg);
+}
+
+.dropdown-content {
+  padding: 0 25px 25px 25px;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.dropdown-item {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 1.1rem;
+  padding: 10px;
+  border-radius: 8px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dropdown-item:hover {
+  background-color: var(--accent-color-translucent);
+  color: var(--text-primary);
+}

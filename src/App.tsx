@@ -11,7 +11,6 @@ import ForgotPassword from './pages/forgotpassword';
 import ResetPassword from './pages/resetpassword';
 import Profile from './pages/profile';
 import Settings from './pages/settings';
-import Quizzes from './pages/Quizzes';
 import './App.css';
 
 // NOVO: Importe o componente Footer que você criou
@@ -38,7 +37,6 @@ function App() {
             <Route path="/reset-password/:token" element={<ResetPassword />} />
             <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
             <Route path="/settings" element={<PrivateRoute><Settings /></PrivateRoute>} />
-            <Route path="/quizzes" element={<PrivateRoute><Quizzes /></PrivateRoute>} />
           </Routes>
           <Footer />
         </div>
