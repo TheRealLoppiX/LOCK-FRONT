@@ -25,7 +25,6 @@ const Dashboard: React.FC = () => {
     <div className="dashboard-container">
       <HexagonBackground />
       <header className="dashboard-header">
-        {/* ... (código do header continua o mesmo) ... */}
         <div className="header-left">
           <Link to="/profile" className="profile-avatar-link">
             <img 
@@ -59,7 +58,6 @@ const Dashboard: React.FC = () => {
               <div className="card-content"><h2>Laboratórios</h2><p>Coloque seus conhecimentos em prática.</p></div>
               <CaretDown weight="bold" className={`caret-icon ${isLabsOpen ? 'open' : ''}`} />
             </div>
-            {/* ALTERADO: Agora usamos classes condicionais em vez de '&&' */}
             <div className={`dropdown-content ${isLabsOpen ? 'open' : ''}`}>
               <Link to="/labs/sql-injection" className="dropdown-item">SQL Injection</Link>
               <Link to="/labs/brute-force" className="dropdown-item">Brute Force</Link>
@@ -77,15 +75,14 @@ const Dashboard: React.FC = () => {
               </div>
               <CaretDown weight="bold" className={`caret-icon ${isQuizzesOpen ? 'open' : ''}`} />
             </div>
-            {isQuizzesOpen && (
-              <div className="dropdown-content">
-                {/* ATUALIZADO: Este link agora aponta para a nova página */}
-                <Link to="/quizzes/burp-suite" className="dropdown-item">
-                  <Question size={20} /> Burp Suite
-                </Link>
-                {/* (Mais quizzes podem ser adicionados aqui no futuro) */}
-              </div>
-            )}
+            {/* ====================================================== */}
+            {/* CORREÇÃO APLICADA AQUI ABAIXO                     */}
+            {/* ====================================================== */}
+            <div className={`dropdown-content ${isQuizzesOpen ? 'open' : ''}`}>
+              <Link to="/quizzes/burp-suite" className="dropdown-item">
+                <Question size={20} /> Burp Suite
+              </Link>
+            </div>
           </div>
         </div>
 
@@ -98,7 +95,6 @@ const Dashboard: React.FC = () => {
               <div className="card-content"><h2>Materiais de Estudo</h2><p>Acesse guias e artigos para aprofundar.</p></div>
               <CaretDown weight="bold" className={`caret-icon ${isMaterialsOpen ? 'open' : ''}`} />
             </div>
-            {/* ALTERADO: Agora usamos classes condicionais em vez de '&&' */}
             <div className={`dropdown-content ${isMaterialsOpen ? 'open' : ''}`}>
               <a href="#" className="dropdown-item"><FilePdf size={20} /> Guia de SQL Injection (PDF)</a>
               <a href="#" className="dropdown-item"><Article size={20} /> Entendendo XSS (Artigo)</a>
