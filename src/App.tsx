@@ -11,6 +11,8 @@ import ForgotPassword from './pages/forgotpassword';
 import ResetPassword from './pages/resetpassword';
 import Profile from './pages/profile';
 import Settings from './pages/settings';
+import QuizBurpPage from './pages/QuizBurpPage';
+import QuizPlayer from './pages/QuizPlayer';
 import './App.css';
 
 // NOVO: Importe o componente Footer que você criou
@@ -37,6 +39,8 @@ function App() {
             <Route path="/reset-password/:token" element={<ResetPassword />} />
             <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
             <Route path="/settings" element={<PrivateRoute><Settings /></PrivateRoute>} />
+            <Route path="/quizzes/burp-suite" element={<PrivateRoute><QuizBurpPage /></PrivateRoute>} />
+            <Route path="/quiz-player/:topic/:difficulty" element={<PrivateRoute><QuizPlayer /></PrivateRoute>} />
           </Routes>
           <Footer />
         </div>

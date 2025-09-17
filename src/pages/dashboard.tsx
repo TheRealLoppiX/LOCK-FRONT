@@ -71,14 +71,21 @@ const Dashboard: React.FC = () => {
           <div className="dashboard-card">
             <div className="dropdown-header" onClick={() => setIsQuizzesOpen(!isQuizzesOpen)}>
               <div className="card-icon"><Exam weight="bold" /></div>
-              <div className="card-content"><h2>Quizzes</h2><p>Teste sua compreensão teórica dos temas.</p></div>
+              <div className="card-content">
+                <h2>Quizzes</h2>
+                <p>Teste sua compreensão teórica dos temas.</p>
+              </div>
               <CaretDown weight="bold" className={`caret-icon ${isQuizzesOpen ? 'open' : ''}`} />
             </div>
-            {/* ALTERADO: Agora usamos classes condicionais em vez de '&&' */}
-            <div className={`dropdown-content ${isQuizzesOpen ? 'open' : ''}`}>
-              <a href="#" className="dropdown-item"><Question size={20} /> Quiz de Redes</a>
-              <a href="#" className="dropdown-item"><Question size={20} /> Quiz de Criptografia</a>
-            </div>
+            {isQuizzesOpen && (
+              <div className="dropdown-content">
+                {/* ATUALIZADO: Este link agora aponta para a nova página */}
+                <Link to="/quizzes/burp-suite" className="dropdown-item">
+                  <Question size={20} /> Burp Suite
+                </Link>
+                {/* (Mais quizzes podem ser adicionados aqui no futuro) */}
+              </div>
+            )}
           </div>
         </div>
 
