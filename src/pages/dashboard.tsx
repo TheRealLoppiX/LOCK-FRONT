@@ -3,7 +3,7 @@ import { useAuth } from '../contexts/authContext';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
   CaretDown, Gear, SignOut, Flask, BookOpen, Exam, 
-  FilePdf, Article, Image as ImageIcon, Question 
+  FilePdf, Article, Question 
 } from '@phosphor-icons/react';
 import HexagonBackground from '../components/hexagonobg';
 import './dashboard.css';
@@ -25,6 +25,7 @@ const Dashboard: React.FC = () => {
     <div className="dashboard-container">
       <HexagonBackground />
       <header className="dashboard-header">
+        {/* ... (código do header continua o mesmo) ... */}
         <div className="header-left">
           <Link to="/profile" className="profile-avatar-link">
             <img 
@@ -55,37 +56,29 @@ const Dashboard: React.FC = () => {
           <div className="dashboard-card">
             <div className="dropdown-header" onClick={() => setIsLabsOpen(!isLabsOpen)}>
               <div className="card-icon"><Flask weight="bold" /></div>
-              <div className="card-content">
-                <h2>Laboratórios</h2>
-                <p>Coloque seus conhecimentos em prática.</p>
-              </div>
+              <div className="card-content"><h2>Laboratórios</h2><p>Coloque seus conhecimentos em prática.</p></div>
               <CaretDown weight="bold" className={`caret-icon ${isLabsOpen ? 'open' : ''}`} />
             </div>
-            {isLabsOpen && (
-              <div className="dropdown-content">
-                <Link to="/labs/sql-injection" className="dropdown-item">SQL Injection</Link>
-                <Link to="/labs/brute-force" className="dropdown-item">Brute Force</Link>
-                <Link to="/labs/xss" className="dropdown-item">Cross-Site Scripting (XSS)</Link>
-              </div>
-            )}
+            {/* ALTERADO: Agora usamos classes condicionais em vez de '&&' */}
+            <div className={`dropdown-content ${isLabsOpen ? 'open' : ''}`}>
+              <Link to="/labs/sql-injection" className="dropdown-item">SQL Injection</Link>
+              <Link to="/labs/brute-force" className="dropdown-item">Brute Force</Link>
+              <Link to="/labs/xss" className="dropdown-item">Cross-Site Scripting (XSS)</Link>
+            </div>
           </div>
 
           {/* Card de Quizzes */}
           <div className="dashboard-card">
             <div className="dropdown-header" onClick={() => setIsQuizzesOpen(!isQuizzesOpen)}>
               <div className="card-icon"><Exam weight="bold" /></div>
-              <div className="card-content">
-                <h2>Quizzes</h2>
-                <p>Teste sua compreensão teórica dos temas.</p>
-              </div>
+              <div className="card-content"><h2>Quizzes</h2><p>Teste sua compreensão teórica dos temas.</p></div>
               <CaretDown weight="bold" className={`caret-icon ${isQuizzesOpen ? 'open' : ''}`} />
             </div>
-            {isQuizzesOpen && (
-              <div className="dropdown-content">
-                <a href="#" className="dropdown-item"><Question size={20} /> Quiz de Redes</a>
-                <a href="#" className="dropdown-item"><Question size={20} /> Quiz de Criptografia</a>
-              </div>
-            )}
+            {/* ALTERADO: Agora usamos classes condicionais em vez de '&&' */}
+            <div className={`dropdown-content ${isQuizzesOpen ? 'open' : ''}`}>
+              <a href="#" className="dropdown-item"><Question size={20} /> Quiz de Redes</a>
+              <a href="#" className="dropdown-item"><Question size={20} /> Quiz de Criptografia</a>
+            </div>
           </div>
         </div>
 
@@ -95,18 +88,14 @@ const Dashboard: React.FC = () => {
           <div className="dashboard-card">
             <div className="dropdown-header" onClick={() => setIsMaterialsOpen(!isMaterialsOpen)}>
               <div className="card-icon"><BookOpen weight="bold" /></div>
-              <div className="card-content">
-                <h2>Materiais de Estudo</h2>
-                <p>Acesse guias e artigos para aprofundar.</p>
-              </div>
+              <div className="card-content"><h2>Materiais de Estudo</h2><p>Acesse guias e artigos para aprofundar.</p></div>
               <CaretDown weight="bold" className={`caret-icon ${isMaterialsOpen ? 'open' : ''}`} />
             </div>
-            {isMaterialsOpen && (
-              <div className="dropdown-content">
-                <a href="#" className="dropdown-item"><FilePdf size={20} /> Guia de SQL Injection (PDF)</a>
-                <a href="#" className="dropdown-item"><Article size={20} /> Entendendo XSS (Artigo)</a>
-              </div>
-            )}
+            {/* ALTERADO: Agora usamos classes condicionais em vez de '&&' */}
+            <div className={`dropdown-content ${isMaterialsOpen ? 'open' : ''}`}>
+              <a href="#" className="dropdown-item"><FilePdf size={20} /> Guia de SQL Injection (PDF)</a>
+              <a href="#" className="dropdown-item"><Article size={20} /> Entendendo XSS (Artigo)</a>
+            </div>
           </div>
         </div>
       </main>

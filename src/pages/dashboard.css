@@ -1,9 +1,25 @@
-/* src/pages/dashboard.css */
+/* --- Layout Geral e Cabeçalho --- */
+.dashboard-container {
+    min-height: 100vh;
+    padding: 40px;
+    box-sizing: border-box;
+}
 
-/* --- Layout Geral e Cabeçalho (sem alterações) --- */
-.dashboard-container { min-height: 100vh; padding: 40px; box-sizing: border-box; background-color: var(--background-primary); color: var(--text-secondary); }
-.dashboard-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 50px; position: relative; z-index: 2; }
-.header-left, .header-right { display: flex; align-items: center; gap: 20px; }
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 50px;
+    position: relative;
+    z-index: 2;
+}
+
+.header-left, .header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
 .profile-avatar-link { display: block; }
 .profile-avatar { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent-color); transition: transform 0.3s ease; }
 .profile-avatar:hover { transform: scale(1.1); }
@@ -15,265 +31,14 @@
 .logout-btn { background: transparent; color: #ff4d4d; border: none; padding: 10px; border-radius: 8px; cursor: pointer; font-size: 1.6rem; display: flex; align-items: center; transition: all 0.3s ease; }
 .logout-btn:hover { color: #fff; background-color: #ff4d4d; box-shadow: 0 0 15px rgba(255, 77, 77, 0.5); }
 
-/* --- Grid de Cards (sem alterações) --- */
-.dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px; position: relative; z-index: 2; }
-.dashboard-card { background: var(--background-secondary); border: 1px solid var(--border-color); backdrop-filter: blur(8px); border-radius: 15px; padding: 30px; text-decoration: none; color: var(--text-secondary); display: flex; flex-direction: column; }
-.card-content h2 { color: var(--text-primary); font-size: 1.8rem; margin: 0 0 10px 0; }
-.card-content p { font-size: 1rem; line-height: 1.6; margin: 0; flex-grow: 1; }
-
-/* ============================================== */
-/* === NOVOS ESTILOS PARA A LISTA DE FERRAMENTAS === */
-/* ============================================== */
-
-.tools-card {
-  /* O card de ferramentas pode ser maior se necessário */
-  grid-column: span 1; /* Ocupa uma coluna por padrão */
-}
-
-@media (min-width: 900px) {
-  .tools-card {
-    grid-column: span 2; /* Ocupa duas colunas em telas maiores */
-  }
-}
-
-.tools-list {
-  margin-top: 20px;
-  border-top: 1px solid var(--border-color);
-  padding-top: 20px;
-}
-
-.tool-item {
-  margin-bottom: 10px;
-}
-
-.tool-header {
-  background-color: var(--background-primary);
-  padding: 15px 20px;
-  border-radius: 8px;
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: var(--text-primary);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  transition: background-color 0.3s ease;
-}
-
-.tool-header.expandable {
-  cursor: pointer;
-}
-
-.tool-header.expandable:hover {
-  background-color: rgba(0, 191, 255, 0.1);
-}
-
-.expand-icon {
-  color: var(--accent-color);
-  transition: transform 0.3s ease;
-}
-
-.topics-list {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.4s ease-in-out, padding 0.4s ease-in-out;
-  padding: 0 20px;
-}
-
-.topics-list.expanded {
-  max-height: 300px; /* Altura suficiente para os tópicos */
-  padding: 10px 20px;
-}
-
-.topic-link {
-  display: block;
-  color: var(--text-secondary);
-  text-decoration: none;
-  padding: 12px 15px;
-  border-radius: 6px;
-  margin-top: 5px;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.topic-link:hover {
-  background-color: var(--accent-color);
-  color: var(--background-primary);
-}
-.dashboard-card {
-  background: var(--background-secondary);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  transition: all 0.3s ease;
-  overflow: hidden;
-}
-
-.dropdown-header {
-  padding: 25px;
-  cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.card-content h2 {
-  color: var(--text-primary);
-  font-size: 1.6rem;
-  margin: 0 0 5px 0;
-}
-
-.card-content p {
-  font-size: 1rem;
-  line-height: 1.5;
-  color: var(--text-secondary);
-  margin: 0;
-}
-
-.caret-icon {
-  color: var(--accent-color);
-  font-size: 1.5rem;
-  transition: transform 0.3s ease;
-}
-
-.caret-icon.open {
-  transform: rotate(180deg);
-}
-
-.dropdown-content {
-  padding: 0 25px 25px 25px;
-  border-top: 1px solid var(--border-color);
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.dropdown-item {
-  color: var(--text-secondary);
-  text-decoration: none;
-  font-size: 1.1rem;
-  padding: 10px;
-  border-radius: 8px;
-  transition: background-color 0.2s ease, color 0.2s ease;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.dropdown-item:hover {
-  background-color: var(--accent-color-translucent);
-  color: var(--text-primary);
-}
-
-/* NOVOS ESTILOS PARA O BOTÃO DE QUIZZES */
-.quizzes-section {
-  margin-top: 40px;
-  text-align: center;
-}
-
-.quizzes-btn {
-  display: inline-block;
-  padding: 15px 40px;
-  background-color: var(--accent-color);
-  color: var(--background-primary);
-  font-size: 1.2rem;
-  font-weight: bold;
-  text-decoration: none;
-  border-radius: 10px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.quizzes-btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 20px var(--accent-color-translucent);
-}
-
-.dashboard-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-    gap: 30px;
-}
-.dashboard-grid {
-    display: grid;
-    /* Duas colunas com tamanhos flexíveis, a primeira um pouco maior */
-    grid-template-columns: 1.2fr 0.8fr; 
-    gap: 30px;
-    align-items: start; /* Alinha os itens no topo de suas células */
-}
-
-/* Coluna da Esquerda: um container flex para empilhar os cards */
-.left-column {
-    display: flex;
-    flex-direction: column;
-    gap: 30px; /* Espaçamento entre o card de labs e o de quizzes */
-}
-
-.dashboard-card {
-  background: var(--background-secondary);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  transition: all 0.3s ease;
-  overflow: hidden;
-}
-
-.dropdown-header {
-  padding: 25px;
-  cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.card-content h2 {
-  color: var(--text-primary);
-  font-size: 1.6rem;
-  margin: 0 0 5px 0;
-}
-
-.card-content p {
-  font-size: 1rem;
-  line-height: 1.5;
-  color: var(--text-secondary);
-  margin: 0;
-}
-
-.caret-icon {
-  color: var(--accent-color);
-  font-size: 1.5rem;
-  transition: transform 0.3s ease;
-}
-
-.caret-icon.open {
-  transform: rotate(180deg);
-}
-
-.dropdown-content {
-  padding: 0 25px 25px 25px;
-  border-top: 1px solid var(--border-color);
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.dropdown-item {
-  color: var(--text-secondary);
-  text-decoration: none;
-  font-size: 1.1rem;
-  padding: 10px;
-  border-radius: 8px;
-  transition: background-color 0.2s ease, color 0.2s ease;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.dropdown-item:hover {
-  background-color: var(--accent-color-translucent);
-  color: var(--text-primary);
-}
-
+/* --- Grid Principal e Colunas --- */
 .dashboard-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 30px;
     align-items: start;
+    position: relative;
+    z-index: 2;
 }
 
 .left-column, .right-column {
@@ -282,12 +47,13 @@
     gap: 30px;
 }
 
+/* --- Estilo dos Cards Expansíveis --- */
 .dashboard-card {
     background: var(--background-secondary);
     border: 1px solid var(--border-color);
     border-radius: 12px;
     transition: all 0.3s ease;
-    overflow: hidden;
+    overflow: hidden; /* Crucial para a animação */
 }
 
 .dashboard-card:hover {
@@ -315,42 +81,34 @@
     font-size: 1.5rem;
 }
 
-.card-content {
-    flex-grow: 1;
-}
+.card-content { flex-grow: 1; }
+.card-content h2 { color: var(--text-primary); font-size: 1.6rem; margin: 0 0 5px 0; }
+.card-content p { font-size: 1rem; line-height: 1.5; color: var(--text-secondary); margin: 0; }
+.caret-icon { color: var(--accent-color); font-size: 1.5rem; transition: transform 0.3s ease; margin-left: auto; }
+.caret-icon.open { transform: rotate(180deg); }
 
-.card-content h2 {
-    color: var(--text-primary);
-    font-size: 1.6rem;
-    margin: 0 0 5px 0;
-}
-
-.card-content p {
-    font-size: 1rem;
-    line-height: 1.5;
-    color: var(--text-secondary);
-    margin: 0;
-}
-
-.caret-icon {
-    color: var(--accent-color);
-    font-size: 1.5rem;
-    transition: transform 0.3s ease;
-    margin-left: auto;
-}
-
-.caret-icon.open {
-    transform: rotate(180deg);
-}
-
+/* --- Animação de Expansão --- */
 .dropdown-content {
-    padding: 0 25px 25px 25px;
-    border-top: 1px solid var(--border-color);
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+    /* Estado Fechado */
+    max-height: 0;
+    overflow: hidden;
+    padding: 0 25px;
+    opacity: 0;
+    border-top: 1px solid transparent;
+    
+    /* A Transição */
+    transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out, opacity 0.3s ease-in-out;
 }
 
+.dropdown-content.open {
+    /* Estado Aberto */
+    max-height: 500px; /* Um valor alto para caber qualquer conteúdo */
+    padding: 0 25px 25px 25px;
+    opacity: 1;
+    border-top: 1px solid var(--border-color);
+}
+
+/* --- Itens Dentro do Dropdown --- */
 .dropdown-item {
     color: var(--text-secondary);
     text-decoration: none;
