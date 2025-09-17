@@ -17,7 +17,7 @@ import './App.css';
 // NOVO: Importe o componente Footer que você criou
 import Footer from './components/Footer'; 
 
-const PrivateRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
+const PrivateRoute: React.FC<{ children: React.ReactElement }> = ({ children }) => {
   const { isAuthenticated } = useAuth();
   // Se o usuário não estiver autenticado, redireciona para a página de login
   return isAuthenticated ? children : <Navigate to="/login" />;
