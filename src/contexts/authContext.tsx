@@ -17,8 +17,6 @@ interface AuthContextType {
   login: (userData: User, token: string) => void;
   logout: () => void;
   setUser: React.Dispatch<React.SetStateAction<User | null>>; // Para atualizar o perfil
-  completedLabs: string[]; // Lista de IDs dos laboratórios concluídos
-  markLabAsCompleted: (labId: string) => Promise<void>; // Função para guardar o progresso
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -106,9 +104,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setUser, 
         isAuthenticated: !!user && !!token,
         login, 
-        logout,
-        completedLabs,
-        markLabAsCompleted
+        logout
       }}
     >
       {children}
