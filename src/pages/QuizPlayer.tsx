@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/authContext';
 import HexagonBackground from '../components/hexagonobg';
 import './QuizPlayer.css';
 import { Timer, CheckCircle, XCircle } from '@phosphor-icons/react';
 
-// Define o tipo de uma Pergunta do quiz
+// Define a estrutura de uma Pergunta
 interface Question {
   id: number;
   question_text: string;
@@ -17,7 +17,6 @@ interface Question {
 const QuizPlayer: React.FC = () => {
   const { topic, difficulty } = useParams<{ topic: string; difficulty: string }>();
   const { token } = useAuth();
-  const navigate = useNavigate();
 
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -27,24 +26,39 @@ const QuizPlayer: React.FC = () => {
   const [timeLeft, setTimeLeft] = useState(30);
   const [quizFinished, setQuizFinished] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null); // Estado para controlar erros
 
   const isTimedMode = difficulty === 'temporizado';
   const isTrainingMode = difficulty === 'treinamento';
 
-  // Busca as perguntas na API quando o componente é montado
+  // Busca as perguntas na API
   useEffect(() => {
     const fetchQuestions = async () => {
-      // No modo temporizado/treinamento, busca mais perguntas
+      setLoading(true);
+      setError(null);
       const limit = (isTimedMode || isTrainingMode) ? 50 : 10;
+      // Garante que a dificuldade 'aleatório' seja enviada para os modos corretos
+      const difficultyParam = isTimedMode || isTrainingMode ? 'aleatório' : difficulty;
+
       try {
-        const response = await fetch(`https://lock-api.onrender.com/quiz/questions?topic=${topic}&difficulty=${difficulty}&limit=${limit}`, {
+        const response = await fetch(`https://lock-api.onrender.com/quiz/questions?topic=${topic}&difficulty=${difficultyParam}&limit=${limit}`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
-        if (!response.ok) throw new Error('Falha ao buscar perguntas');
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || 'Falha ao buscar perguntas do servidor.');
+        }
+
         const data = await response.json();
+        if (data.length === 0) {
+          throw new Error('Não foram encontradas perguntas para este modo. Verifique o tópico e a dificuldade.');
+        }
+
         setQuestions(data);
-      } catch (error) {
-        console.error(error);
+      } catch (err: any) {
+        setError(err.message);
+        console.error(err);
       } finally {
         setLoading(false);
       }
@@ -52,9 +66,9 @@ const QuizPlayer: React.FC = () => {
     fetchQuestions();
   }, [topic, difficulty, token, isTimedMode, isTrainingMode]);
 
-  // Lógica do cronômetro para o modo Temporizado
+  // Lógica do cronômetro
   useEffect(() => {
-    if (isTimedMode && !quizFinished && questions.length > 0) {
+    if (isTimedMode && !quizFinished && questions.length > 0 && !error) {
       if (timeLeft <= 0) {
         setQuizFinished(true);
         return;
@@ -62,13 +76,11 @@ const QuizPlayer: React.FC = () => {
       const timer = setInterval(() => setTimeLeft(prev => prev - 1), 1000);
       return () => clearInterval(timer);
     }
-  }, [isTimedMode, quizFinished, timeLeft, questions]);
+  }, [isTimedMode, quizFinished, timeLeft, questions, error]);
 
-  // Função para ir para a próxima pergunta
   const handleNextQuestion = useCallback(() => {
     setIsAnswered(false);
     setSelectedAnswer(null);
-
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(prev => prev + 1);
     } else {
@@ -76,33 +88,37 @@ const QuizPlayer: React.FC = () => {
     }
   }, [currentQuestionIndex, questions.length]);
 
-  // Função para lidar com a seleção de uma resposta
   const handleAnswerSelect = (index: number) => {
     if (isAnswered) return;
-
     setSelectedAnswer(index);
     setIsAnswered(true);
     const isCorrect = index === questions[currentQuestionIndex].correct_answer_index;
 
     if (isCorrect) {
       setScore(prev => prev + 1);
-      if (isTimedMode) {
-        setTimeLeft(prev => prev + 5); // Adiciona 5 segundos por resposta certa
-      }
+      if (isTimedMode) setTimeLeft(prev => prev + 5);
     }
-
-    setTimeout(() => {
-      handleNextQuestion();
-    }, 1500); // Espera 1.5s antes de ir para a próxima
+    setTimeout(() => handleNextQuestion(), 1500);
   };
-  
-  // Renderização
-  if (loading) return <div>Carregando...</div>;
-  if (questions.length === 0) return <div>Nenhuma pergunta encontrada.</div>;
 
-  const currentQuestion = questions[currentQuestionIndex];
+  // --- Telas de Renderização ---
 
-  // Tela de Fim de Jogo
+  if (loading) {
+    return <div className="quiz-player-container"><div>Carregando Quiz...</div></div>;
+  }
+
+  if (error) {
+    return (
+      <div className="quiz-player-container">
+        <div className="quiz-summary">
+          <h1>Ocorreu um Erro</h1>
+          <p className="error-message">{error}</p>
+          <Link to={`/quizzes/${topic}`} className="summary-btn secondary">Tentar Novamente</Link>
+        </div>
+      </div>
+    );
+  }
+
   if (quizFinished) {
     return (
       <div className="quiz-player-container">
@@ -119,13 +135,13 @@ const QuizPlayer: React.FC = () => {
     );
   }
 
-  // Tela do Jogo
+  const currentQuestion = questions[currentQuestionIndex];
   return (
     <div className="quiz-player-container">
       <HexagonBackground />
       <div className="quiz-box">
         <div className="quiz-player-header">
-          <h2>{topic}: Modo {difficulty}</h2>
+          <h2 style={{ textTransform: 'capitalize' }}>{topic}: Modo {difficulty}</h2>
           <div className="stats">
             <span>Pontuação: {score}</span>
             {isTimedMode && <span className="timer"><Timer size={20} /> {timeLeft}s</span>}
@@ -139,17 +155,14 @@ const QuizPlayer: React.FC = () => {
           {currentQuestion.options.map((option, index) => {
             const isCorrect = index === currentQuestion.correct_answer_index;
             let buttonClass = 'option-btn';
-            if (isAnswered && selectedAnswer === index) {
-              buttonClass += isCorrect ? ' correct' : ' incorrect';
-            } else if (isAnswered && isCorrect) {
-              buttonClass += ' correct';
+            if (isAnswered) {
+              if (selectedAnswer === index) buttonClass += isCorrect ? ' correct' : ' incorrect';
+              else if (isCorrect) buttonClass += ' correct';
             }
-
             return (
               <button key={index} className={buttonClass} onClick={() => handleAnswerSelect(index)} disabled={isAnswered}>
                 {option}
-                {isAnswered && selectedAnswer === index && (isCorrect ? <CheckCircle /> : <XCircle />)}
-                {isAnswered && selectedAnswer !== index && isCorrect && <CheckCircle />}
+                {isAnswered && (isCorrect ? <CheckCircle /> : (selectedAnswer === index && <XCircle />))}
               </button>
             );
           })}
