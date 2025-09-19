@@ -38,7 +38,9 @@ function App() {
           {/* Rotas Públicas */}
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
-          {/* ... outras rotas públicas ... */}
+          <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
 
           {/* Rotas Protegidas */}
           <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
