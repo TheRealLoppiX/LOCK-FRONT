@@ -15,45 +15,57 @@ import QuizBurpPage from './pages/QuizBurpPage';
 import QuizPlayer from './pages/QuizPlayer';
 
 // ===================================================================
-// PrivateRoute ATUALIZADA para lidar com o carregamento inicial
+// COMPONENTE PARA PROTEGER ROTAS
 // ===================================================================
 const PrivateRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
 
+  // Mostra uma tela de carregamento enquanto verifica a autenticação
   if (loading) {
-    // Mostra uma tela de carregamento enquanto verifica a autenticação
-    return <div>Verificando autenticação...</div>;
+    return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', backgroundColor: '#0d1117', color: 'white' }}>Carregando...</div>;
   }
 
   // Se não estiver carregando, decide se mostra a página ou redireciona
   return isAuthenticated ? children : <Navigate to="/login" />;
 };
-// ===================================================================
 
+// ===================================================================
+// COMPONENTE QUE CONTÉM AS ROTAS
+// ===================================================================
+function AppRoutes() {
+  return (
+    <Routes>
+      {/* Rotas Públicas */}
+      <Route path="/" element={<Home />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password/:token" element={<ResetPassword />} />
+
+      {/* Rotas Protegidas */}
+      <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+      <Route path="/settings" element={<PrivateRoute><Settings /></PrivateRoute>} />
+      <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
+      
+      {/* Rotas do Quiz */}
+      <Route path="/quizzes/burp-suite" element={<PrivateRoute><QuizBurpPage /></PrivateRoute>} />
+      <Route path="/quiz-player/:topic/:difficulty" element={<PrivateRoute><QuizPlayer /></PrivateRoute>} />
+    </Routes>
+  );
+}
+
+// ===================================================================
+// O COMPONENTE PRINCIPAL QUE ORGANIZA TUDO
+// ===================================================================
 function App() {
   return (
-    <AuthProvider>
-      <Router>
-        <Routes>
-          {/* Rotas Públicas */}
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
-
-          {/* Rotas Protegidas */}
-          <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
-          <Route path="/settings" element={<PrivateRoute><Settings /></PrivateRoute>} />
-          <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
-          
-          {/* Rotas do Quiz */}
-          <Route path="/quizzes/burp-suite" element={<PrivateRoute><QuizBurpPage /></PrivateRoute>} />
-          <Route path="/quiz-player/:topic/:difficulty" element={<PrivateRoute><QuizPlayer /></PrivateRoute>} />
-        </Routes>
-      </Router>
-    </AuthProvider>
+    <Router>      {/* 1. A "estrada" vem primeiro */}
+      <AuthProvider>  {/* 2. O "carro" com o GPS vem depois, já na estrada */}
+        <AppRoutes /> {/* 3. As rotas são renderizadas aqui dentro */}
+      </AuthProvider>
+    </Router>
   );
 }
 
 export default App;
+

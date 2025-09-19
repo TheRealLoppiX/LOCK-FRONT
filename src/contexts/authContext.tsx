@@ -1,7 +1,7 @@
-import React, { createContext, useState, useContext, useEffect, ReactNode, useCallback } from 'react';
+import React, { createContext, useState, useContext, useEffect, ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-// Define a aparência dos dados do utilizador
+// Define a aparência dos dados do usuário
 interface User {
   id: string;
   name: string;
@@ -9,12 +9,12 @@ interface User {
   avatar_url?: string;
 }
 
-// Define o que o nosso contexto vai fornecer para a aplicação
+// Define o que o nosso contexto vai fornecer
 interface AuthContextType {
   user: User | null;
   token: string | null;
   isAuthenticated: boolean;
-  loading: boolean; // Novo estado para controlar o carregamento inicial
+  loading: boolean;
   login: (userData: User, token: string) => void;
   logout: () => void;
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
@@ -25,23 +25,19 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true); // Começa como 'true'
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  // ======================================================
-  // A LÓGICA DE "MEMÓRIA" QUE FALTAVA
-  // ======================================================
+  // Efeito que "lembra" do usuário ao recarregar a página
   useEffect(() => {
     const storedUser = localStorage.getItem('lock-user');
     const storedToken = localStorage.getItem('lock-token');
-
     if (storedUser && storedToken) {
       setUser(JSON.parse(storedUser));
       setToken(storedToken);
     }
-    setLoading(false); // Termina o carregamento
+    setLoading(false);
   }, []);
-  // ======================================================
 
   const login = (userData: User, receivedToken: string) => {
     localStorage.setItem('lock-user', JSON.stringify(userData));
@@ -76,7 +72,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   );
 };
 
-// Hook personalizado para facilitar o uso do contexto
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
