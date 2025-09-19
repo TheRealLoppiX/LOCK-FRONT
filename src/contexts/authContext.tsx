@@ -14,9 +14,10 @@ interface AuthContextType {
   user: User | null;
   token: string | null;
   isAuthenticated: boolean;
+  loading: boolean; // Novo estado para controlar o carregamento inicial
   login: (userData: User, token: string) => void;
   logout: () => void;
-  setUser: React.Dispatch<React.SetStateAction<User | null>>; // Para atualizar o perfil
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -24,9 +25,24 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true); // Começa como 'true'
   const navigate = useNavigate();
 
-  // Função de login que guarda dados e busca o progresso
+  // ======================================================
+  // A LÓGICA DE "MEMÓRIA" QUE FALTAVA
+  // ======================================================
+  useEffect(() => {
+    const storedUser = localStorage.getItem('lock-user');
+    const storedToken = localStorage.getItem('lock-token');
+
+    if (storedUser && storedToken) {
+      setUser(JSON.parse(storedUser));
+      setToken(storedToken);
+    }
+    setLoading(false); // Termina o carregamento
+  }, []);
+  // ======================================================
+
   const login = (userData: User, receivedToken: string) => {
     localStorage.setItem('lock-user', JSON.stringify(userData));
     localStorage.setItem('lock-token', receivedToken);
@@ -35,7 +51,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     navigate('/dashboard');
   };
 
-  // Função de logout que limpa tudo
   const logout = () => {
     localStorage.removeItem('lock-user');
     localStorage.removeItem('lock-token');
@@ -51,6 +66,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         token, 
         setUser, 
         isAuthenticated: !!user && !!token,
+        loading,
         login, 
         logout
       }}
