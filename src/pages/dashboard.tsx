@@ -82,6 +82,12 @@ const Dashboard: React.FC = () => {
               <Link to="/quizzes/burp-suite" className="dropdown-item">
                 <Question size={20} /> Burp Suite
               </Link>
+              <Link to="/quizzes/tcpdump" className="dropdown-item">
+                <Question size={20} /> TCPDump
+              </Link>
+              <Link to="/quizzes/wireshark" className="dropdown-item">
+                <Question size={20} /> Wireshark
+              </Link>
             </div>
           </div>
         </div>
