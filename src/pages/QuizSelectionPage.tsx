@@ -1,16 +1,18 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import HexagonBackground from '../components/hexagonobg';
 import { Timer, Brain, GraduationCap, Trophy, Barbell } from '@phosphor-icons/react';
-import './QuizPage.css';
+import './QuizPage.css'; // Estilo compartilhado para as páginas de quiz
 
-const QuizBurpPage: React.FC = () => {
+const QuizSelectionPage: React.FC = () => {
+  const { topic } = useParams<{ topic: string }>();
+  
   const modes = [
     { name: 'Fácil', difficulty: 'fácil', icon: <GraduationCap size={32} />, description: '10 perguntas para iniciantes.' },
     { name: 'Médio', difficulty: 'médio', icon: <Brain size={32} />, description: '10 perguntas de nível intermediário.' },
     { name: 'Difícil', difficulty: 'difícil', icon: <Trophy size={32} />, description: '10 perguntas para desafiar seus conhecimentos.' },
-    { name: 'Temporizado', difficulty: 'aleatório', icon: <Timer size={32} />, description: 'Responda o máximo que puder contra o relógio.' },
-    { name: 'Treinamento', difficulty: 'aleatório', icon: <Barbell size={32} />, description: 'Pratique sem pressão de tempo ou pontuação.' },
+    { name: 'Temporizado', difficulty: 'temporizado', icon: <Timer size={32} />, description: 'Responda o máximo que puder contra o relógio.' },
+    { name: 'Treinamento', difficulty: 'treinamento', icon: <Barbell size={32} />, description: 'Pratique sem pressão de tempo ou pontuação.' },
   ];
 
   return (
@@ -18,14 +20,14 @@ const QuizBurpPage: React.FC = () => {
       <HexagonBackground />
       <div className="quiz-content">
         <header className="quiz-header">
-          <h1>Quiz: Burp Suite</h1>
+          <h1 style={{ textTransform: 'capitalize' }}>Quiz: {topic?.replace('-', ' ')}</h1>
           <p>Selecione um modo de jogo para começar.</p>
         </header>
         <main className="quiz-mode-grid">
           {modes.map((mode) => (
             <Link 
               key={mode.name} 
-              to={`/quiz-player/burp-suite/${mode.difficulty}`}
+              to={`/quiz/player/${topic}/${mode.difficulty}`}
               className="mode-card"
             >
               <div className="mode-icon">{mode.icon}</div>
@@ -40,4 +42,4 @@ const QuizBurpPage: React.FC = () => {
   );
 };
 
-export default QuizBurpPage;
+export default QuizSelectionPage;

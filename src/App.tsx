@@ -11,8 +11,6 @@ import ResetPassword from './pages/resetpassword';
 import Dashboard from './pages/dashboard';
 import Settings from './pages/settings';
 import Profile from './pages/profile';
-import QuizBurpPage from './pages/QuizBurpPage';
-import QuizPlayer from './pages/QuizPlayer';
 
 // ===================================================================
 // COMPONENTE PARA PROTEGER ROTAS
@@ -48,8 +46,7 @@ function AppRoutes() {
       <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
       
       {/* Rotas do Quiz */}
-      <Route path="/quizzes/burp-suite" element={<PrivateRoute><QuizBurpPage /></PrivateRoute>} />
-      <Route path="/quiz-player/:topic/:difficulty" element={<PrivateRoute><QuizPlayer /></PrivateRoute>} />
+
     </Routes>
   );
 }
