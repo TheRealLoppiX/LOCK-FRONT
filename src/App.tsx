@@ -11,6 +11,8 @@ import ResetPassword from './pages/resetpassword';
 import Dashboard from './pages/dashboard';
 import Settings from './pages/settings';
 import Profile from './pages/profile';
+import QuizSelectionPage from './pages/QuizSelectionPage'; 
+import QuizPlayer from './pages/QuizPlayer';       
 
 // ===================================================================
 // COMPONENTE PARA PROTEGER ROTAS
@@ -46,6 +48,8 @@ function AppRoutes() {
       <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
       
       {/* Rotas do Quiz */}
+      <Route path="/quizzes/:topic" element={<PrivateRoute><QuizSelectionPage /></PrivateRoute>} />
+      <Route path="/quiz/player/:topic/:difficulty" element={<PrivateRoute><QuizPlayer /></PrivateRoute>} />
 
     </Routes>
   );
