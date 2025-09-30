@@ -7,6 +7,7 @@ import {
 } from '@phosphor-icons/react';
 import HexagonBackground from '../components/hexagonobg';
 import './dashboard.css';
+import logoLock from '../assets/Logo lock.png';
 
 const Dashboard: React.FC = () => {
   const { user, logout } = useAuth();
@@ -99,7 +100,9 @@ const Dashboard: React.FC = () => {
           {/* ====================================================== */}
           <div className="dashboard-card">
             <div className="dropdown-header" onClick={() => setIsAboutUsOpen(!isAboutUsOpen)}>
-              <div className="card-icon"><Info weight="bold" /></div>
+              <div className="card-icon">
+                <img src={logoLock} alt="Logo LOCK" className="card-logo-icon" />
+              </div>
               <div className="card-content">
                 <h2>Sobre o LOCK</h2>
                 <p>Conheça o projeto.</p>
