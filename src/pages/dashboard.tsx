@@ -60,9 +60,7 @@ const Dashboard: React.FC = () => {
               <CaretDown weight="bold" className={`caret-icon ${isLabsOpen ? 'open' : ''}`} />
             </div>
             <div className={`dropdown-content ${isLabsOpen ? 'open' : ''}`}>
-              <Link to="/labs/sql-injection" className="dropdown-item">SQL Injection</Link>
-              <Link to="/labs/brute-force" className="dropdown-item">Brute Force</Link>
-              <Link to="/labs/xss" className="dropdown-item">Cross-Site Scripting (XSS)</Link>
+              <Link to="/labs/burp-suite" className="dropdown-item">Burp Suite</Link>
             </div>
           </div>
 
@@ -111,7 +109,7 @@ const Dashboard: React.FC = () => {
             <div className={`dropdown-content ${isAboutUsOpen ? 'open' : ''}`}>
               <div className="about-us-text">
                 <p>O Laboratório Online de Cibersegurança com Kali Linux (LOCK) nasce em meio à necessidade de um meio de pesquisa, estudo e aprendizagem prática sobre segurança e pentesting, principalmente na realidade do Instituto Federal do Sertão Pernambucano (IFSertão-PE) - Campus Salgueiro.</p>
-                <p>A equipe, composta por membros do Campus Salgueiro do IF Sertão-PE, tem como objetivo investigar, pesquisar, desenvolver, comprovar e aplicar tecnologias relacionadas ao contexto da cibersegurança em estado da atualidade.</p>
+                <p>A equipe, composta por membros do Campus Salgueiro do IFSertão-PE, tem como objetivo investigar, pesquisar, desenvolver, comprovar e aplicar tecnologias relacionadas ao contexto da cibersegurança em estado da atualidade.</p>
                 <p>Diante disso, o grupo busca meios de transformar a cibersegurança em uma aprendizagem prática e dinâmica para incentivar a propagação do conhecimento, mitigar vulnerabilidades comuns, promover boas práticas de segurança da informação e preparar discentes e docentes para enfrentar cenários reais de ameaças cibernéticas.</p>
               </div>
             </div>

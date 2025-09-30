@@ -12,7 +12,11 @@ import Dashboard from './pages/dashboard';
 import Settings from './pages/settings';
 import Profile from './pages/profile';
 import QuizSelectionPage from './pages/QuizSelectionPage'; 
-import QuizPlayer from './pages/QuizPlayer';       
+import QuizPlayer from './pages/QuizPlayer';     
+
+// Rodapé 
+import Footer from './components/Footer';
+
 
 // ===================================================================
 // COMPONENTE PARA PROTEGER ROTAS
@@ -60,13 +64,17 @@ function AppRoutes() {
 // ===================================================================
 function App() {
   return (
-    <Router>      {/* 1. A "estrada" vem primeiro */}
-      <AuthProvider>  {/* 2. O "carro" com o GPS vem depois, já na estrada */}
-        <AppRoutes /> {/* 3. As rotas são renderizadas aqui dentro */}
+    <Router>
+      <AuthProvider>
+        <div className="app-container">
+          <main className="main-content">
+            <AppRoutes />
+          </main>
+          <Footer />
+        </div>
       </AuthProvider>
     </Router>
   );
 }
-
 export default App;
 
