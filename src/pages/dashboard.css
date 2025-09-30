@@ -125,3 +125,13 @@
     background-color: var(--accent-color-translucent);
     color: var(--text-primary);
 }
+.card-icon {
+  /* Remove a cor de fundo para que a imagem apareça sem o círculo colorido */
+  background-color: transparent; 
+}
+
+.card-logo-icon {
+  width: 100%; /* Faz a imagem ocupar todo o espaço do container do ícone */
+  height: 100%;
+  object-fit: contain; /* Garante que a imagem caiba sem distorcer */
+}
