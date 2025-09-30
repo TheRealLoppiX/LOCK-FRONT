@@ -106,8 +106,10 @@ const Dashboard: React.FC = () => {
             <div className="dropdown-header">
               <div className="card-icon"><Info weight="bold" /></div>
               <div className="card-content">
-                <h2>Sobre Nós</h2>
-                <p>Conheça nossa missão de democratizar a educação em cibersegurança.</p>
+                <h2>Sobre o LOCK</h2>
+                <p> O Laboratório Online de Cibersegurança com Kali Linux (LOCK) nasce em meio à necessidade de um meio de pesquisa, estudo e aprendizagem prática sobre segurança e pentesting, principalmente na realidade do Instituto Federal do Sertão Pernambucano (IF Sertão-PE) - Campus Salgueiro, cujo escopo é compartilhar os resultados iniciais do projeto de pesquisa com mesmo nome.
+      A equipe, composta por membros do Campus Salgueiro do IF Sertão-PE  tem como objetivo investigar, pesquisar, desenvolver, comprovar e aplicar tecnologias relacionadas ao contexto da cibersegurança em estado da atualidade. 
+   Diante disso, o grupo busca meios de transformar a cibersegurança em uma aprendizagem prática e dinâmica para incentivar a propagação do conhecimento e mitigar vulnerabilidades comuns, promover boas práticas de segurança da informação e preparar discentes e docentes para enfrentar cenários reais de ameaças cibernéticas.</p>
               </div>
             </div>
           </div>
