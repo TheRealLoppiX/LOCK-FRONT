@@ -135,3 +135,41 @@
   height: 100%;
   object-fit: contain; /* Garante que a imagem caiba sem distorcer */
 }
+.card-title-with-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Espaço entre o título e o logo */
+}
+
+.card-title-with-logo h2 {
+  margin: 0;
+}
+
+.header-logo-icon {
+  height: 28px;
+  /* Aplica as duas animações: a de rotação e a de brilho */
+  animation: 
+    spin 10s linear infinite,
+    glow 3s ease-in-out infinite;
+}
+
+/* Animação de Rotação */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* NOVA Animação de Brilho (Glow) */
+@keyframes glow {
+  0%, 100% {
+    /* O drop-shadow é melhor que o box-shadow para PNGs, pois segue o contorno da imagem */
+    filter: drop-shadow(0 0 4px var(--accent-color-translucent));
+  }
+  50% {
+    filter: drop-shadow(0 0 12px var(--accent-color));
+  }
+}
