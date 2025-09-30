@@ -3,7 +3,7 @@ import { useAuth } from '../contexts/authContext';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
   CaretDown, Gear, SignOut, Flask, BookOpen, Exam, 
-  FilePdf, Article, Question 
+  FilePdf, Article, Question, Info // Adicionado o ícone "Info"
 } from '@phosphor-icons/react';
 import HexagonBackground from '../components/hexagonobg';
 import './dashboard.css';
@@ -75,19 +75,10 @@ const Dashboard: React.FC = () => {
               </div>
               <CaretDown weight="bold" className={`caret-icon ${isQuizzesOpen ? 'open' : ''}`} />
             </div>
-            {/* ====================================================== */}
-            {/* CORREÇÃO APLICADA AQUI ABAIXO                     */}
-            {/* ====================================================== */}
             <div className={`dropdown-content ${isQuizzesOpen ? 'open' : ''}`}>
-              <Link to="/quizzes/burp-suite" className="dropdown-item">
-                <Question size={20} /> Burp Suite
-              </Link>
-              <Link to="/quizzes/tcpdump" className="dropdown-item">
-                <Question size={20} /> TCPDump
-              </Link>
-              <Link to="/quizzes/wireshark" className="dropdown-item">
-                <Question size={20} /> Wireshark
-              </Link>
+              <Link to="/quizzes/burp-suite" className="dropdown-item"><Question size={20} /> Burp Suite</Link>
+              <Link to="/quizzes/tcpdump" className="dropdown-item"><Question size={20} /> TCPDump</Link>
+              <Link to="/quizzes/wireshark" className="dropdown-item"><Question size={20} /> Wireshark</Link>
             </div>
           </div>
         </div>
@@ -106,6 +97,21 @@ const Dashboard: React.FC = () => {
               <a href="#" className="dropdown-item"><Article size={20} /> Entendendo XSS (Artigo)</a>
             </div>
           </div>
+
+          {/* ====================================================== */}
+          {/* NOVO CARD "SOBRE NÓS" ADICIONADO AQUI ABAIXO         */}
+          {/* ====================================================== */}
+          <div className="dashboard-card">
+            {/* Note que este não é expansível, então não tem onClick */}
+            <div className="dropdown-header">
+              <div className="card-icon"><Info weight="bold" /></div>
+              <div className="card-content">
+                <h2>Sobre Nós</h2>
+                <p>Conheça nossa missão de democratizar a educação em cibersegurança.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </main>
     </div>
