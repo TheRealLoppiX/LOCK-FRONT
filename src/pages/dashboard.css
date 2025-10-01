@@ -173,3 +173,7 @@
     filter: drop-shadow(0 0 12px var(--accent-color));
   }
 }
+.dashboard-card-link {
+  text-decoration: none; /* Remove o sublinhado do link */
+  color: inherit; /* Mantém a cor do texto original */
+}

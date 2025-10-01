@@ -83,17 +83,17 @@ const Dashboard: React.FC = () => {
         {/* Coluna da Direita */}
         <div className="right-column">
           {/* Card de Materiais de Estudo */}
-          <div className="dashboard-card">
-            <div className="dropdown-header" onClick={() => setIsMaterialsOpen(!isMaterialsOpen)}>
-              <div className="card-icon"><BookOpen weight="bold" /></div>
-              <div className="card-content"><h2>Materiais de Estudo</h2><p>Acesse guias e artigos para aprofundar.</p></div>
-              <CaretDown weight="bold" className={`caret-icon ${isMaterialsOpen ? 'open' : ''}`} />
+          <Link to="/biblioteca" className="dashboard-card-link">
+            <div className="dashboard-card">
+              <div className="dropdown-header">
+                <div className="card-icon"><BookOpen weight="bold" /></div>
+                <div className="card-content">
+                  <h2>Biblioteca</h2>
+                  <p>Acesse guias, artigos e livros para aprofundar seu conhecimento.</p>
+                </div>
+              </div>
             </div>
-            <div className={`dropdown-content ${isMaterialsOpen ? 'open' : ''}`}>
-              <a href="#" className="dropdown-item"><FilePdf size={20} /> Guia de SQL Injection (PDF)</a>
-              <a href="#" className="dropdown-item"><Article size={20} /> Entendendo XSS (Artigo)</a>
-            </div>
-          </div>
+          </Link>
 
           {/* ====================================================== */}
           {/* CARD "SOBRE NÓS" AGORA É EXPANSÍVEL E FORMATADO      */}

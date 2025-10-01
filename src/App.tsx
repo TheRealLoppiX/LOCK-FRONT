@@ -12,7 +12,8 @@ import Dashboard from './pages/dashboard';
 import Settings from './pages/settings';
 import Profile from './pages/profile';
 import QuizSelectionPage from './pages/QuizSelectionPage'; 
-import QuizPlayer from './pages/QuizPlayer';     
+import QuizPlayer from './pages/QuizPlayer'; 
+import Biblioteca from './pages/Biblioteca';    
 
 // Rodapé 
 import Footer from './components/Footer';
@@ -50,6 +51,7 @@ function AppRoutes() {
       <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
       <Route path="/settings" element={<PrivateRoute><Settings /></PrivateRoute>} />
       <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
+      <Route path="/biblioteca" element={<PrivateRoute><Biblioteca /></PrivateRoute>} />
       
       {/* Rotas do Quiz */}
       <Route path="/quizzes/:topic" element={<PrivateRoute><QuizSelectionPage /></PrivateRoute>} />

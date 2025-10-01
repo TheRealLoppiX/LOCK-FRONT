@@ -1,0 +1,87 @@
+.biblioteca-container { min-height: 100vh; padding: 40px; box-sizing: border-box; }
+.biblioteca-content { max-width: 1200px; margin: 0 auto; position: relative; z-index: 2; }
+.biblioteca-header { text-align: center; margin-bottom: 50px; }
+.biblioteca-header h1 { font-family: 'Space Grotesk', sans-serif; color: var(--accent-color); font-size: 2.8rem; }
+.biblioteca-header p { font-size: 1.1rem; color: var(--text-secondary); }
+
+/* Estilo das Estantes */
+.estante-section {
+  margin-bottom: 50px;
+}
+.estante-section h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 10px;
+  margin-bottom: 25px;
+}
+
+/* Estilo da Seção "Continue Estudando" */
+.continue-estudando {
+  background: var(--background-secondary);
+  border: 1px solid var(--accent-color);
+  border-radius: 15px;
+  padding: 30px;
+  margin-bottom: 60px;
+}
+.continue-estudando h2 {
+  border-color: var(--accent-color-translucent);
+}
+
+.materiais-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 25px; }
+.materiais-grid-single { display: grid; grid-template-columns: 1fr; }
+
+/* Card de Material */
+.material-card {
+  background: var(--background-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+}
+.material-card:hover { transform: translateY(-5px); border-color: var(--accent-color); box-shadow: 0 0 15px var(--accent-color-translucent); }
+
+.material-link-main {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  padding: 25px;
+  text-decoration: none;
+  flex-grow: 1;
+}
+
+.material-icon { color: var(--accent-color); font-size: 2rem; margin-top: 5px; }
+.material-info h2 { color: var(--text-primary); font-size: 1.3rem; margin: 5px 0 10px 0; }
+.material-info p { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.5; margin: 0; }
+.material-tipo { background-color: var(--accent-color-translucent); color: var(--accent-color); padding: 4px 8px; border-radius: 5px; font-size: 0.8rem; font-weight: bold; }
+
+/* Seletor de Status */
+.material-status-changer {
+  border-top: 1px solid var(--border-color);
+  padding: 10px 25px;
+  position: relative;
+}
+.material-status-changer select {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-weight: bold;
+  cursor: pointer;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+.select-caret {
+  position: absolute;
+  right: 25px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--accent-color);
+  pointer-events: none;
+}
+
+.back-link { display: block; margin-top: 40px; color: var(--text-secondary); text-decoration: none; text-align: center; }
