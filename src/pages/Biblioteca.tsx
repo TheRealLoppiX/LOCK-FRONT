@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/authContext';
 import HexagonBackground from '../components/hexagonobg';
-import { FilePdf, Article, Book, Link as LinkIcon, CaretDown } from '@phosphor-icons/react';
+import { FilePdf, Article, Book, Link as LinkIcon, CaretDown, PlusCircle } from '@phosphor-icons/react';
 import './Biblioteca.css';
 
 // Define a estrutura de um Material de estudo
@@ -15,17 +15,18 @@ interface Material {
   status: 'A seguir' | 'Lendo' | 'Parado' | 'Lido' | null;
 }
 
-// Componente para um card de material individual
-const MaterialCard: React.FC<{ material: Material; onStatusChange: (id: string, status: string) => void; onMaterialClick: (id: string) => void; }> = ({ material, onStatusChange, onMaterialClick }) => {
-  const getIcon = (type: string) => {
+// Função auxiliar para pegar o ícone correto
+const getIcon = (type: string) => {
     switch (type) {
-      case 'PDF': return <FilePdf size={32} />;
-      case 'Artigo': return <Article size={32} />;
-      case 'Livro': return <Book size={32} />;
-      default: return <LinkIcon size={32} />;
+      case 'PDF': return <FilePdf size={24} />;
+      case 'Artigo': return <Article size={24} />;
+      case 'Livro': return <Book size={24} />;
+      default: return <LinkIcon size={24} />;
     }
-  };
+};
 
+// Componente para um card de material individual (usado na coluna da direita)
+const MaterialCard: React.FC<{ material: Material; onStatusChange: (id: string, status: string) => void; onMaterialClick: (id: string) => void; }> = ({ material, onStatusChange, onMaterialClick }) => {
   return (
     <div className="material-card">
       <a href={material.url} target="_blank" rel="noopener noreferrer" className="material-link-main" onClick={() => onMaterialClick(material.id)}>
@@ -58,6 +59,7 @@ const Biblioteca: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Função para buscar os dados da API
   const fetchData = async () => {
     if (!token) {
       setError("Autenticação necessária.");
@@ -88,7 +90,6 @@ const Biblioteca: React.FC = () => {
 
   // Função para mudar o status de um material
   const handleStatusChange = async (materialId: string, status: string) => {
-    // Atualização Otimista: muda na tela primeiro
     const originalMaterials = [...allMaterials];
     const updatedMaterials = allMaterials.map(m => m.id === materialId ? { ...m, status: status as Material['status'] } : m);
     setAllMaterials(updatedMaterials);
@@ -103,7 +104,6 @@ const Biblioteca: React.FC = () => {
         body: JSON.stringify({ materialId, status }),
       });
     } catch (err) {
-      // Se der erro, reverte para o estado original
       setAllMaterials(originalMaterials);
       alert('Falha ao atualizar o status. Tente novamente.');
     }
@@ -123,7 +123,8 @@ const Biblioteca: React.FC = () => {
 
   // Separa os materiais em listas para cada estante
   const estantes = useMemo(() => {
-    const aSeguir = allMaterials.filter(m => m.status === 'A seguir' || m.status === null);
+    // CORRIGIDO: "A seguir" agora só inclui itens explicitamente adicionados.
+    const aSeguir = allMaterials.filter(m => m.status === 'A seguir');
     const lendo = allMaterials.filter(m => m.status === 'Lendo');
     const parado = allMaterials.filter(m => m.status === 'Parado');
     const lido = allMaterials.filter(m => m.status === 'Lido');
@@ -139,48 +140,92 @@ const Biblioteca: React.FC = () => {
       <div className="biblioteca-content">
         <header className="biblioteca-header">
           <h1>Biblioteca de Materiais</h1>
-          <p>Organize seus estudos e continue de onde parou.</p>
+          <p>Explore os conteúdos e organize seus estudos.</p>
         </header>
 
-        {/* Seção "Continue Estudando" */}
-        {lastAccessed && (
-          <section className="estante-section continue-estudando">
-            <h2>Continue Estudando</h2>
-            <div className="materiais-grid-single">
-              <MaterialCard material={lastAccessed} onStatusChange={handleStatusChange} onMaterialClick={handleMaterialClick} />
+        {/* NOVA ESTRUTURA DE LAYOUT EM DUAS COLUNAS */}
+        <div className="biblioteca-layout">
+          
+          {/* --- COLUNA DA ESQUERDA: EXPLORAR --- */}
+          <aside className="coluna-explorar">
+            <h2>Explorar Conteúdos</h2>
+            <div className="lista-explorar">
+              {allMaterials.map(material => (
+                <div key={material.id} className="explorar-item">
+                  <div className="explorar-item-info">
+                    <span className="explorar-item-icon">{getIcon(material.type)}</span>
+                    <a href={material.url} target="_blank" rel="noopener noreferrer" onClick={() => handleMaterialClick(material.id)}>
+                      {material.title}
+                    </a>
+                  </div>
+                  <button 
+                    className="add-button" 
+                    title="Adicionar à lista 'A Seguir'"
+                    onClick={() => handleStatusChange(material.id, 'A seguir')}
+                  >
+                    <PlusCircle size={20} />
+                  </button>
+                </div>
+              ))}
             </div>
-          </section>
-        )}
+          </aside>
 
-        {/* Estantes de Livros */}
-        <section className="estante-section">
-          <h2>A Seguir ({estantes.aSeguir.length})</h2>
-          <div className="materiais-grid">
-            {estantes.aSeguir.map(m => <MaterialCard key={m.id} material={m} onStatusChange={handleStatusChange} onMaterialClick={handleMaterialClick} />)}
-          </div>
-        </section>
+          {/* --- COLUNA DA DIREITA: MINHAS ESTANTES --- */}
+          <main className="coluna-estantes">
+            {/* Seção "Continue Estudando" */}
+            {lastAccessed && (
+              <section className="estante-section continue-estudando">
+                <h2>Continue Estudando</h2>
+                <div className="materiais-grid">
+                  <MaterialCard material={lastAccessed} onStatusChange={handleStatusChange} onMaterialClick={handleMaterialClick} />
+                </div>
+              </section>
+            )}
 
-        <section className="estante-section">
-          <h2>Lendo ({estantes.lendo.length})</h2>
-          <div className="materiais-grid">
-            {estantes.lendo.map(m => <MaterialCard key={m.id} material={m} onStatusChange={handleStatusChange} onMaterialClick={handleMaterialClick} />)}
-          </div>
-        </section>
+            {/* Estantes Pessoais */}
+            <section className="estante-section">
+              <h2>A Seguir ({estantes.aSeguir.length})</h2>
+              <div className="materiais-grid">
+                {estantes.aSeguir.length > 0 ? 
+                  estantes.aSeguir.map(m => <MaterialCard key={m.id} material={m} onStatusChange={handleStatusChange} onMaterialClick={handleMaterialClick} />) :
+                  <p className="estante-vazia">Adicione materiais da lista "Explorar" para começar.</p>
+                }
+              </div>
+            </section>
 
-        <section className="estante-section">
-          <h2>Parado ({estantes.parado.length})</h2>
-          <div className="materiais-grid">
-            {estantes.parado.map(m => <MaterialCard key={m.id} material={m} onStatusChange={handleStatusChange} onMaterialClick={handleMaterialClick} />)}
-          </div>
-        </section>
+            <section className="estante-section">
+              <h2>Lendo ({estantes.lendo.length})</h2>
+              <div className="materiais-grid">
+                {estantes.lendo.length > 0 ?
+                  estantes.lendo.map(m => <MaterialCard key={m.id} material={m} onStatusChange={handleStatusChange} onMaterialClick={handleMaterialClick} />) :
+                  <p className="estante-vazia">Mova um item para cá para marcá-lo como "Lendo".</p>
+                }
+              </div>
+            </section>
+            
+            <section className="estante-section">
+              <h2>Parado ({estantes.parado.length})</h2>
+              <div className="materiais-grid">
+                {estantes.parado.length > 0 ?
+                  estantes.parado.map(m => <MaterialCard key={m.id} material={m} onStatusChange={handleStatusChange} onMaterialClick={handleMaterialClick} />) :
+                  <p className="estante-vazia">Mova um item para cá se tiver dado uma pausa.</p>
+                }
+              </div>
+            </section>
+
+            <section className="estante-section">
+              <h2>Lido ({estantes.lido.length})</h2>
+              <div className="materiais-grid">
+                {estantes.lido.length > 0 ?
+                  estantes.lido.map(m => <MaterialCard key={m.id} material={m} onStatusChange={handleStatusChange} onMaterialClick={handleMaterialClick} />) :
+                  <p className="estante-vazia">Parabéns! Mova um item para cá após concluí-lo.</p>
+                }
+              </div>
+            </section>
+
+          </main>
+        </div>
         
-        <section className="estante-section">
-          <h2>Lido ({estantes.lido.length})</h2>
-          <div className="materiais-grid">
-            {estantes.lido.map(m => <MaterialCard key={m.id} material={m} onStatusChange={handleStatusChange} onMaterialClick={handleMaterialClick} />)}
-          </div>
-        </section>
-
         <Link to="/dashboard" className="back-link">← Voltar para a Dashboard</Link>
       </div>
     </div>
