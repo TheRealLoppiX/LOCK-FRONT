@@ -5,11 +5,13 @@ import HexagonBackground from '../components/hexagonobg';
 import './QuizPlayer.css';
 import { Timer, CheckCircle, XCircle } from '@phosphor-icons/react';
 
+// A interface agora inclui a propriedade opcional 'image_url'
 interface Question {
   id: number;
   question_text: string;
   options: string[];
   correct_answer_index: number;
+  image_url?: string; // <-- NOVA PROPRIEDADE (o '?' a torna opcional)
 }
 
 const QuizPlayer: React.FC = () => {
@@ -143,9 +145,22 @@ const QuizPlayer: React.FC = () => {
             {!isTimedMode && !isTrainingMode && <span>Pergunta {currentQuestionIndex + 1}/{questions.length}</span>}
           </div>
         </div>
+        
         <div className="question-area">
+          {/* ====================================================== */}
+          {/* ALTERAÇÃO APLICADA AQUI                                */}
+          {/* Renderiza a imagem APENAS SE a URL existir na questão */}
+          {/* ====================================================== */}
+          {currentQuestion.image_url && (
+            <img 
+              src={currentQuestion.image_url} 
+              alt="Ilustração da questão" 
+              className="question-image" 
+            />
+          )}
           <h3>{currentQuestion.question_text}</h3>
         </div>
+
         <div className="options-grid">
           {currentQuestion.options.map((option, index) => {
             const isCorrect = index === currentQuestion.correct_answer_index;

@@ -116,3 +116,18 @@
     color: #ff4d4d;
     margin-top: 20px;
 }
+/* Centraliza o conteúdo da área da questão */
+.question-area {
+  text-align: center;
+  margin: 30px 0;
+}
+
+/* Estilo para a nova imagem da questão */
+.question-image {
+  max-width: 100%;
+  max-height: 300px; /* Evita que imagens muito altas dominem a tela */
+  border-radius: 8px;
+  margin-bottom: 20px;
+  object-fit: contain; /* Garante que a imagem escale sem distorcer */
+  border: 1px solid var(--border-color);
+}

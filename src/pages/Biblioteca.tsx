@@ -139,7 +139,7 @@ const Biblioteca: React.FC = () => {
       <HexagonBackground />
       <div className="biblioteca-content">
         <header className="biblioteca-header">
-          <h1>Biblioteca de Materiais</h1>
+          <h1>BIBLIOTECA</h1>
           <p>Explore os conteúdos e organize seus estudos.</p>
         </header>
 

@@ -75,7 +75,7 @@ const Dashboard: React.FC = () => {
             <div className={`dropdown-content ${isQuizzesOpen ? 'open' : ''}`}>
               <Link to="/quizzes/burp-suite" className="dropdown-item"><Question size={20} /> Burp Suite</Link>
               <Link to="/quizzes/tcpdump" className="dropdown-item"><Question size={20} /> TCPDump</Link>
-              <Link to="/quizzes/wireshark" className="dropdown-item"><Question size={20} /> Wireshark</Link>
+              <Link to="/quizzes/nmap" className="dropdown-item"><Question size={20} /> NMap</Link>
             </div>
           </div>
         </div>
