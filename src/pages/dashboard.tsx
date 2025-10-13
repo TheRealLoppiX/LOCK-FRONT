@@ -57,11 +57,16 @@ const Dashboard: React.FC = () => {
           <div className="dashboard-card">
             <div className="dropdown-header" onClick={() => setIsLabsOpen(!isLabsOpen)}>
               <div className="card-icon"><Flask weight="bold" /></div>
-              <div className="card-content"><h2>Laboratórios</h2><p>Coloque seus conhecimentos em prática.</p></div>
+              <div className="card-content">
+                <h2>Laboratórios</h2>
+                <p>Coloque seus conhecimentos em prática.</p>
+              </div>
               <CaretDown weight="bold" className={`caret-icon ${isLabsOpen ? 'open' : ''}`} />
             </div>
             <div className={`dropdown-content ${isLabsOpen ? 'open' : ''}`}>
-              <Link to="/labs/burp-suite" className="dropdown-item">Burp Suite</Link>
+              <Link to="/labs/sql-injection" className="dropdown-item">SQL Injection</Link>
+              <Link to="/labs/brute-force" className="dropdown-item">Brute Force</Link>
+              <Link to="/labs/xss" className="dropdown-item">Cross-Site Scripting (XSS)</Link>
             </div>
           </div>
 

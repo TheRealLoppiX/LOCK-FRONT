@@ -13,7 +13,11 @@ import Settings from './pages/settings';
 import Profile from './pages/profile';
 import QuizSelectionPage from './pages/QuizSelectionPage'; 
 import QuizPlayer from './pages/QuizPlayer'; 
-import Biblioteca from './pages/Biblioteca';    
+import Biblioteca from './pages/Biblioteca';  
+import LabSelectionPage from './pages/labs/LabSelectionPage';
+import SqlInjectionLab from './pages/labs/SqlInjectionLab';
+import BruteForceLab from './pages/labs/BruteForceLab';
+import XSSLab from './pages/labs/XSSLab';  
 
 // Rodapé 
 import Footer from './components/Footer';
@@ -56,6 +60,12 @@ function AppRoutes() {
       {/* Rotas do Quiz */}
       <Route path="/quizzes/:topic" element={<PrivateRoute><QuizSelectionPage /></PrivateRoute>} />
       <Route path="/quiz/player/:topic/:difficulty" element={<PrivateRoute><QuizPlayer /></PrivateRoute>} />
+
+      {/* Rotas dos Laboratórios */}
+      <Route path="/labs/:topic" element={<PrivateRoute><LabSelectionPage /></PrivateRoute>} />
+      <Route path="/labs/sql-injection/1" element={<PrivateRoute><SqlInjectionLab /></PrivateRoute>} />
+      <Route path="/labs/brute-force/1" element={<PrivateRoute><BruteForceLab /></PrivateRoute>} />
+      <Route path="/labs/xss/1" element={<PrivateRoute><XSSLab /></PrivateRoute>} />
 
     </Routes>
   );

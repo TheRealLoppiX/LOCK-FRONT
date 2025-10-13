@@ -1,0 +1,24 @@
+/* Estilo para as Páginas de Seleção */
+.lab-selection-container { min-height: 100vh; padding: 40px; }
+.lab-selection-content { max-width: 900px; margin: 0 auto; text-align: center; position: relative; z-index: 2; }
+.lab-selection-header h1 { font-family: 'Space Grotesk', sans-serif; color: var(--accent-color); font-size: 2.8rem; }
+.lab-selection-grid { display: grid; grid-template-columns: 1fr; gap: 20px; margin-top: 40px; }
+.lab-selection-card { display: block; background: var(--background-secondary); border: 1px solid var(--border-color); border-radius: 12px; padding: 25px; text-decoration: none; text-align: left; transition: all 0.3s ease; }
+.lab-selection-card:hover { transform: translateY(-5px); border-color: var(--accent-color); }
+.lab-selection-card h2 { color: var(--text-primary); margin-top: 0; }
+.lab-selection-card p { color: var(--text-secondary); }
+.lab-action { display: block; margin-top: 20px; color: var(--accent-color); font-weight: 600; }
+.back-link { display: inline-block; margin-top: 30px; color: var(--text-secondary); text-decoration: none; }
+
+/* Estilo para a Página do Laboratório em si */
+.lab-page-container { display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+.lab-content { background: var(--background-secondary); border-radius: 15px; padding: 40px; max-width: 500px; width: 100%; text-align: center; border: 1px solid var(--border-color); }
+.lab-content h1 { color: var(--accent-color); margin-top: 0; }
+.lab-objective { color: var(--text-secondary); margin-bottom: 30px; line-height: 1.6; }
+.lab-form { display: flex; flex-direction: column; gap: 15px; }
+.lab-form input { background-color: var(--background-primary); border: 1px solid var(--border-color); padding: 12px; border-radius: 8px; color: var(--text-primary); font-size: 1rem; }
+.lab-form button { background-color: var(--accent-color); color: #fff; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: bold; }
+.lab-form button:disabled { background-color: #555; cursor: not-allowed; }
+.result-message { margin-top: 20px; padding: 10px; border-radius: 8px; }
+.result-message.success { background-color: rgba(57, 255, 20, 0.1); color: #39FF14; border: 1px solid #39FF14; }
+.result-message.error { background-color: rgba(255, 77, 77, 0.1); color: #ff4d4d; border: 1px solid #ff4d4d; }
