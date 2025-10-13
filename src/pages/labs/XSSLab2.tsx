@@ -12,8 +12,8 @@ interface Comment {
 const XSSLab2: React.FC = () => {
   const [comments, setComments] = useState<Comment[]>([]);
   const [author, setAuthor] = useState('Carlos');
-  const [site, setSite] = useState("javascript:alert('XSS Armazenado!')");
-  const [comment, setComment] = useState('Ótimo post!');
+  const [site, setSite] = useState('https://meusite.com');
+  const [comment, setComment] = useState('<img src=x onerror="alert(\'Stored XSS bem-sucedido!\')">');
   
   const fetchComments = async () => {
     const response = await fetch(`${process.env.REACT_APP_API_URL}/labs/xss/2/comments`);
@@ -32,7 +32,6 @@ const XSSLab2: React.FC = () => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ author, site, comment }),
     });
-    // Limpa o formulário e busca os comentários de novo
     setAuthor(''); setSite(''); setComment('');
     fetchComments();
   };
@@ -43,21 +42,24 @@ const XSSLab2: React.FC = () => {
       <div className="lab-content" style={{maxWidth: '700px'}}>
         <h1>Nível 2: A Mensagem Persistente</h1>
         <p className="lab-objective">
-          O campo "Site" no formulário de comentário não é sanitizado. Deixe um comentário cujo link do seu nome execute um `alert()` para qualquer um que visitar a página.
+          Este blog permite que usuários deixem comentários. O servidor salva o conteúdo do comentário sem qualquer filtro de segurança (sanitização). 
+          Deixe um comentário que execute um `alert()` para qualquer um que visitar a página.
         </p>
         <div className="comment-section">
           <h3>Comentários</h3>
           {comments.map((c, i) => (
             <div key={i} className="comment-box">
-              <p><strong><a href={c.site}>{c.author}</a> diz:</strong></p>
-              <p>{c.comment}</p>
+              <p><strong>{c.author} diz:</strong></p>
+              {/* A MÁGICA ESTÁ AQUI */}
+              {/* Usamos dangerouslySetInnerHTML para simular a vulnerabilidade de forma controlada */}
+              <div dangerouslySetInnerHTML={{ __html: c.comment }} />
             </div>
           ))}
         </div>
         <form onSubmit={handleSubmit} className="lab-form">
           <input type="text" value={author} onChange={e => setAuthor(e.target.value)} placeholder="Seu Nome" />
-          <input type="text" value={site} onChange={e => setSite(e.target.value)} placeholder="Seu Site (ex: https://...)" />
-          <textarea value={comment} onChange={e => setComment(e.target.value)} placeholder="Seu comentário" />
+          <input type="text" value={site} onChange={e => setSite(e.target.value)} placeholder="Seu Site" />
+          <textarea value={comment} onChange={e => setComment(e.target.value)} placeholder="Seu comentário (injete o payload aqui)" />
           <button type="submit">Postar Comentário</button>
         </form>
          <Link to="/labs/xss" className="back-link">← Voltar</Link>

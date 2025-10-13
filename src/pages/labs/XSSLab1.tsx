@@ -21,7 +21,7 @@ const XSSLab1: React.FC = () => {
           A barra de busca reflete o termo pesquisado na página de resultados sem qualquer filtro. Crie um termo de busca que execute um `alert()` no seu navegador.
         </p>
         <form onSubmit={handleSearch} className="lab-form">
-          <input type="text" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} placeholder="<script>alert('XSS')</script>" />
+          <input type="text" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
           <button type="submit">Buscar</button>
         </form>
         {result && (

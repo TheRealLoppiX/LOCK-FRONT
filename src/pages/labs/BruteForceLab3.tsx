@@ -33,7 +33,7 @@ const BruteForceLab3: React.FC = () => {
       <div className="lab-content">
         <h1>Nível 3: Ataque Furtivo</h1>
         <p className="lab-objective">
-          O sistema agora bloqueia seu IP por 60 segundos após 3 tentativas falhas. Descubra a senha (`4815`) do `admin` contornando essa proteção.
+          O sistema agora bloqueia seu IP por 60 segundos após 3 tentativas falhas. Descubra a senha numérica de quatro dígitos do `admin` contornando essa proteção.
         </p>
         <form onSubmit={handleSubmit} className="lab-form">
           <input type="text" value="admin" disabled />

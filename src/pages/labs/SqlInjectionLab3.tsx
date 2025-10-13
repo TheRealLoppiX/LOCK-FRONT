@@ -4,7 +4,7 @@ import HexagonBackground from '../../components/hexagonobg';
 import './LabPage.css';
 
 const SqlInjectionLab3: React.FC = () => {
-  const [username, setUsername] = useState("' UNION SELECT 'Sup3r_S3cr3t_P4ss', NULL --");
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [result, setResult] = useState<{ success: boolean; message: string } | null>(null);
   const [isLoading, setIsLoading] = useState(false);

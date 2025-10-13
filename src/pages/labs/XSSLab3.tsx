@@ -11,9 +11,9 @@ interface Comment {
 
 const XSSLab3: React.FC = () => {
   const [comments, setComments] = useState<Comment[]>([]);
-  const [author, setAuthor] = useState('Hacker');
-  const [site, setSite] = useState('"><img src=x onerror="prompt(1)">');
-  const [comment, setComment] = useState('Tentando bypassar o filtro...');
+  const [author, setAuthor] = useState('');
+  const [site, setSite] = useState('');
+  const [comment, setComment] = useState('');
   
   const fetchComments = async () => {
     const response = await fetch(`${process.env.REACT_APP_API_URL}/labs/xss/3/comments`);

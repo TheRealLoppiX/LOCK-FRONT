@@ -4,7 +4,7 @@ import HexagonBackground from '../../components/hexagonobg';
 import './LabPage.css';
 
 const SqlInjectionLab2: React.FC = () => {
-  const [username, setUsername] = useState("administrator'--");
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [result, setResult] = useState<{ success: boolean; message: string } | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -38,7 +38,7 @@ const SqlInjectionLab2: React.FC = () => {
         </p>
         <form onSubmit={handleSubmit} className="lab-form">
           <input type="text" value={username} onChange={e => setUsername(e.target.value)} placeholder="Usuário" />
-          <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Senha (pode ser qualquer coisa)" />
+          <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Senha" />
           <button type="submit" disabled={isLoading}>{isLoading ? 'Invadindo...' : 'Entrar'}</button>
         </form>
         {result && (

@@ -16,7 +16,7 @@ const BruteForceLab: React.FC = () => {
     setAttempts(prev => prev + 1); // Incrementa o contador de tentativas
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/labs/brute-force`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/labs/brute-force/1`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ password }),
@@ -36,8 +36,7 @@ const BruteForceLab: React.FC = () => {
       <div className="lab-content">
         <h1>Laboratório: Força Bruta em Login</h1>
         <p className="lab-objective">
-          O objetivo é descobrir a senha do usuário <strong>admin</strong>. A senha é um número simples de 3 dígitos. 
-          Use a sua intuição ou uma ferramenta como o Burp Intruder para automatizar o ataque.
+          O objetivo é descobrir a senha do usuário, um padrão numérico de três dígitos.
         </p>
         
         <form onSubmit={handleSubmit} className="lab-form">
