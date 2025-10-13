@@ -3,8 +3,7 @@ import { Link } from 'react-router-dom';
 import HexagonBackground from '../../components/hexagonobg';
 import './LabPage.css';
 
-const SqlInjectionLab: React.FC = () => {
-  const [username, setUsername] = useState('');
+const BruteForceLab2: React.FC = () => {
   const [password, setPassword] = useState('');
   const [result, setResult] = useState<{ success: boolean; message: string } | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -14,15 +13,15 @@ const SqlInjectionLab: React.FC = () => {
     setResult(null);
     setIsLoading(true);
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/labs/sql-injection`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/labs/brute-force/2`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ username: 'admin', password }),
       });
       const data = await response.json();
       setResult(data);
     } catch (error) {
-      setResult({ success: false, message: "Erro de conexão com a API. Verifique se ela está no ar." });
+      setResult({ success: false, message: "Erro de conexão com a API." });
     } finally {
       setIsLoading(false);
     }
@@ -32,24 +31,23 @@ const SqlInjectionLab: React.FC = () => {
     <div className="lab-page-container">
       <HexagonBackground />
       <div className="lab-content">
-        <h1>Laboratório: Bypass de Autenticação com SQLi</h1>
-        <p className="lab-objective">O objetivo é fazer login como administrador sem saber a senha. Tente usar um payload de SQL Injection clássico, como `' OR '1'='1`, nos campos de usuário e senha.</p>
-        
+        <h1>Nível 2: Acesso à Conta</h1>
+        <p className="lab-objective">
+          Agora que você sabe que o usuário `admin` existe, use um ataque de dicionário para descobrir a senha. Tente uma destas: `1234`, `password`, `lock`, `admin`.
+        </p>
         <form onSubmit={handleSubmit} className="lab-form">
-          <input type="text" value={username} onChange={e => setUsername(e.target.value)} placeholder="Usuário" />
+          <input type="text" value="admin" disabled />
           <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Senha" />
-          <button type="submit" disabled={isLoading}>{isLoading ? 'Verificando...' : 'Entrar'}</button>
+          <button type="submit" disabled={isLoading}>{isLoading ? 'Tentando...' : 'Entrar'}</button>
         </form>
-
         {result && (
           <div className={`result-message ${result.success ? 'success' : 'error'}`}>
             {result.message}
           </div>
         )}
-        <Link to="/labs/sql-injection" className="back-link">← Voltar para a lista de laboratórios</Link>
+        <Link to="/labs/brute-force" className="back-link">← Voltar</Link>
       </div>
     </div>
   );
 };
-
-export default SqlInjectionLab;
+export default BruteForceLab2;

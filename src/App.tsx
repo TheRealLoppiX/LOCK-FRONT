@@ -15,9 +15,15 @@ import QuizSelectionPage from './pages/QuizSelectionPage';
 import QuizPlayer from './pages/QuizPlayer'; 
 import Biblioteca from './pages/Biblioteca';  
 import LabSelectionPage from './pages/labs/LabSelectionPage';
-import SqlInjectionLab from './pages/labs/SqlInjectionLab';
-import BruteForceLab from './pages/labs/BruteForceLab';
-import XSSLab from './pages/labs/XSSLab';  
+import SqlInjectionLab1 from './pages/labs/SqlInjectionLab1';
+import SqlInjectionLab2 from './pages/labs/SqlInjectionLab2';
+import SqlInjectionLab3 from './pages/labs/SqlInjectionLab3';
+import BruteForceLab1 from './pages/labs/BruteForceLab1';
+import BruteForceLab2 from './pages/labs/BruteForceLab2';
+import BruteForceLab3 from './pages/labs/BruteForceLab3';
+import XSSLab1 from './pages/labs/XSSLab1';  
+import XSSLab2 from './pages/labs/XSSLab2'; 
+import XSSLab3 from './pages/labs/XSSLab3'; 
 
 // Rodapé 
 import Footer from './components/Footer';
@@ -63,9 +69,15 @@ function AppRoutes() {
 
       {/* Rotas dos Laboratórios */}
       <Route path="/labs/:topic" element={<PrivateRoute><LabSelectionPage /></PrivateRoute>} />
-      <Route path="/labs/sql-injection/1" element={<PrivateRoute><SqlInjectionLab /></PrivateRoute>} />
-      <Route path="/labs/brute-force/1" element={<PrivateRoute><BruteForceLab /></PrivateRoute>} />
-      <Route path="/labs/xss/1" element={<PrivateRoute><XSSLab /></PrivateRoute>} />
+      <Route path="/labs/sql-injection/1" element={<PrivateRoute><SqlInjectionLab1 /></PrivateRoute>} />
+      <Route path="/labs/sql-injection/2" element={<PrivateRoute><SqlInjectionLab2 /></PrivateRoute>} />
+      <Route path="/labs/sql-injection/3" element={<PrivateRoute><SqlInjectionLab3 /></PrivateRoute>} />
+      <Route path="/labs/brute-force/1" element={<PrivateRoute><BruteForceLab1 /></PrivateRoute>} />
+      <Route path="/labs/brute-force/2" element={<PrivateRoute><BruteForceLab2 /></PrivateRoute>} />
+      <Route path="/labs/brute-force/3" element={<PrivateRoute><BruteForceLab3 /></PrivateRoute>} />
+      <Route path="/labs/xss/1" element={<PrivateRoute><XSSLab1 /></PrivateRoute>} />
+      <Route path="/labs/xss/2" element={<PrivateRoute><XSSLab2 /></PrivateRoute>} />
+      <Route path="/labs/xss/3" element={<PrivateRoute><XSSLab3 /></PrivateRoute>} />
 
     </Routes>
   );
