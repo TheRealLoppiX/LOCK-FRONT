@@ -11,9 +11,9 @@ interface Comment {
 
 const XSSLab2: React.FC = () => {
   const [comments, setComments] = useState<Comment[]>([]);
-  const [author, setAuthor] = useState('Carlos');
+  const [author, setAuthor] = useState('');
   const [site, setSite] = useState('https://meusite.com');
-  const [comment, setComment] = useState('<img src=x onerror="alert(\'Stored XSS bem-sucedido!\')">');
+  const [comment, setComment] = useState('');
   
   const fetchComments = async () => {
     const response = await fetch(`${process.env.REACT_APP_API_URL}/labs/xss/2/comments`);
