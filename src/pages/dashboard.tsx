@@ -3,7 +3,7 @@ import { useAuth } from '../contexts/authContext';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
   CaretDown, Gear, SignOut, Flask, BookOpen, Exam, 
-  FilePdf, Article, Question, Info, Users, Atom // Adicionados ícones para o "Sobre Nós"
+  FilePdf, Article, Question, Info, Users, Atom, Shuffle
 } from '@phosphor-icons/react';
 import HexagonBackground from '../components/hexagonobg';
 import './dashboard.css';
@@ -16,7 +16,7 @@ const Dashboard: React.FC = () => {
   const [isLabsOpen, setIsLabsOpen] = useState(false);
   const [isMaterialsOpen, setIsMaterialsOpen] = useState(false);
   const [isQuizzesOpen, setIsQuizzesOpen] = useState(false);
-  const [isAboutUsOpen, setIsAboutUsOpen] = useState(false); // Novo estado para o "Sobre Nós"
+  const [isAboutUsOpen, setIsAboutUsOpen] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -78,6 +78,10 @@ const Dashboard: React.FC = () => {
               <CaretDown weight="bold" className={`caret-icon ${isQuizzesOpen ? 'open' : ''}`} />
             </div>
             <div className={`dropdown-content ${isQuizzesOpen ? 'open' : ''}`}>
+              {/* LINK ADICIONADO AQUI */}
+              <Link to="/quizzes/variado" className="dropdown-item">
+                <Shuffle size={20} /> Tema Variado
+              </Link>
               <Link to="/quizzes/burp-suite" className="dropdown-item"><Question size={20} /> Burp Suite</Link>
               <Link to="/quizzes/tcpdump" className="dropdown-item"><Question size={20} /> TCPDump</Link>
               <Link to="/quizzes/nmap" className="dropdown-item"><Question size={20} /> NMap</Link>
@@ -100,9 +104,7 @@ const Dashboard: React.FC = () => {
             </div>
           </Link>
 
-          {/* ====================================================== */}
-          {/* CARD "SOBRE NÓS" AGORA É EXPANSÍVEL E FORMATADO      */}
-          {/* ====================================================== */}
+          {/* CARD "SOBRE NÓS" */}
           <div className="dashboard-card">
             <div className="dropdown-header" onClick={() => setIsAboutUsOpen(!isAboutUsOpen)}>
               <div className="card-icon">
