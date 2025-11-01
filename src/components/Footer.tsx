@@ -1,37 +1,29 @@
-// src/components/Footer.tsx
-
 import React from 'react';
 import './Footer.css';
-
-// NOVO: Importe as imagens da sua pasta assets
-// Confirme se os nomes dos arquivos estão exatamente iguais.
 import logoIf from '../assets/Sem_título-removebg-preview.png';
-import bandeiraPe from '../assets/Bandeira de Pernambuco.png';
+import logoLOCK from '../assets/Logo lock.png';
 
 const Footer: React.FC = () => {
   return (
     <footer className="site-footer">
-      {/* Imagem da Logo no canto esquerdo */}
-      <img 
-        src={logoIf} // Use a variável importada aqui
-        alt="Logo IFSertãoPE" 
-        className="footer-logo" 
-      />
-
-      {/* Link do IFSertãoPE centralizado */}
       <a 
         href="https://ifsertaope.edu.br/" 
         target="_blank" 
         rel="noopener noreferrer"
       >
-        IFSertãoPE - Instituto Federal do Sertão Pernambucano
+        <img 
+          src={logoIf} 
+          alt="Logo IFSertãoPE" 
+          className="footer-logo" 
+        />
       </a>
 
-      {/* Imagem da Bandeira de Pernambuco no canto direito */}
+      <p>Todos os direitos reservados © LOCK - 2025</p>
+
       <img 
-        src={bandeiraPe} // Use a variável importada aqui
-        alt="Bandeira de Pernambuco" 
-        className="footer-flag" 
+        src={logoLOCK} 
+        alt="LogoLOCK" 
+        className="footer-logo" 
       />
     </footer>
   );
