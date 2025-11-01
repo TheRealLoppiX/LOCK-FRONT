@@ -14,7 +14,7 @@ const Footer: React.FC = () => {
         <img 
           src={logoIf} 
           alt="Logo IFSertãoPE" 
-          className="footer-logo" 
+          className="footer-logo"
         />
       </a>
 
@@ -23,7 +23,7 @@ const Footer: React.FC = () => {
       <img 
         src={logoLOCK} 
         alt="LogoLOCK" 
-        className="footer-logo" 
+        className="footer-logo rotating-logo" 
       />
     </footer>
   );

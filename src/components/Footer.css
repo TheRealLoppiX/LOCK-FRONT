@@ -67,3 +67,42 @@
         display: none; /* Em telas muito pequenas, esconde o texto */
     }
 }
+
+.site-footer {
+  display: flex; /* Transforma o footer em um flex container */
+  justify-content: space-between; /* Distribui os itens: logos nas pontas, texto no meio */
+  align-items: center; /* Alinha verticalmente os itens */
+  padding: 10px 20px; /* Ajuste o padding conforme necessário */
+  background-color: #0d1117; /* Cor de fundo do footer */
+  color: #c9d1d9; /* Cor do texto */
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  box-sizing: border-box; /* Garante que padding e borda não aumentem o tamanho total */
+}
+
+.site-footer p {
+  flex-grow: 1; /* Faz o parágrafo ocupar o espaço restante */
+  text-align: center; /* Centraliza o texto do parágrafo */
+  margin: 0; /* Remove margens padrão do parágrafo */
+}
+
+.footer-logo {
+  height: 40px; /* Altura das logos, ajuste se necessário */
+  object-fit: contain; /* Garante que a imagem não seja cortada */
+}
+
+/* NOVO: Estilo para a logo giratória */
+.rotating-logo {
+  animation: rotate 10s infinite linear; /* Animação de rotação */
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
