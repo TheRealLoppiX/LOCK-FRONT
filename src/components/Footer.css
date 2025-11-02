@@ -49,20 +49,72 @@
     }
 }
 
-.site-footer {
-  display: flex; /* Transforma o footer em um flex container */
-  justify-content: space-between; /* Distribui os itens: logos nas pontas, texto no meio */
-  align-items: center; /* Alinha verticalmente os itens */
-  padding: 10px 20px; /* Ajuste o padding conforme necessário */
-  background-color: #0d1117; /* Cor de fundo do footer */
-  color: #c9d1d9; /* Cor do texto */
+.neon-line-separator {
   width: 100%;
+  height: 2px; /* Espessura da linha */
+  background: linear-gradient(90deg, transparent, #00f0ff, transparent); /* Gradiente neon */
+  position: fixed; /* Fixa a linha na parte inferior */
+  bottom: 60px; /* Ajuste para ficar logo acima do footer (altura do footer + 2px da linha) */
+  left: 0;
+  box-shadow: 0 0 8px #00f0ff; /* Brilho neon */
+  animation: pulseNeonLine 3s infinite alternate; /* Animação de pulso */
+  z-index: 1000; /* Garante que a linha esteja acima de outros elementos, se necessário */
+}
+
+@keyframes pulseNeonLine {
+  0% {
+    box-shadow: 0 0 4px #00f0ff;
+    opacity: 0.7;
+  }
+  50% {
+    box-shadow: 0 0 12px #00f0ff;
+    opacity: 1;
+  }
+  100% {
+    box-shadow: 0 0 4px #00f0ff;
+    opacity: 0.7;
+  }
+}
+
+.site-footer {
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center; 
+  padding: 10px 20px; 
+  background-color: #0d1117; 
+  color: #c9d1d9; 
+  width: 100%;
+  height: 60px; /* Defina uma altura fixa para o footer */
   position: fixed;
   bottom: 0;
   left: 0;
-  box-sizing: border-box; /* Garante que padding e borda não aumentem o tamanho total */
+  box-sizing: border-box;
+  z-index: 999; /* Z-index um pouco menor que a linha, para a linha ficar por cima */
 }
 
+.site-footer p {
+  flex-grow: 1; 
+  text-align: center; 
+  margin: 0; 
+}
+
+.footer-logo {
+  height: 40px; 
+  object-fit: contain; 
+}
+
+.rotating-logo {
+  animation: rotate 10s infinite linear; 
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
 .site-footer p {
   flex-grow: 1; /* Faz o parágrafo ocupar o espaço restante */
   text-align: center; /* Centraliza o texto do parágrafo */
