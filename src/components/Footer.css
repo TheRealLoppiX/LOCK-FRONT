@@ -1,134 +1,89 @@
-/* src/components/Footer.css */
-
-.site-footer a {
-  color: #a0b2c2;
-  text-decoration: none;
-  font-size: 14px;
-  transition: color 0.3s ease, text-shadow 0.3s ease;
-  flex-grow: 1; 
-  text-align: center;
-  margin: 0 15px; /* Adiciona margem para não colar nas imagens */
-}
-
-.site-footer a:hover {
-  color: #00e5ff;
-  text-shadow: 0 0 5px rgba(0, 191, 255, 0.8);
-}
-
-.footer-logo,
-.footer-flag {
-  height: 30px; /* Define uma altura fixa */
-  width: auto;
-  flex-shrink: 0;
-  
-  /* --- CORREÇÃO IMPORTANTE --- */
-  display: block; /* Remove qualquer espaçamento extra que a tag <img> possa ter */
-}
-
-/* Responsividade mais simples e segura */
-@media (max-width: 650px) {
-  .site-footer a {
-    /* Esconde o texto longo em telas pequenas para evitar quebra de linha */
-    font-size: 0; 
-  }
-
-  /* Mostra apenas a sigla em telas pequenas */
-  .site-footer a::after {
-    content: "IFSertãoPE";
-    font-size: 14px;
-  }
-
-  .site-footer {
-    padding: 8px 15px;
-  }
-}
-
-@media (max-width: 400px) {
-    .site-footer a {
-        display: none; /* Em telas muito pequenas, esconde o texto */
-    }
-}
-
+/* ==================================
+ * A LINHA NEON
+ * ================================== */
 .neon-line-separator {
   width: 100%;
-  height: 2px; /* Espessura da linha */
-  background: linear-gradient(90deg, transparent, #00f0ff, transparent); /* Gradiente neon */
-  position: fixed; /* Fixa a linha na parte inferior */
-  bottom: 60px; /* Ajuste para ficar logo acima do footer (altura do footer + 2px da linha) */
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #00f0ff, transparent);
+  position: fixed;
+  bottom: 60px; /* Deve ser a altura exata do footer */
   left: 0;
-  box-shadow: 0 0 8px #00f0ff; /* Brilho neon */
-  animation: pulseNeonLine 3s infinite alternate; /* Animação de pulso */
-  z-index: 1000; /* Garante que a linha esteja acima de outros elementos, se necessário */
+  box-shadow: 0 0 8px #00f0ff;
+  animation: pulseNeonLine 3s infinite alternate;
+  z-index: 1000;
 }
 
 @keyframes pulseNeonLine {
-  0% {
-    box-shadow: 0 0 4px #00f0ff;
-    opacity: 0.7;
-  }
-  50% {
-    box-shadow: 0 0 12px #00f0ff;
-    opacity: 1;
-  }
-  100% {
-    box-shadow: 0 0 4px #00f0ff;
-    opacity: 0.7;
-  }
+  0% { box-shadow: 0 0 4px #00f0ff; opacity: 0.7; }
+  50% { box-shadow: 0 0 12px #00f0ff; opacity: 1; }
+  100% { box-shadow: 0 0 4px #00f0ff; opacity: 0.7; }
 }
 
+/* ==================================
+ * O FOOTER (PAI)
+ * ================================== */
 .site-footer {
-  display: flex; 
-  justify-content: space-between; 
-  align-items: center; 
-  padding: 10px 20px; 
-  background-color: #0d1117; 
-  color: #c9d1d9; 
+  display: flex;
+  justify-content: space-between; /* Espaça as 3 "caixas" */
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #0d1117;
+  color: #c9d1d9;
   width: 100%;
-  height: 60px; /* Defina uma altura fixa para o footer */
+  height: 60px; /* Altura fixa é importante */
   position: fixed;
   bottom: 0;
   left: 0;
   box-sizing: border-box;
-  z-index: 999; /* Z-index um pouco menor que a linha, para a linha ficar por cima */
+  z-index: 999;
 }
 
+/* ==================================
+ * A SOLUÇÃO DE CENTRALIZAÇÃO
+ * As "caixas" invisíveis dos logos.
+ * ================================== */
+.footer-logo-container {
+  /* Dê uma largura fixa para as caixas. 
+     Ajuste este valor se a logo do IF ainda estiver cortando */
+  width: 250px; 
+  display: flex;
+  align-items: center;
+}
+
+/* Alinha o logo da esquerda (IF) à esquerda */
+.footer-logo-container:first-child {
+  justify-content: flex-start;
+}
+
+/* Alinha o logo da direita (LOCK) à direita */
+.footer-logo-container:last-child {
+  justify-content: flex-end;
+}
+
+/* ==================================
+ * O TEXTO CENTRAL
+ * ================================== */
 .site-footer p {
-  flex-grow: 1; 
-  text-align: center; 
-  margin: 0; 
+  flex-grow: 1; /* Faz o texto ocupar todo o espaço entre as caixas */
+  text-align: center; /* Centraliza o texto dentro dele mesmo */
+  margin: 0;
+  font-size: 0.9em;
 }
 
+/* ==================================
+ * AS LOGOS (FILHOS)
+ * ================================== */
 .footer-logo {
-  height: 40px; 
-  object-fit: contain; 
+  max-height: 40px; /* Altura máxima para as logos */
+  max-width: 100%;  /* Garante que a logo do IF não estoure a caixa */
+  object-fit: contain;
 }
 
+/* ==================================
+ * A ANIMAÇÃO
+ * ================================== */
 .rotating-logo {
-  animation: rotate 10s infinite linear; 
-}
-
-@keyframes rotate {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-.site-footer p {
-  flex-grow: 1; /* Faz o parágrafo ocupar o espaço restante */
-  text-align: center; /* Centraliza o texto do parágrafo */
-  margin: 0; /* Remove margens padrão do parágrafo */
-}
-
-.footer-logo {
-  height: 40px; /* Altura das logos, ajuste se necessário */
-  object-fit: contain; /* Garante que a imagem não seja cortada */
-}
-
-/* NOVO: Estilo para a logo giratória */
-.rotating-logo {
-  animation: rotate 10s infinite linear; /* Animação de rotação */
+  animation: rotate 10s infinite linear;
 }
 
 @keyframes rotate {

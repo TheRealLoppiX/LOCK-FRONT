@@ -5,28 +5,37 @@ import logoLOCK from '../assets/Logo lock.png';
 
 const Footer: React.FC = () => {
   return (
-    <> {/* Fragmento para agrupar múltiplos elementos */}
-      <div className="neon-line-separator"></div> {/* NOVO ELEMENTO AQUI */}
+    <>
+      <div className="neon-line-separator"></div>
       <footer className="site-footer">
-        <a 
-          href="https://ifsertaope.edu.br/" 
-          target="_blank" 
-          rel="noopener noreferrer"
-        >
-          <img 
-            src={logoIf} 
-            alt="Logo IFSertãoPE" 
-            className="footer-logo" 
-          />
-        </a>
+        
+        {/* Caixa da Esquerda */}
+        <div className="footer-logo-container">
+          <a 
+            href="https://ifsertaope.edu.br/" 
+            target="_blank" 
+            rel="noopener noreferrer"
+          >
+            <img 
+              src={logoIf} 
+              alt="Logo IFSertãoPE" 
+              className="footer-logo" 
+            />
+          </a>
+        </div>
 
+        {/* Texto Central */}
         <p>Todos os direitos reservados © LOCK - 2025</p>
 
-        <img 
-          src={logoLOCK} 
-          alt="LogoLOCK" 
-          className="footer-logo rotating-logo" 
-        />
+        {/* Caixa da Direita */}
+        <div className="footer-logo-container">
+          <img 
+            src={logoLOCK} 
+            alt="LogoLOCK" 
+            className="footer-logo rotating-logo" 
+          />
+        </div>
+
       </footer>
     </>
   );
