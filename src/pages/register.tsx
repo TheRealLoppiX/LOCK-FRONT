@@ -1,117 +1,124 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import HexagonBackground from "../components/hexagonobg";
-import "./auth.css"; // Este arquivo deve importar o auth.css
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/authContext';
+import HexagonBackground from '../components/hexagonobg';
+import './auth.css';
+import { Eye, EyeSlash } from '@phosphor-icons/react';
 
-export default function Register() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+const Register: React.FC = () => {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
 
-  // Sua lógica de cadastro está perfeita e foi mantida
-  async function handleRegister(e: React.FormEvent) {
+  const { register } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!name || !email || !password) {
-      alert("Por favor, preencha todos os campos");
+    if (!agreedToTerms) {
+      setError("Você deve aceitar os Termos de Uso e a Política de Privacidade.");
       return;
     }
-
-    if (password.length < 6) {
-      alert("A senha deve ter pelo menos 6 caracteres");
-      return;
-    }
-
-    setIsLoading(true);
+    setError(null);
+    setLoading(true);
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/register`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        alert(`Cadastro realizado! Bem-vindo, ${data.user.name}`);
-        setName("");
-        setEmail("");
-        setPassword("");
-      } else {
-        alert(data.error || "Falha no cadastro");
-      }
-    } catch (err) {
-      alert("Erro: não foi possível conectar à API");
+      await register(name, email, password);
+      navigate('/dashboard'); 
+    } catch (err: any) {
+      setError(err.message || 'Erro ao criar conta. Verifique seus dados.');
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
-  }
+  };
 
   return (
-    // ALTERADO: Usando as classes da página de auth para reutilizar o estilo
-    <div className="auth-page">
+    <div className="register-page-container">
       <HexagonBackground />
-      <div className="auth-container">
-        <div className="auth-card">
-          <h1 className="auth-title">Criar Conta</h1>
-          <p className="register-subtitle">Preencha os dados para se cadastrar</p>
+      <div className="register-container">
+        <form onSubmit={handleSubmit} className="register-form">
+          <h1>Criar Conta</h1>
+          <p>Junte-se ao LOCK e comece sua jornada na cibersegurança.</p>
+          {error && <div className="error-message">{error}</div>}
           
-          <form onSubmit={handleRegister} className="auth-form">
-            <div className="input-group">
-              <input 
-                type="text" 
-                placeholder="Nome completo" 
-                value={name} 
-                onChange={(e) => setName(e.target.value)} 
-                className="auth-input" // ALTERADO
-                required
-              />
-            </div>
-            
-            <div className="input-group">
-              <input 
-                type="email" 
-                placeholder="Email" 
-                value={email} 
-                onChange={(e) => setEmail(e.target.value)} 
-                className="auth-input" // ALTERADO
-                required
-              />
-            </div>
-            
-            <div className="input-group">
-              <input 
-                type="password" 
-                placeholder="Senha (mínimo 6 caracteres)" 
-                value={password} 
-                onChange={(e) => setPassword(e.target.value)} 
-                className="auth-input" // ALTERADO
-                required
-                minLength={6}
-              />
-            </div>
-            
-            <button 
-              type="submit" 
-              className="auth-button" // ALTERADO
-              disabled={isLoading}
-            >
-              {isLoading ? "Cadastrando..." : "Criar Conta"}
-            </button>
-          </form>
-          
-          <div className="auth-links"> {/* ALTERADO */}
-            <p>
-              Já tem uma conta? <Link to="/login" className="auth-link">Faça Login</Link> {/* ALTERADO */}
-            </p>
-            <p>
-              <Link to="/" className="auth-link">← Voltar para Home</Link> {/* ALTERADO */}
-            </p>
+          <div className="input-group">
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Nome Completo"
+              required
+            />
           </div>
-        </div>
+          
+          <div className="input-group">
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="E-mail"
+              required
+            />
+          </div>
+          
+          <div className="input-group password-group">
+            <input
+              type={showPassword ? 'text' : 'password'}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Senha (mín. 6 caracteres)"
+              required
+            />
+            <span 
+              className="password-toggle-icon" 
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <EyeSlash size={20} /> : <Eye size={20} />}
+            </span>
+          </div>
+          <div className="terms-container">
+            <input
+              type="checkbox"
+              id="terms"
+              checked={agreedToTerms}
+              onChange={(e) => setAgreedToTerms(e.target.checked)}
+            />
+            <label htmlFor="terms">
+              Ao criar a conta, aceito os 
+              <a 
+                href="/Termos_de_Uso_LOCK.pdf" 
+                download="Termos_de_Uso_LOCK.pdf"
+              >
+                Termos de Uso
+              </a> 
+              e a 
+              <a 
+                href="/Politica_de_Privacidade_LOCK.pdf" 
+                download="Politica_de_Privacidade_LOCK.pdf"
+              >
+                Política de Privacidade
+              </a>.
+            </label>
+          </div>
+          <button 
+            type="submit" 
+            className="register-btn" 
+            disabled={loading || !agreedToTerms}
+          >
+            {loading ? 'Cadastrando...' : 'Cadastrar'}
+          </button>
+          
+          <div className="login-link">
+            Já tem uma conta? <Link to="/login">Faça Login</Link>
+          </div>
+        </form>
       </div>
     </div>
   );
-}
+};
+
+export default Register;

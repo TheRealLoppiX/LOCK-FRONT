@@ -102,3 +102,49 @@
   text-decoration: underline;
 }
 
+.terms-container {
+  display: flex;
+  align-items: flex-start; /* Alinha no topo */
+  margin: 15px 0;
+  width: 100%;
+}
+
+.terms-container input[type="checkbox"] {
+  /* Deixa o checkbox um pouco maior e com espaçamento */
+  width: 16px;
+  height: 16px;
+  margin-right: 12px;
+  flex-shrink: 0; /* Impede que o checkbox encolha */
+  margin-top: 3px; /* Alinha o checkbox com a primeira linha do texto */
+}
+
+.terms-container label {
+  font-size: 14px;
+  color: #c9d1d9; /* Cor do texto padrão */
+  line-height: 1.5;
+  text-align: left;
+  flex-grow: 1; /* Faz o label ocupar o espaço */
+}
+
+.terms-container label a {
+  color: #00e5ff; /* Cor neon de destaque */
+  text-decoration: underline;
+  margin: 0 4px; /* Pequeno espaço ao redor dos links */
+  cursor: pointer;
+}
+
+.terms-container label a:hover {
+  color: #fff;
+  text-shadow: 0 0 5px #00e5ff;
+}
+
+/* ======================================== */
+/* Estilo do botão desabilitado             */
+/* ======================================== */
+.register-btn:disabled {
+  background-color: #333;
+  color: #888;
+  cursor: not-allowed;
+  box-shadow: none;
+  border-color: #555;
+}

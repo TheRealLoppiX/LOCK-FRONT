@@ -177,3 +177,27 @@
   text-decoration: none; /* Remove o sublinhado do link */
   color: inherit; /* Mantém a cor do texto original */
 }
+/* Seção para os ícones no header */
+.header-icons {
+  display: flex;
+  align-items: center;
+  gap: 16px; /* Espaço entre os ícones */
+}
+
+/* Estilo base para os botões de ícone */
+.icon-button {
+  background: none;
+  border: none;
+  color: #c9d1d9; /* Cinza claro padrão */
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+.icon-button:hover {
+  color: #00f0ff; /* Efeito neon azul */
+  text-shadow: 0 0 5px #00f0ff;
+}

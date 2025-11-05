@@ -3,20 +3,21 @@ import { useAuth } from '../contexts/authContext';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
   CaretDown, Gear, SignOut, Flask, BookOpen, Exam, 
-  FilePdf, Article, Question, Info, Users, Atom, Shuffle
+  Question, Info, Shuffle // Imports limpos
 } from '@phosphor-icons/react';
 import HexagonBackground from '../components/hexagonobg';
+import InfoModal from '../components/InfoModal'; // NOVO: Importa o modal
 import './dashboard.css';
-import logoLock from '../assets/Logo lock.png';
 
 const Dashboard: React.FC = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   
   const [isLabsOpen, setIsLabsOpen] = useState(false);
-  const [isMaterialsOpen, setIsMaterialsOpen] = useState(false);
   const [isQuizzesOpen, setIsQuizzesOpen] = useState(false);
-  const [isAboutUsOpen, setIsAboutUsOpen] = useState(false);
+  
+  // NOVO: Estado do modal movido para o lugar certo
+  const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -40,10 +41,21 @@ const Dashboard: React.FC = () => {
             <p>Selecione uma opção abaixo para começar.</p>
           </div>
         </div>
-        <div className="header-right">
-          <Link to="/settings" className="settings-icon-link" title="Configurações">
-            <Gear weight="bold" className="settings-icon" />
+        <div className="header-right header-icons"> {/* Classe adicionada */}
+          
+          {/* NOVO: Ícone de "Info" que abre o modal */}
+          <button 
+            className="icon-button" 
+            onClick={() => setIsInfoModalOpen(true)} 
+            title="Sobre o Projeto"
+          >
+            <Info weight="bold" />
+          </button>
+
+          <Link to="/settings" className="icon-button" title="Configurações">
+            <Gear weight="bold" />
           </Link>
+          
           <button onClick={handleLogout} className="logout-btn" title="Sair">
             <SignOut weight="bold" />
           </button>
@@ -78,7 +90,6 @@ const Dashboard: React.FC = () => {
               <CaretDown weight="bold" className={`caret-icon ${isQuizzesOpen ? 'open' : ''}`} />
             </div>
             <div className={`dropdown-content ${isQuizzesOpen ? 'open' : ''}`}>
-              {/* LINK ADICIONADO AQUI */}
               <Link to="/quizzes/variado" className="dropdown-item">
                 <Shuffle size={20} /> Tema Variado
               </Link>
@@ -104,28 +115,17 @@ const Dashboard: React.FC = () => {
             </div>
           </Link>
 
-          {/* CARD "SOBRE NÓS" */}
-          <div className="dashboard-card">
-            <div className="dropdown-header" onClick={() => setIsAboutUsOpen(!isAboutUsOpen)}>
-              <div className="card-icon">
-                <img src={logoLock} alt="Logo LOCK" className="card-logo-icon" />
-              </div>
-              <div className="card-content">
-                <h2>Sobre o LOCK</h2>
-                <p>Conheça o projeto.</p>
-              </div>
-              <CaretDown weight="bold" className={`caret-icon ${isAboutUsOpen ? 'open' : ''}`} />
-            </div>
-            <div className={`dropdown-content ${isAboutUsOpen ? 'open' : ''}`}>
-              <div className="about-us-text">
-                <p>O Laboratório Online de Cibersegurança com Kali Linux (LOCK) nasce em meio à necessidade de um meio de pesquisa, estudo e aprendizagem prática sobre segurança e pentesting, principalmente na realidade do Instituto Federal do Sertão Pernambucano (IFSertão-PE) - Campus Salgueiro.</p>
-                <p>A equipe, composta por membros do Campus Salgueiro do IFSertão-PE, tem como objetivo investigar, pesquisar, desenvolver, comprovar e aplicar tecnologias relacionadas ao contexto da cibersegurança em estado da atualidade.</p>
-                <p>Diante disso, o grupo busca meios de transformar a cibersegurança em uma aprendizagem prática e dinâmica para incentivar a propagação do conhecimento, mitigar vulnerabilidades comuns, promover boas práticas de segurança da informação e preparar discentes e docentes para enfrentar cenários reais de ameaças cibernéticas.</p>
-              </div>
-            </div>
-          </div>
+          {/* O card "Sobre o LOCK" foi removido daqui e 
+              colocado no ícone "Info" no cabeçalho */}
+
         </div>
       </main>
+
+      {/* NOVO: Renderiza o Modal (ele só aparece se isOpen for true) */}
+      <InfoModal 
+        isOpen={isInfoModalOpen} 
+        onClose={() => setIsInfoModalOpen(false)} 
+      />
     </div>
   );
 };
