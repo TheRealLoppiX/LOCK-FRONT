@@ -138,6 +138,7 @@
   text-align: left;
   cursor: pointer;
   transition: all 0.3s ease;
+  justify-content: center;
 }
 
 .menu-item-button:hover {
