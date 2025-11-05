@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/authContext';
 import HexagonBackground from '../components/hexagonobg';
-import './auth.css';
+import './register.css'; // CORRETO: Importa o register.css
 import { Eye, EyeSlash } from '@phosphor-icons/react';
 
 const Register: React.FC = () => {
@@ -15,7 +15,8 @@ const Register: React.FC = () => {
   const [agreedToTerms, setAgreedToTerms] = useState(false);
 
   const { register } = useAuth();
-  const navigate = useNavigate();
+  // O navigate não é mais usado aqui, pois o context já cuida disso
+  // const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,7 +29,7 @@ const Register: React.FC = () => {
 
     try {
       await register(name, email, password);
-      navigate('/dashboard'); 
+      // REMOVIDO: navigate('/dashboard'); (O authContext já faz isso)
     } catch (err: any) {
       setError(err.message || 'Erro ao criar conta. Verifique seus dados.');
     } finally {
@@ -37,10 +38,13 @@ const Register: React.FC = () => {
   };
 
   return (
-    <div className="register-page-container">
+    // ATUALIZADO: className
+    <div className="auth-page-container">
       <HexagonBackground />
-      <div className="register-container">
-        <form onSubmit={handleSubmit} className="register-form">
+      {/* ATUALIZADO: className */}
+      <div className="auth-container">
+        {/* ATUALIZADO: className */}
+        <form onSubmit={handleSubmit} className="auth-form">
           <h1>Criar Conta</h1>
           <p>Junte-se ao LOCK e comece sua jornada na cibersegurança.</p>
           {error && <div className="error-message">{error}</div>}
@@ -80,6 +84,8 @@ const Register: React.FC = () => {
               {showPassword ? <EyeSlash size={20} /> : <Eye size={20} />}
             </span>
           </div>
+          
+          {/* Este container é específico do register.css */}
           <div className="terms-container">
             <input
               type="checkbox"
@@ -104,15 +110,18 @@ const Register: React.FC = () => {
               </a>.
             </label>
           </div>
+          
+          {/* ATUALIZADO: className */}
           <button 
             type="submit" 
-            className="register-btn" 
+            className="auth-btn" 
             disabled={loading || !agreedToTerms}
           >
             {loading ? 'Cadastrando...' : 'Cadastrar'}
           </button>
           
-          <div className="login-link">
+          {/* ATUALIZADO: className */}
+          <div className="switch-link">
             Já tem uma conta? <Link to="/login">Faça Login</Link>
           </div>
         </form>

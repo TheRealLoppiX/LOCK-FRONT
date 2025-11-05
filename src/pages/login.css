@@ -1,0 +1,21 @@
+/* 1. Importa todos os estilos comuns de autenticação */
+@import './auth.css';
+
+/* 2. Adiciona APENAS os estilos que são únicos desta página */
+
+/* Ex: Link "Esqueci minha senha" */
+.forgot-password-link {
+  text-align: right;
+  margin-top: -10px; /* Puxa para perto do input de senha */
+  margin-bottom: 15px;
+}
+
+.forgot-password-link a {
+  font-size: 14px;
+  color: #00e5ff;
+  text-decoration: none;
+}
+
+.forgot-password-link a:hover {
+  text-decoration: underline;
+}

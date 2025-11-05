@@ -81,7 +81,7 @@ const InfoModal: React.FC<InfoModalProps> = ({ isOpen, onClose }) => {
             <span>Ajuda</span>
           </button>
 
-          <a className="menu-item" href="mailto:seu-email@ifsertaope.edu.br">
+          <a className="menu-item" href="mailto:arthur.vasconcelos1@aluno.ifsertao-pe.edu.br">
             <Envelope size={24} weight="bold" />
             <span>Contato</span>
           </a>
@@ -89,6 +89,11 @@ const InfoModal: React.FC<InfoModalProps> = ({ isOpen, onClose }) => {
           <a className="menu-item" href="/Termos_de_Uso_LOCK.pdf" download="Termos_de_Uso_LOCK.pdf">
             <FileText size={24} weight="bold" />
             <span>Termos de Uso</span>
+          </a>
+
+          <a className="menu-item" href="/Politica_de_Privacidade_LOCK.pdf" download="Politica_de_Privacidade_LOCK.pdf">
+            <FileText size={24} weight="bold" />
+            <span>Política de Privacidade</span>
           </a>
 
           <button className="menu-item" onClick={() => setView('about')}>

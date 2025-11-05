@@ -1,0 +1,40 @@
+/* 1. Importa todos os estilos comuns de autenticação */
+@import './auth.css';
+
+/* 2. Adiciona APENAS os estilos que são únicos desta página */
+
+/* Estilos para os Termos de Uso */
+.terms-container {
+  display: flex;
+  align-items: flex-start;
+  margin: 15px 0 10px 0;
+  width: 100%;
+}
+
+.terms-container input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  margin-right: 12px;
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+
+.terms-container label {
+  font-size: 14px;
+  color: #c9d1d9;
+  line-height: 1.5;
+  text-align: left;
+  flex-grow: 1;
+}
+
+.terms-container label a {
+  color: #00e5ff;
+  text-decoration: underline;
+  margin: 0 4px;
+  cursor: pointer;
+}
+
+.terms-container label a:hover {
+  color: #fff;
+  text-shadow: 0 0 5px #00e5ff;
+}

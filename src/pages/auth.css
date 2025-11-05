@@ -1,150 +1,161 @@
-/* src/pages/auth.css */
-
-.auth-page {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+/* ========================================
+ * CONTAINER PRINCIPAL (FUNDO)
+ * ======================================== */
+.auth-page-container {
   min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 20px;
-  /* ALTERADO: Removida a cor de fundo para que o HexagonBackground seja visível */
-  /* background-color: var(--background-primary); */
   position: relative;
-  overflow: hidden;
+  overflow: hidden; /* Garante que o HexagonBackground não vaze */
 }
 
-/* Esta regra garante que o HexagonBackground, que é o primeiro
-  filho de .auth-page, se posicione corretamente como fundo.
-  Nenhuma alteração necessária aqui.
-*/
-.auth-page > div:first-child {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-}
-
-.auth-card {
-  width: 100%;
-  max-width: 400px;
-  padding: 40px;
-  background-color: var(--background-secondary);
-  border: 1px solid var(--border-color);
+/* ========================================
+ * CAIXA DO FORMULÁRIO (Glassmorphism)
+ * ======================================== */
+.auth-container {
+  background: rgba(13, 17, 23, 0.75); /* Fundo escuro semi-transparente */
+  border: 1px solid #30363d;
   border-radius: 12px;
-  text-align: center;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-  position: relative;
-  z-index: 1; /* Garante que o card fique na frente do fundo */
-}
-
-.auth-card h1 {
-  font-family: 'Space Grotesk', sans-serif;
-  color: var(--accent-color);
-  margin-bottom: 30px;
+  padding: 32px;
+  width: 100%;
+  max-width: 420px;
+  z-index: 2;
+  backdrop-filter: blur(10px); /* O efeito "vidro fosco" */
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
 .auth-form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
 }
 
-.auth-input {
-  width: 100%;
-  padding: 14px;
-  border-radius: 8px;
-  border: 1px solid var(--border-color);
-  background-color: var(--background-primary);
-  color: var(--text-primary);
-  font-size: 1rem;
-}
-
-.auth-input::placeholder {
-  color: var(--text-secondary);
-}
-
-.auth-button {
-  padding: 14px;
-  border-radius: 8px;
-  border: none;
-  background-color: var(--accent-color);
+.auth-form h1 {
   color: #fff;
-  font-size: 1.1rem;
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.auth-form p {
+  color: #c9d1d9;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+/* ========================================
+ * MENSAGEM DE ERRO
+ * ======================================== */
+.error-message {
+  background-color: #d73a4933; /* Vermelho transparente */
+  color: #f85149; /* Vermelho claro */
+  border: 1px solid #d73a49;
+  border-radius: 6px;
+  padding: 12px;
+  margin-bottom: 16px;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+/* ========================================
+ * GRUPO DE INPUTS
+ * ======================================== */
+.input-group {
+  margin-bottom: 16px;
+  position: relative;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 12px 15px;
+  background-color: #0d1117; /* Fundo do input */
+  border: 1px solid #30363d; /* Borda padrão */
+  border-radius: 6px;
+  color: #c9d1d9; /* Cor do texto digitado */
+  font-size: 1rem;
+  box-sizing: border-box; /* Garante que o padding não mude o tamanho */
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.input-group input:focus {
+  outline: none;
+  border-color: #00e5ff; /* Borda neon ao focar */
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.5); /* Brilho neon */
+}
+
+/* ========================================
+ * GRUPO DE SENHA (com ícone)
+ * ======================================== */
+.password-group {
+  position: relative;
+}
+
+.password-group input {
+  padding-right: 45px; /* Abre espaço para o ícone do olho */
+}
+
+.password-toggle-icon {
+  position: absolute;
+  top: 50%;
+  right: 15px;
+  transform: translateY(-50%);
+  color: #8b949e; /* Cinza do ícone */
+  cursor: pointer;
+  z-index: 3;
+}
+
+.password-toggle-icon:hover {
+  color: #00e5ff;
+}
+
+/* ========================================
+ * BOTÃO PRINCIPAL (NEON)
+ * ======================================== */
+.auth-btn {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(90deg, #00e5ff, #00b8cc);
+  border: none;
+  border-radius: 6px;
+  color: #0d1117; /* Cor do texto (escura) */
+  font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: transform 0.2s ease;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+  box-shadow: 0 0 15px rgba(0, 229, 255, 0.3);
 }
 
-.auth-button:hover:not(:disabled) {
-  transform: scale(1.02);
+.auth-btn:hover {
+  box-shadow: 0 0 25px rgba(0, 229, 255, 0.7);
+  transform: translateY(-2px);
 }
 
-.auth-button:disabled {
-  background-color: var(--text-secondary);
-  cursor: not-allowed;
-}
-
-.auth-links {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  margin-top: 25px;
-}
-
-.auth-links a {
-  color: var(--text-secondary);
-  text-decoration: none;
-}
-
-.auth-links a:hover {
-  color: var(--accent-color);
-  text-decoration: underline;
-}
-
-.terms-container {
-  display: flex;
-  align-items: flex-start; /* Alinha no topo */
-  margin: 15px 0;
-  width: 100%;
-}
-
-.terms-container input[type="checkbox"] {
-  /* Deixa o checkbox um pouco maior e com espaçamento */
-  width: 16px;
-  height: 16px;
-  margin-right: 12px;
-  flex-shrink: 0; /* Impede que o checkbox encolha */
-  margin-top: 3px; /* Alinha o checkbox com a primeira linha do texto */
-}
-
-.terms-container label {
-  font-size: 14px;
-  color: #c9d1d9; /* Cor do texto padrão */
-  line-height: 1.5;
-  text-align: left;
-  flex-grow: 1; /* Faz o label ocupar o espaço */
-}
-
-.terms-container label a {
-  color: #00e5ff; /* Cor neon de destaque */
-  text-decoration: underline;
-  margin: 0 4px; /* Pequeno espaço ao redor dos links */
-  cursor: pointer;
-}
-
-.terms-container label a:hover {
-  color: #fff;
-  text-shadow: 0 0 5px #00e5ff;
-}
-
-/* ======================================== */
-/* Estilo do botão desabilitado             */
-/* ======================================== */
-.register-btn:disabled {
-  background-color: #333;
+.auth-btn:disabled {
+  background: #333;
   color: #888;
   cursor: not-allowed;
   box-shadow: none;
-  border-color: #555;
+  transform: none;
+}
+
+/* ========================================
+ * LINK INFERIOR (Troca de página)
+ * ======================================== */
+.switch-link {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 14px;
+  color: #c9d1d9;
+}
+
+.switch-link a {
+  color: #00e5ff; /* Cor neon */
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.switch-link a:hover {
+  text-decoration: underline;
 }
