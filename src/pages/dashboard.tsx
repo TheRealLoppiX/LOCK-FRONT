@@ -214,7 +214,7 @@ const Dashboard: React.FC = () => {
                     onChange={() => handleStepToggle('step4')} 
                   />
                   <label htmlFor="step4">
-                    <strong>Primeira Interação com Ethical Hacking:</strong> Acesse o Guia para montar seu laboratório de Burp Suite, disponível na nossa <Link to='/biblioteca'>Biblioteca</Link> para experienciar o Ethical Hacking.
+                    <strong>Primeira Interação com Ethical Hacking:</strong> Acesse o Guia para montar seu laboratório de Burp Suite, disponível na nossa <Link to='/biblioteca'>Biblioteca</Link>, para experienciar o Ethical Hacking.
                   </label>
                 </li>
                 

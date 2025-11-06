@@ -53,7 +53,8 @@
     border: 1px solid var(--border-color);
     border-radius: 12px;
     transition: all 0.3s ease;
-    overflow: hidden; /* Crucial para a animação */
+    overflow: visible;
+    position: relative;
 }
 
 .dashboard-card:hover {
@@ -202,30 +203,22 @@
   text-shadow: 0 0 5px #00f0ff;
 }
 .beginner-tag {
-  /* O visual "hacker green" */
-  background-color: #00ff00; /* Verde neon brilhante */
-  color: #0d1117; /* Texto escuro para contraste */
-  font-family: 'Consolas', 'Courier New', monospace; /* Fonte hacker */
+  /* Estilos visuais (idênticos) */
+  background-color: #00ff00;
+  color: #0d1117;
+  font-family: 'Consolas', 'Courier New', monospace;
   font-size: 0.7rem;
   font-weight: 700;
   text-transform: uppercase;
-  
-  /* Posicionamento */
-  margin-left: auto; /* Empurra para a direita, antes do Caret */
-  margin-right: 15px;
   padding: 4px 8px;
-  
-  /* Formato de Tag */
-  border-radius: 4px;
-  clip-path: polygon(
-    0% 0%, 
-    100% 0%, 
-    100% 100%, 
-    0% 100%, 
-    10px 50% /* "corte" de tag à esquerda */
-  );
-  
   animation: pulseTag 2s infinite alternate;
+  clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 10px 50%);
+  
+  /* NOVO Posicionamento "Saindo da Caixa" */
+  position: absolute;
+  top: -10px;   /* Puxa para CIMA, ficando metade fora */
+  left: 15px;   /* Alinha com o padding do conteúdo do card */
+  z-index: 2;   /* Garante que a tag fique EM CIMA da borda */
 }
 
 @keyframes pulseTag {
