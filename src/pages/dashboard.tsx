@@ -188,7 +188,7 @@ const Dashboard: React.FC = () => {
                     onChange={() => handleStepToggle('step2')} 
                   />
                   <label htmlFor="step2">
-                    <strong>Explore a Teoria:</strong> Visite a <Link to="/biblioteca">Biblioteca</Link> e adicione seu primeiro material de estudo.
+                    <strong>Explore a Teoria:</strong> Leia o livro Testes de Invasão da Georgia Weidman, disponível na nossa <Link to="/biblioteca">Biblioteca</Link>.
                   </label>
                 </li>
                 
@@ -201,7 +201,7 @@ const Dashboard: React.FC = () => {
                     onChange={() => handleStepToggle('step3')} 
                   />
                   <label htmlFor="step3">
-                    <strong>Valide o Conhecimento:</strong> Faça um <Link to="/quizzes/variado">Quiz Variado</Link> para testar sua base teórica.
+                    <strong>Teste seu Conhecimento:</strong> Faça um <Link to="/quizzes/variado">Quiz Variado</Link> na dificuldade fácil para testar sua base teórica.
                   </label>
                 </li>
                 
@@ -214,7 +214,7 @@ const Dashboard: React.FC = () => {
                     onChange={() => handleStepToggle('step4')} 
                   />
                   <label htmlFor="step4">
-                    <strong>Primeira Invasão:</strong> Resolva o laboratório <Link to="/labs/sql-injection">SQL Injection Nível 1</Link>.
+                    <strong>Primeira Interação com Ethical Hacking:</strong> Acesse o Guia para montar seu laboratório de Burp Suite, disponível na nossa <Link to='/biblioteca'>Biblioteca</Link> para experienciar o Ethical Hacking.
                   </label>
                 </li>
                 
@@ -227,7 +227,7 @@ const Dashboard: React.FC = () => {
                     onChange={() => handleStepToggle('step5')} 
                   />
                   <label htmlFor="step5">
-                    <strong>Explore os Desafios:</strong> Navegue pelos laboratórios de <Link to="/labs/xss">XSS</Link> e <Link to="/labs/brute-force">Brute Force</Link>.
+                    <strong>Explore os Desafios:</strong> Use o conhecimento adquirido para solucionar os laboratórios disponíveis na plataforma.
                   </label>
                 </li>
                 
