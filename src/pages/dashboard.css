@@ -201,3 +201,132 @@
   color: #00f0ff; /* Efeito neon azul */
   text-shadow: 0 0 5px #00f0ff;
 }
+.beginner-tag {
+  /* O visual "hacker green" */
+  background-color: #00ff00; /* Verde neon brilhante */
+  color: #0d1117; /* Texto escuro para contraste */
+  font-family: 'Consolas', 'Courier New', monospace; /* Fonte hacker */
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  
+  /* Posicionamento */
+  margin-left: auto; /* Empurra para a direita, antes do Caret */
+  margin-right: 15px;
+  padding: 4px 8px;
+  
+  /* Formato de Tag */
+  border-radius: 4px;
+  clip-path: polygon(
+    0% 0%, 
+    100% 0%, 
+    100% 100%, 
+    0% 100%, 
+    10px 50% /* "corte" de tag à esquerda */
+  );
+  
+  animation: pulseTag 2s infinite alternate;
+}
+
+@keyframes pulseTag {
+  from {
+    box-shadow: 0 0 5px #00ff00;
+  }
+  to {
+    box-shadow: 0 0 15px #00ff00, 0 0 10px #fff;
+  }
+}
+
+/* ===================================
+ * NOVO: Lista de Passos Guiados
+ * =================================== */
+.guided-step-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background-color: rgba(36, 41, 47, 0.5); /* Fundo sutil */
+}
+
+.guided-step-item {
+  display: flex;
+  align-items: flex-start; /* Alinha no topo para textos longos */
+  padding: 16px 20px;
+  border-top: 1px solid #30363d;
+  transition: background-color 0.3s ease;
+}
+
+.guided-step-item:hover {
+  background-color: rgba(0, 240, 255, 0.1); /* Destaque neon azul */
+}
+
+/* Estilizando o checkbox */
+.guided-step-item input[type="checkbox"] {
+  /* Esconde o checkbox padrão */
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: transparent;
+  
+  /* Cria o nosso */
+  width: 18px;
+  height: 18px;
+  border: 2px solid #00f0ff; /* Borda neon */
+  border-radius: 3px;
+  margin-right: 15px;
+  margin-top: 3px; /* Alinha com a primeira linha do texto */
+  cursor: pointer;
+  flex-shrink: 0;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+/* Efeito de "check" */
+.guided-step-item input[type="checkbox"]:checked {
+  background-color: #00f0ff;
+  box-shadow: 0 0 10px #00f0ff;
+}
+
+/* O "V" de check (usando pseudo-elemento) */
+.guided-step-item input[type="checkbox"]:checked::after {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 1px;
+  width: 5px;
+  height: 10px;
+  border: solid #0d1117; /* Cor escura do fundo */
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg);
+}
+
+/* O label (texto) do passo */
+.guided-step-item label {
+  color: #c9d1d9;
+  line-height: 1.5;
+  cursor: pointer;
+}
+
+.guided-step-item label strong {
+  color: #fff; /* Destaque para o título do passo */
+  display: block;
+  margin-bottom: 2px;
+}
+
+/* Links dentro dos passos */
+.guided-step-item label a {
+  color: #00f0ff;
+  text-decoration: none;
+  font-weight: 600;
+}
+.guided-step-item label a:hover {
+  text-decoration: underline;
+}
+
+/* Efeito ao completar (riscado) */
+.guided-step-item input[type="checkbox"]:checked + label {
+  color: #8b949e; /* Cinza */
+  text-decoration: line-through;
+}
+
+.guided-step-item input[type="checkbox"]:checked + label strong {
+  color: #8b949e; /* Cinza */
+}
