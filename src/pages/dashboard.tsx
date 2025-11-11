@@ -23,6 +23,7 @@ const Dashboard: React.FC = () => {
   
   // NOVO: Estado para o novo card
   const [isGuidedOpen, setIsGuidedOpen] = useState(false);
+  const [isExercíciosOpen, setisExercíciosOpen] = useState(false);
   
   // NOVO: Estado para os 5 passos (lido do localStorage)
   const [guidedSteps, setGuidedSteps] = useState(() => {
@@ -127,6 +128,20 @@ const Dashboard: React.FC = () => {
               <Link to="/quizzes/nmap" className="dropdown-item"><Question size={20} /> NMap</Link>
               <Link to="/BurpI" className="dropdown-item">
                 <FilePdf size={20} /> Exercício de Fixação I - Burp Suite (Google Form)
+              </Link>
+            </div>
+          </div>
+
+          {/* Card de Exercícios*/}
+          <div className="dashboard-card">
+            <div className="dropdown-header" onClick={() => setisExercíciosOpen(!isExercíciosOpen)}>
+              <div className="card-icon"><Exam weight="bold" /></div>
+              <div className="card-content"><h2>Exercícios</h2><p>Exercite o conhecimento adquirido nos laboratórios.</p></div>
+              <CaretDown weight="bold" className={`caret-icon ${isExercíciosOpen ? 'open' : ''}`} />
+            </div>
+            <div className={`dropdown-content ${isExercíciosOpen ? 'open' : ''}`}>
+              <Link to="/BurpI" className="dropdown-item">
+                <FilePdf size={20} /> Exercícios de Fixação - Burp Suite
               </Link>
             </div>
           </div>
