@@ -23,7 +23,8 @@ import BruteForceLab2 from './pages/labs/BruteForceLab2';
 import BruteForceLab3 from './pages/labs/BruteForceLab3';
 import XSSLab1 from './pages/labs/XSSLab1';  
 import XSSLab2 from './pages/labs/XSSLab2'; 
-import XSSLab3 from './pages/labs/XSSLab3'; 
+import XSSLab3 from './pages/labs/XSSLab3';
+import FormViewer from './pages/FormViewer';
 
 // Rodapé 
 import Footer from './components/Footer';
@@ -43,7 +44,7 @@ const PrivateRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   // Se não estiver carregando, decide se mostra a página ou redireciona
   return isAuthenticated ? children : <Navigate to="/login" />;
 };
-
+const quizformsburpI = "https://forms.gle/SYUA6qkz8tFiv3tC8"
 // ===================================================================
 // COMPONENTE QUE CONTÉM AS ROTAS
 // ===================================================================
@@ -66,6 +67,10 @@ function AppRoutes() {
       {/* Rotas do Quiz */}
       <Route path="/quizzes/:topic" element={<PrivateRoute><QuizSelectionPage /></PrivateRoute>} />
       <Route path="/quiz/player/:topic/:difficulty" element={<PrivateRoute><QuizPlayer /></PrivateRoute>} />
+      <Route 
+            path="/BurpI" 
+            element={<FormViewer src={quizformsburpI} title="Exercício de Fixação I - Burp Suite" />} 
+          />
 
       {/* Rotas dos Laboratórios */}
       <Route path="/labs/:topic" element={<PrivateRoute><LabSelectionPage /></PrivateRoute>} />

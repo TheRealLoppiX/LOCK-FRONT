@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { 
   CaretDown, Gear, SignOut, Flask, BookOpen, Exam, 
   Question, Info, Shuffle,
-  RocketLaunch
+  RocketLaunch, FilePdf
 } from '@phosphor-icons/react';
 import HexagonBackground from '../components/hexagonobg';
 import InfoModal from '../components/InfoModal';
@@ -125,6 +125,9 @@ const Dashboard: React.FC = () => {
               <Link to="/quizzes/burp-suite" className="dropdown-item"><Question size={20} /> Burp Suite</Link>
               <Link to="/quizzes/tcpdump" className="dropdown-item"><Question size={20} /> TCPDump</Link>
               <Link to="/quizzes/nmap" className="dropdown-item"><Question size={20} /> NMap</Link>
+              <Link to="/BurpI" className="dropdown-item">
+                <FilePdf size={20} /> Exercício de Fixação I - Burp Suite (Google Form)
+              </Link>
             </div>
           </div>
         </div>

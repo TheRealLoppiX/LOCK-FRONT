@@ -1,0 +1,31 @@
+.form-viewer-container {
+  padding: 20px 20px 80px 20px; /* Padding para header e footer */
+  min-height: 100vh;
+}
+
+.form-viewer-header {
+  max-width: 1200px;
+  margin: 0 auto 20px auto;
+  text-align: center;
+  color: #fff;
+}
+
+.form-viewer-header h1 {
+  color: #00f0ff;
+}
+
+.form-viewer-frame-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  height: 80vh; /* Altura do iframe */
+  background: #fff; /* Fundo branco para o "loading" */
+  border-radius: 8px;
+  overflow: hidden; /* Garante que o iframe fique contido */
+  border: 1px solid #00f0ff;
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
+}
+
+.form-viewer-frame-container iframe {
+  display: block;
+}
