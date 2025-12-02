@@ -126,9 +126,6 @@ const Dashboard: React.FC = () => {
               <Link to="/quizzes/burp-suite" className="dropdown-item"><Question size={20} /> Burp Suite</Link>
               <Link to="/quizzes/tcpdump" className="dropdown-item"><Question size={20} /> TCPDump</Link>
               <Link to="/quizzes/nmap" className="dropdown-item"><Question size={20} /> NMap</Link>
-              <Link to="/BurpI" className="dropdown-item">
-                <FilePdf size={20} /> Exercício de Fixação I - Burp Suite (Google Form)
-              </Link>
             </div>
           </div>
 
