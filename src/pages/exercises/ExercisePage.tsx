@@ -1,13 +1,13 @@
 import React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import HexagonBackground from '../../components/hexagonobg';
-import { BurpExercises, TCPDumpExercises, NMapExercises, ExerciseInfo } from './ExerciseData.ts';
+import { BurpExercises, TCPDumpExercises, NMapExercises, ExerciseInfo } from './ExerciseData';
 import './ExercisePage.css';
 
 const topics: Record<string, { title: string; Exercises: ExerciseInfo[] }> = {
-  'Burp': { title: 'Burp Suite', Exercises: BurpExercises },
-  'TCPDump': { title: 'TCPDump', Exercises: TCPDumpExercises },
-  'NMap': { title: 'NMap', Exercises: NMapExercises },
+  'burp': { title: 'Burp Suite', Exercises: BurpExercises },
+  'tcpdump': { title: 'TCPDump', Exercises: TCPDumpExercises },
+  'nmap': { title: 'NMap', Exercises: NMapExercises },
 };
 
 const ExercisePage: React.FC = () => {

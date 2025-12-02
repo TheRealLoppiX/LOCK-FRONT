@@ -5,7 +5,7 @@ export interface ExerciseInfo {
   path: string;
 }
 
-// === LISTA DE LABORATÓRIOS DE SQL INJECTION ===
+// === LISTA DE EXERCÍCIOS BURP ===
 export const BurpExercises: ExerciseInfo[] = [
   { 
     id: '1', 
@@ -14,7 +14,7 @@ export const BurpExercises: ExerciseInfo[] = [
   }
 ];
 
-// === LISTA DE LABORATÓRIOS DE BRUTE FORCE ===
+// === LISTA DE EXERCÍCIOS TCP ===
 export const TCPDumpExercises: ExerciseInfo[] = [
   { 
     id: '1', 
@@ -23,7 +23,7 @@ export const TCPDumpExercises: ExerciseInfo[] = [
   }
 ];
 
-// === LISTA DE LABORATÓRIOS DE CROSS-SITE SCRIPTING (XSS) ===
+// === LISTA DE EXERCÍCIOS NMAP ===
 export const NMapExercises: ExerciseInfo[] = [
   { 
     id: '1', 
