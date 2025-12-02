@@ -44,7 +44,10 @@ const PrivateRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   // Se não estiver carregando, decide se mostra a página ou redireciona
   return isAuthenticated ? children : <Navigate to="/login" />;
 };
-const quizformsburpI = "https://forms.gle/SYUA6qkz8tFiv3tC8"
+const quizformsburp1 = "https://forms.gle/SYUA6qkz8tFiv3tC8"
+const quizformsburp2 = "https://forms.gle/eD1amS8RyNQpqNag7"
+const quizformsburp3 = "https://forms.gle/hVHYnHGnHixtckfm8"
+const quizformsburp4 = "https://forms.gle/6K7qfkp9LyjFgdG37"
 // ===================================================================
 // COMPONENTE QUE CONTÉM AS ROTAS
 // ===================================================================
@@ -67,11 +70,24 @@ function AppRoutes() {
       {/* Rotas do Quiz */}
       <Route path="/quizzes/:topic" element={<PrivateRoute><QuizSelectionPage /></PrivateRoute>} />
       <Route path="/quiz/player/:topic/:difficulty" element={<PrivateRoute><QuizPlayer /></PrivateRoute>} />
+      
+      {/* Rotas dos Exercícios */}
       <Route 
-            path="/BurpI" 
-            element={<FormViewer src={quizformsburpI} title="Exercício de Fixação I - Burp Suite" />} 
+            path="/exercises/burp/1" 
+            element={<FormViewer src={quizformsburp1} title="Exercício de Fixação I - Burp Suite" />} 
           />
-
+      <Route 
+            path="/exercises/burp/2" 
+            element={<FormViewer src={quizformsburp2} title="Exercício de Fixação II - Burp Suite" />} 
+          />
+      <Route 
+            path="/exercises/burp/3" 
+            element={<FormViewer src={quizformsburp3} title="Exercício de Fixação III - Burp Suite" />} 
+          />
+      <Route 
+            path="/exercises/burp/4" 
+            element={<FormViewer src={quizformsburp4} title="Exercício de Fixação IV - Burp Suite" />} 
+          />
       {/* Rotas dos Laboratórios */}
       <Route path="/labs/:topic" element={<PrivateRoute><LabSelectionPage /></PrivateRoute>} />
       <Route path="/labs/sql-injection/1" element={<PrivateRoute><SqlInjectionLab1 /></PrivateRoute>} />

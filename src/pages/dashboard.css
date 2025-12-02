@@ -200,11 +200,11 @@
 
 .icon-button:hover {
   color: #00f0ff; /* Efeito neon azul */
-  text-shadow: 0 0 5px #00f0ff;
+  text-shadow: 0 0 5px #009dff;
 }
 .beginner-tag {
   /* Estilos visuais (idênticos) */
-  background-color: #00ff00;
+  background-color: #009dff;
   color: #0d1117;
   font-family: 'Consolas', 'Courier New', monospace;
   font-size: 0.7rem;
