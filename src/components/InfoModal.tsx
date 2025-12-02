@@ -40,7 +40,8 @@ const InfoModal: React.FC<InfoModalProps> = ({ isOpen, onClose }) => {
               O Laboratório Online de Cibersegurança (LOCK) nasce em meio à 
               necessidade de um meio de pesquisa, estudo e aprendizagem 
               prática sobre segurança e pentesting, principalmente na 
-              realidade do IFSertão-PE - Campus Salgueiro.
+              realidade do IFSertãoPE - Campus Salgueiro. Sendo financiado
+              pelo IFSertãoPE, FACEPE e CNPq.
             </p>
             <p>
               A equipe tem como objetivo investigar, pesquisar, desenvolver, 
