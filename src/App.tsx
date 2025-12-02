@@ -25,6 +25,7 @@ import XSSLab1 from './pages/labs/XSSLab1';
 import XSSLab2 from './pages/labs/XSSLab2'; 
 import XSSLab3 from './pages/labs/XSSLab3';
 import FormViewer from './pages/FormViewer';
+import ExercisePage from './pages/exercises/ExercisePage';
 
 // Rodapé 
 import Footer from './components/Footer';
@@ -72,6 +73,7 @@ function AppRoutes() {
       <Route path="/quiz/player/:topic/:difficulty" element={<PrivateRoute><QuizPlayer /></PrivateRoute>} />
       
       {/* Rotas dos Exercícios */}
+      <Route path="/exercises/:topic" element={<PrivateRoute><ExercisePage /></PrivateRoute>} />
       <Route 
             path="/exercises/burp/1" 
             element={<FormViewer src={quizformsburp1} title="Exercício de Fixação I - Burp Suite" />} 

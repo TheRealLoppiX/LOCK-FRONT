@@ -137,7 +137,7 @@ const Dashboard: React.FC = () => {
               <CaretDown weight="bold" className={`caret-icon ${isExercíciosOpen ? 'open' : ''}`} />
             </div>
             <div className={`dropdown-content ${isExercíciosOpen ? 'open' : ''}`}>
-              <Link to="/Burp" className="dropdown-item">
+              <Link to="/exercises/burp" className="dropdown-item">
                 <FilePdf size={20} /> Burp Suite
               </Link>
             </div>
