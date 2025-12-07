@@ -49,6 +49,9 @@ const quizformsburp1 = "https://forms.gle/SYUA6qkz8tFiv3tC8"
 const quizformsburp2 = "https://forms.gle/eD1amS8RyNQpqNag7"
 const quizformsburp3 = "https://forms.gle/hVHYnHGnHixtckfm8"
 const quizformsburp4 = "https://forms.gle/6K7qfkp9LyjFgdG37"
+const quizformsburp5 = "https://forms.gle/7bvv1px1Duh5bLKb8"
+const quizformsburp6 = "https://forms.gle/UKtVz6XZ7C2ydNVb6"
+
 // ===================================================================
 // COMPONENTE QUE CONTÉM AS ROTAS
 // ===================================================================
@@ -90,6 +93,15 @@ function AppRoutes() {
             path="/exercises/burp/4" 
             element={<FormViewer src={quizformsburp4} title="Exercício de Fixação IV - Burp Suite" />} 
           />
+      <Route 
+            path="/exercises/burp/5" 
+            element={<FormViewer src={quizformsburp4} title="Exercício de Fixação V - Burp Suite" />} 
+          />    
+      <Route 
+            path="/exercises/burp/6" 
+            element={<FormViewer src={quizformsburp4} title="Exercício de Fixação VI - Burp Suite" />} 
+          />
+
       {/* Rotas dos Laboratórios */}
       <Route path="/labs/:topic" element={<PrivateRoute><LabSelectionPage /></PrivateRoute>} />
       <Route path="/labs/sql-injection/1" element={<PrivateRoute><SqlInjectionLab1 /></PrivateRoute>} />
