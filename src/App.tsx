@@ -51,6 +51,8 @@ const quizformsburp3 = "https://forms.gle/hVHYnHGnHixtckfm8"
 const quizformsburp4 = "https://forms.gle/6K7qfkp9LyjFgdG37"
 const quizformsburp5 = "https://forms.gle/7bvv1px1Duh5bLKb8"
 const quizformsburp6 = "https://forms.gle/UKtVz6XZ7C2ydNVb6"
+const quizformsburp7 = "https://forms.gle/g5eaRGAojtjMrqcK9"
+const quizformsburp8 = "https://forms.gle/7p75hyGuQZ2NQLzZ8"
 
 // ===================================================================
 // COMPONENTE QUE CONTÉM AS ROTAS
@@ -95,11 +97,19 @@ function AppRoutes() {
           />
       <Route 
             path="/exercises/burp/5" 
-            element={<FormViewer src={quizformsburp4} title="Exercício de Fixação V - Burp Suite" />} 
+            element={<FormViewer src={quizformsburp5} title="Exercício de Fixação V - Burp Suite" />} 
           />    
       <Route 
             path="/exercises/burp/6" 
-            element={<FormViewer src={quizformsburp4} title="Exercício de Fixação VI - Burp Suite" />} 
+            element={<FormViewer src={quizformsburp6} title="Exercício de Fixação VI - Burp Suite" />} 
+          />
+      <Route 
+            path="/exercises/burp/7" 
+            element={<FormViewer src={quizformsburp7} title="Exercício de Fixação VII - Burp Suite" />} 
+          />
+      <Route 
+            path="/exercises/burp/8" 
+            element={<FormViewer src={quizformsburp8} title="Exercício de Fixação VIII - Burp Suite" />} 
           />
 
       {/* Rotas dos Laboratórios */}

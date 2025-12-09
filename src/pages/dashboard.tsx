@@ -140,6 +140,9 @@ const Dashboard: React.FC = () => {
               <Link to="/exercises/burp" className="dropdown-item">
                 <FilePdf size={20} /> Burp Suite
               </Link>
+              <Link to="/exercises/tcp" className="dropdown-item">
+                <FilePdf size={20} /> TCPDump
+              </Link>
             </div>
           </div>
         </div>
