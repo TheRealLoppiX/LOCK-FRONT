@@ -97,10 +97,9 @@ const AdminQuestions: React.FC = () => {
             <div className="input-group">
               <label>Tópico</label>
               <select value={topic} onChange={e => setTopic(e.target.value)}>
-                <option value="sql-injection">SQL Injection</option>
-                <option value="xss">XSS (Cross-Site Scripting)</option>
-                <option value="brute-force">Brute Force</option>
-                <option value="redes">Redes / TCPDump / NMap</option>
+                <option value="burp-suite">Burp Suite</option>
+                <option value="tcpdump">TCPDump</option>
+                <option value="nmap">NMap</option>
                 <option value="variado">Variado</option>
               </select>
             </div>
