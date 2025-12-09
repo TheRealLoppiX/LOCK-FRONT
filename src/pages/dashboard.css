@@ -323,3 +323,11 @@
 .guided-step-item input[type="checkbox"]:checked + label strong {
   color: #8b949e; /* Cinza */
 }
+.admin-card {
+  border-color: #FFD700 !important; /* Dourado */
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+}
+
+.admin-card:hover {
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+}

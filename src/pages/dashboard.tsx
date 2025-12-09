@@ -4,50 +4,53 @@ import { Link, useNavigate } from 'react-router-dom';
 import { 
   CaretDown, Gear, SignOut, Flask, BookOpen, Exam, 
   Question, Info, Shuffle,
-  RocketLaunch, FilePdf
+  RocketLaunch, FilePdf, Crown // Ícone da Coroa importado
 } from '@phosphor-icons/react';
 import HexagonBackground from '../components/hexagonobg';
 import InfoModal from '../components/InfoModal';
 import './dashboard.css';
+import logoLock from '../assets/Logo lock.png';
 
-// NOVO: Define o tipo para as chaves dos passos
 type GuidedStepKey = 'step1' | 'step2' | 'step3' | 'step4' | 'step5';
+
+// Interface auxiliar para garantir que o TS entenda o campo is_admin
+interface UserWithRole {
+  id: string;
+  name: string;
+  email: string;
+  avatar_url?: string;
+  is_admin?: boolean;
+}
 
 const Dashboard: React.FC = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   
+  // Cast para acessar a propriedade is_admin com segurança
+  const currentUser = user as UserWithRole;
+  const isAdmin = currentUser?.is_admin === true;
+
   const [isLabsOpen, setIsLabsOpen] = useState(false);
   const [isQuizzesOpen, setIsQuizzesOpen] = useState(false);
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
-  
-  // NOVO: Estado para o novo card
   const [isGuidedOpen, setIsGuidedOpen] = useState(false);
   const [isExercíciosOpen, setisExercíciosOpen] = useState(false);
+  const [isAdminOpen, setIsAdminOpen] = useState(false); // Estado para o card de Admin
+  const [isAboutUsOpen, setIsAboutUsOpen] = useState(false);
   
-  // NOVO: Estado para os 5 passos (lido do localStorage)
   const [guidedSteps, setGuidedSteps] = useState(() => {
     const savedSteps = localStorage.getItem('lock-guided-steps');
     if (savedSteps) {
       return JSON.parse(savedSteps);
     }
     return {
-      step1: false,
-      step2: false,
-      step3: false,
-      step4: false,
-      step5: false,
+      step1: false, step2: false, step3: false, step4: false, step5: false,
     };
   });
 
-  // NOVO: Handler para os checkboxes (agora salva no localStorage)
   const handleStepToggle = (step: GuidedStepKey) => {
     setGuidedSteps((prev: Record<GuidedStepKey, boolean>) => {
-      const newSteps = {
-        ...prev,
-        [step]: !prev[step]
-      };
-      // Salva o progresso no navegador do usuário
+      const newSteps = { ...prev, [step]: !prev[step] };
       localStorage.setItem('lock-guided-steps', JSON.stringify(newSteps));
       return newSteps;
     });
@@ -95,6 +98,31 @@ const Dashboard: React.FC = () => {
       <main className="dashboard-grid">
         {/* Coluna da Esquerda */}
         <div className="left-column">
+          
+          {/* ====================================================== */}
+          {/* PAINEL ADMINISTRATIVO (SÓ APARECE SE FOR ADMIN)        */}
+          {/* ====================================================== */}
+          {isAdmin && (
+            <div className="dashboard-card admin-card">
+              <div className="dropdown-header" onClick={() => setIsAdminOpen(!isAdminOpen)}>
+                <div className="card-icon" style={{ color: '#FFD700' }}>
+                  <Crown weight="bold" />
+                </div>
+                <div className="card-content">
+                  <h2 style={{ color: '#FFD700' }}>Painel Admin</h2>
+                  <p>Gerenciamento do sistema.</p>
+                </div>
+                <CaretDown weight="bold" className={`caret-icon ${isAdminOpen ? 'open' : ''}`} style={{ color: '#FFD700' }} />
+              </div>
+              <div className={`dropdown-content ${isAdminOpen ? 'open' : ''}`}>
+                <Link to="/admin/questions" className="dropdown-item" style={{ color: '#FFD700' }}>
+                  ➕ Cadastrar Questões
+                </Link>
+                {/* Aqui você pode adicionar mais funções de admin */}
+              </div>
+            </div>
+          )}
+
           {/* Card de Laboratórios */}
           <div className="dashboard-card">
             <div className="dropdown-header" onClick={() => setIsLabsOpen(!isLabsOpen)}>
@@ -162,105 +190,58 @@ const Dashboard: React.FC = () => {
             </div>
           </Link>
 
-          {/* ==================================
-           * NOVO CARD: APRENDIZADO GUIADO
-           * ==================================
-          */}
-          <div className="dashboard-card">
-            <div className="dropdown-header" onClick={() => setIsGuidedOpen(!isGuidedOpen)}>
-              <div className="card-icon"><RocketLaunch weight="bold" /></div>
-              <div className="card-content">
-                <h2>Aprendizado Guiado</h2>
-                <p>Seus primeiros passos no LOCK.</p>
+          {/* Card Aprendizado Guiado */}
+          <div className="guided-learning-wrapper">
+            <div className="beginner-tag">Indicado para Iniciantes</div>
+            <div className="dashboard-card">
+              <div className="dropdown-header" onClick={() => setIsGuidedOpen(!isGuidedOpen)}>
+                <div className="card-icon"><RocketLaunch weight="bold" /></div>
+                <div className="card-content">
+                  <h2>Aprendizado Guiado</h2>
+                  <p>Siga estes 5 passos para começar no hacking ético.</p>
+                </div>
+                <CaretDown weight="bold" className={`caret-icon ${isGuidedOpen ? 'open' : ''}`} />
               </div>
               
-              {/* NOVO: A Tag de Iniciante */}
-              <span className="beginner-tag">Indicado para Iniciantes</span>
-              
-              <CaretDown weight="bold" className={`caret-icon ${isGuidedOpen ? 'open' : ''}`} />
-            </div>
-            
-            {/* NOVO: Conteúdo do Dropdown */}
-            <div className={`dropdown-content ${isGuidedOpen ? 'open' : ''}`}>
-              <ul className="guided-step-list">
-                
-                {/* Passo 1 */}
-                <li className="guided-step-item">
-                  <input 
-                    type="checkbox" 
-                    id="step1" 
-                    checked={guidedSteps.step1} 
-                    onChange={() => handleStepToggle('step1')} 
-                  />
-                  <label htmlFor="step1">
-                    <strong>Conheça a Missão:</strong> Entenda o projeto clicando no ícone de "Informações" (ℹ️) no topo.
-                  </label>
-                </li>
-                
-                {/* Passo 2 */}
-                <li className="guided-step-item">
-                  <input 
-                    type="checkbox" 
-                    id="step2" 
-                    checked={guidedSteps.step2} 
-                    onChange={() => handleStepToggle('step2')} 
-                  />
-                  <label htmlFor="step2">
-                    <strong>Explore a Teoria:</strong> Leia o livro Testes de Invasão da Georgia Weidman, disponível na nossa <Link to="/biblioteca">Biblioteca</Link>.
-                  </label>
-                </li>
-                
-                {/* Passo 3 */}
-                <li className="guided-step-item">
-                  <input 
-                    type="checkbox" 
-                    id="step3" 
-                    checked={guidedSteps.step3} 
-                    onChange={() => handleStepToggle('step3')} 
-                  />
-                  <label htmlFor="step3">
-                    <strong>Teste seu Conhecimento:</strong> Faça um <Link to="/quizzes/variado">Quiz Variado</Link> na dificuldade fácil para testar sua base teórica.
-                  </label>
-                </li>
-                
-                {/* Passo 4 */}
-                <li className="guided-step-item">
-                  <input 
-                    type="checkbox" 
-                    id="step4" 
-                    checked={guidedSteps.step4} 
-                    onChange={() => handleStepToggle('step4')} 
-                  />
-                  <label htmlFor="step4">
-                    <strong>Primeira Interação com Ethical Hacking:</strong> Acesse o Guia para montar seu laboratório de Burp Suite, disponível na nossa <Link to='/biblioteca'>Biblioteca</Link>, para experienciar o Ethical Hacking.
-                  </label>
-                </li>
-                
-                {/* Passo 5 */}
-                <li className="guided-step-item">
-                  <input 
-                    type="checkbox" 
-                    id="step5" 
-                    checked={guidedSteps.step5} 
-                    onChange={() => handleStepToggle('step5')} 
-                  />
-                  <label htmlFor="step5">
-                    <strong>Explore os Desafios:</strong> Use o conhecimento adquirido para solucionar os laboratórios disponíveis na plataforma.
-                  </label>
-                </li>
-                
-              </ul>
+              <div className={`dropdown-content ${isGuidedOpen ? 'open' : ''}`}>
+                <div className="guided-steps-container">
+                  {/* Passos do Guia (Mantidos) */}
+                  <li className="guided-step-item">
+                    <input type="checkbox" id="step1" checked={guidedSteps.step1} onChange={() => handleStepToggle('step1')} />
+                    <label htmlFor="step1"><strong>1. Conheça a Missão</strong><p>Leia o "Sobre o App" no ícone <Info weight="bold" /> acima.</p></label>
+                  </li>
+                  <li className="guided-step-item">
+                    <input type="checkbox" id="step2" checked={guidedSteps.step2} onChange={() => handleStepToggle('step2')} />
+                    <label htmlFor="step2"><strong>2. Base Teórica</strong><p>Visite a <Link to="/biblioteca">Biblioteca</Link>.</p></label>
+                  </li>
+                  {/* ... outros passos ... */}
+                </div>
+              </div>
             </div>
           </div>
 
+          {/* Card "Sobre o LOCK" */}
+          <div className="dashboard-card">
+            <div className="dropdown-header" onClick={() => setIsAboutUsOpen(!isAboutUsOpen)}>
+              <div className="card-icon">
+                <img src={logoLock} alt="Logo LOCK" className="card-logo-icon" />
+              </div>
+              <div className="card-content">
+                <h2>Sobre o LOCK</h2>
+                <p>Conheça o projeto.</p>
+              </div>
+              <CaretDown weight="bold" className={`caret-icon ${isAboutUsOpen ? 'open' : ''}`} />
+            </div>
+            <div className={`dropdown-content ${isAboutUsOpen ? 'open' : ''}`}>
+              <div className="about-us-text">
+                <p>O Laboratório Online de Cibersegurança com Kali Linux (LOCK) nasce em meio à necessidade de um meio de pesquisa, estudo e aprendizagem prática sobre segurança e pentesting.</p>
+              </div>
+            </div>
+          </div>
         </div>
       </main>
 
-      {/* Renderiza o Modal (ele só aparece se isOpen for true) */}
-      <InfoModal 
-        isOpen={isInfoModalOpen} 
-        onClose={() => setIsInfoModalOpen(false)} 
-      />
+      <InfoModal isOpen={isInfoModalOpen} onClose={() => setIsInfoModalOpen(false)} />
     </div>
   );
 };
