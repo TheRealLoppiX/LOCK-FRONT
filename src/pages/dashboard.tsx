@@ -108,25 +108,25 @@ const Dashboard: React.FC = () => {
         {/* Coluna da Esquerda */}
         <div className="left-column">
         {/*Painel de Admin*/}
-        {isAdmin && (
-            <div className="dashboard-card admin-card">
-              <div className="dropdown-header" onClick={() => setIsAdminOpen(!isAdminOpen)}>
-                <div className="card-icon" style={{ color: '#FFD700' }}>
-                  <Crown weight="bold" />
+          {isAdmin && (
+              <div className="dashboard-card admin-card">
+                <div className="dropdown-header" onClick={() => setIsAdminOpen(!isAdminOpen)}>
+                  <div className="card-icon" style={{ color: '#FFD700' }}>
+                    <Crown weight="bold" />
+                  </div>
+                  <div className="card-content">
+                    <h2 style={{ color: '#FFD700' }}>Painel Admin</h2>
+                    <p>Gerenciamento do sistema.</p>
+                  </div>
+                  <CaretDown weight="bold" className={`caret-icon ${isAdminOpen ? 'open' : ''}`} style={{ color: '#FFD700' }} />
                 </div>
-                <div className="card-content">
-                  <h2 style={{ color: '#FFD700' }}>Painel Admin</h2>
-                  <p>Gerenciamento do sistema.</p>
+                <div className={`dropdown-content ${isAdminOpen ? 'open' : ''}`}>
+                  <Link to="/admin/questions" className="dropdown-item" style={{ color: '#FFD700' }}>
+                    ➕ Cadastrar Questões
+                  </Link>
                 </div>
-                <CaretDown weight="bold" className={`caret-icon ${isAdminOpen ? 'open' : ''}`} style={{ color: '#FFD700' }} />
               </div>
-              <div className={`dropdown-content ${isAdminOpen ? 'open' : ''}`}>
-                <Link to="/admin/questions" className="dropdown-item" style={{ color: '#FFD700' }}>
-                  ➕ Cadastrar Questões
-                </Link>
-              </div>
-            </div>
-          )}
+            )}
           {/* Card de Laboratórios */}
           <div className="dashboard-card">
             <div className="dropdown-header" onClick={() => setIsLabsOpen(!isLabsOpen)}>
