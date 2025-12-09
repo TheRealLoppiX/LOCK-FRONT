@@ -1,0 +1,180 @@
+.admin-page-container {
+  min-height: 100vh;
+  padding: 40px 20px;
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+.admin-content {
+  width: 100%;
+  max-width: 800px;
+  position: relative;
+  z-index: 2;
+  background: rgba(13, 17, 23, 0.9);
+  padding: 40px;
+  border-radius: 16px;
+  border: 1px solid #FFD700; /* Borda Dourada para Admin */
+  box-shadow: 0 0 30px rgba(255, 215, 0, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.admin-content h1 {
+  color: #FFD700; /* Dourado */
+  margin: 10px 0 5px 0;
+  text-align: center;
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+.admin-subtitle {
+  color: #8b949e;
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.back-btn {
+  background: transparent;
+  border: 1px solid #30363d;
+  color: #c9d1d9;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.back-btn:hover {
+  border-color: #00f0ff;
+  color: #00f0ff;
+}
+
+/* Form Styles */
+.admin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.input-group label {
+  color: #e6edf3;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.input-group input,
+.input-group select,
+.input-group textarea {
+  background: #0d1117;
+  border: 1px solid #30363d;
+  color: #fff;
+  padding: 12px;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-family: inherit;
+}
+
+.input-group input:focus,
+.input-group select:focus,
+.input-group textarea:focus {
+  outline: none;
+  border-color: #FFD700;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+}
+
+.options-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+/* Radio Buttons para resposta correta */
+.radio-options {
+  display: flex;
+  gap: 15px;
+}
+
+.radio-label {
+  flex: 1;
+  background: #21262d;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #30363d;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #8b949e;
+}
+
+.radio-label input {
+  display: none;
+}
+
+.radio-label.selected {
+  background: rgba(0, 255, 65, 0.1); /* Verde Matrix */
+  border-color: #00ff41;
+  color: #00ff41;
+  font-weight: bold;
+}
+
+/* Botão de Submit */
+.submit-btn {
+  margin-top: 20px;
+  background: linear-gradient(45deg, #FFD700, #FFA500);
+  border: none;
+  padding: 15px;
+  color: #000;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: transform 0.2s;
+}
+
+.submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+}
+
+.submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Feedback */
+.feedback-message {
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.feedback-message.success {
+  background: rgba(0, 255, 65, 0.1);
+  border: 1px solid #00ff41;
+  color: #00ff41;
+}
+
+.feedback-message.error {
+  background: rgba(255, 50, 50, 0.1);
+  border: 1px solid #ff3232;
+  color: #ff3232;
+}

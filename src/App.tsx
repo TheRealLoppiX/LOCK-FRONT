@@ -26,6 +26,7 @@ import XSSLab2 from './pages/labs/XSSLab2';
 import XSSLab3 from './pages/labs/XSSLab3';
 import FormViewer from './pages/FormViewer';
 import ExercisePage from './pages/exercises/ExercisePage';
+import AdminQuestions from './pages/admin/AdminQuestions';
 
 // Rodapé 
 import Footer from './components/Footer';
@@ -123,6 +124,9 @@ function AppRoutes() {
       <Route path="/labs/xss/1" element={<PrivateRoute><XSSLab1 /></PrivateRoute>} />
       <Route path="/labs/xss/2" element={<PrivateRoute><XSSLab2 /></PrivateRoute>} />
       <Route path="/labs/xss/3" element={<PrivateRoute><XSSLab3 /></PrivateRoute>} />
+
+      {/* Rotas de Admin */}
+      <Route path="/admin/questions" element={<PrivateRoute><AdminQuestions /></PrivateRoute>} />
 
     </Routes>
   );
