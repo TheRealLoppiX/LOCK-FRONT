@@ -25,7 +25,6 @@ const getIcon = (type: string) => {
     }
 };
 
-// --- NOVO COMPONENTE: ITEM DA ESTANTE (Visual de Capa) ---
 const BookShelfItem: React.FC<{ 
     material: Material; 
     onStatusChange: (id: string, status: string) => void; 
@@ -130,8 +129,7 @@ const Biblioteca: React.FC = () => {
       aSeguir: sorted.filter(m => m.status === 'A seguir'),
       lendo: sorted.filter(m => m.status === 'Lendo'),
       parado: sorted.filter(m => m.status === 'Parado'),
-      lido: sorted.filter(m => m.status === 'Lido'),
-      // Itens sem status vão apenas para o "Explorar"
+      lido: sorted.filter(m => m.status === 'Lido')
     };
   }, [allMaterials]);
 
