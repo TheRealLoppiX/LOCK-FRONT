@@ -1,89 +1,167 @@
-.biblioteca-container { min-height: 100vh; padding: 40px; box-sizing: border-box; }
-.biblioteca-content { max-width: 1400px; margin: 0 auto; position: relative; z-index: 2; }
-.biblioteca-header { text-align: center; margin-bottom: 50px; }
-.biblioteca-header h1 { font-family: 'Space Grotesk', sans-serif; color: var(--accent-color); font-size: 2.8rem; }
-.biblioteca-header p { font-size: 1.1rem; color: var(--text-secondary); }
+/* Layout Geral */
+.biblioteca-container {
+  min-height: 100vh;
+  position: relative;
+  color: #fff;
+}
 
-/* ================================== */
-/* NOVO LAYOUT DE DUAS COLUNAS        */
-/* ================================== */
+.biblioteca-content {
+  position: relative;
+  z-index: 2;
+  padding: 40px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.biblioteca-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.biblioteca-header h1 {
+  font-size: 3rem;
+  color: #FFD700;
+  margin-bottom: 10px;
+  text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+}
+
+/* Layout Colunas */
 .biblioteca-layout {
   display: grid;
-  grid-template-columns: 1fr 2fr; /* Coluna da esquerda é 1/3, direita é 2/3 */
-  gap: 40px;
-  align-items: flex-start;
+  grid-template-columns: 250px 1fr; /* Coluna Explorar fixa, Estante fluida */
+  gap: 30px;
 }
 
-.coluna-explorar h2, .coluna-estantes h2 {
-  font-family: 'Space Grotesk', sans-serif;
-  color: var(--text-primary);
-  border-bottom: 1px solid var(--border-color);
+/* --- ESTILO DA ESTANTE (GRID DE CAPAS) --- */
+.estante-section {
+  margin-bottom: 50px;
+  background: rgba(13, 17, 23, 0.6);
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid #30363d;
+}
+
+.estante-section h2 {
+  color: #8b949e;
+  border-bottom: 1px solid #30363d;
   padding-bottom: 10px;
-  margin-top: 0;
-  margin-bottom: 25px;
+  margin-bottom: 20px;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
 }
 
-/* --- Coluna da Esquerda (Explorar) --- */
-.coluna-explorar {
-  position: sticky; /* Fica fixo enquanto rola a coluna da direita */
-  top: 40px;
+.shelf-grid {
+  display: grid;
+  /* Cria colunas que se adaptam: mínimo 140px, máximo 1fr */
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 30px 20px; /* Gap vertical maior para o título não bater */
+  align-items: end; /* Alinha as capas pela base (efeito prateleira) */
 }
-.lista-explorar {
-  max-height: 70vh; /* Altura máxima antes de a rolagem aparecer */
-  overflow-y: auto;
-  padding-right: 15px;
-}
-.explorar-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 0;
-  border-bottom: 1px solid var(--border-color);
-}
-.explorar-item-info {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-.explorar-item-info a {
-  color: var(--text-secondary);
-  text-decoration: none;
-  transition: color 0.3s;
-}
-.explorar-item-info a:hover {
-  color: var(--accent-color);
-}
-.explorar-item-icon {
-  color: var(--accent-color);
-}
-.add-button {
-  background: none;
-  border: none;
-  color: var(--text-secondary);
+
+/* --- CARD DO LIVRO (CAPA) --- */
+.book-cover-card {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2 / 3; /* Proporção padrão de livro */
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   cursor: pointer;
-  transition: color 0.3s;
-}
-.add-button:hover {
-  color: var(--accent-color);
+  border-radius: 6px;
+  perspective: 1000px;
 }
 
+/* Imagem da Capa */
+.book-cover-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 4px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
 
-/* --- Coluna da Direita (Estantes) --- */
-.estante-section { margin-bottom: 40px; }
-.continue-estudando { background: var(--background-secondary); border: 1px solid var(--accent-color); border-radius: 15px; padding: 30px; }
-.continue-estudando h2 { border-color: var(--accent-color-translucent); }
-.estante-vazia { color: var(--text-secondary); font-style: italic; font-size: 0.9rem; }
+/* Efeito Hover: Aumentar e Sombra */
+.book-cover-card:hover .book-cover-img {
+  transform: scale(1.1) translateY(-10px);
+  box-shadow: 0 15px 30px rgba(0, 255, 65, 0.3); /* Brilho Verde Hacker */
+  z-index: 10;
+  position: relative;
+}
 
-/* (O restante do CSS para .material-card, .select, etc. continua o mesmo) */
-.materiais-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
-.material-card { background: var(--background-secondary); border: 1px solid var(--border-color); border-radius: 12px; text-decoration: none; display: flex; flex-direction: column; transition: all 0.3s ease; }
-.material-card:hover { transform: translateY(-3px); border-color: var(--accent-color); }
-.material-link-main { display: flex; gap: 20px; align-items: flex-start; padding: 20px; text-decoration: none; flex-grow: 1; }
-.material-icon { color: var(--accent-color); font-size: 1.5rem; margin-top: 5px; }
-.material-info h2 { color: var(--text-primary); font-size: 1.2rem; margin: 5px 0 10px 0; }
-.material-info p { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.5; margin: 0; }
-.material-tipo { background-color: var(--accent-color-translucent); color: var(--accent-color); padding: 4px 8px; border-radius: 5px; font-size: 0.8rem; font-weight: bold; }
-.material-status-changer { border-top: 1px solid var(--border-color); padding: 10px 20px; position: relative; }
-.material-status-changer select { width: 100%; background: transparent; border: none; color: var(--text-secondary); font-size: 0.9rem; font-weight: bold; cursor: pointer; -webkit-appearance: none; appearance: none; }
-.select-caret { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); color: var(--accent-color); pointer-events: none; }
-.back-link { display: block; margin-top: 40px; color: var(--text-secondary); text-decoration: none; text-align: center; }
+/* Overlay do Título (Escondido por padrão) */
+.book-info-overlay {
+  position: absolute;
+  bottom: -40px; /* Fica abaixo da capa */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120%;
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 20;
+}
+
+.book-cover-card:hover .book-info-overlay {
+  opacity: 1;
+}
+
+.book-title-mini {
+  background: rgba(0, 0, 0, 0.9);
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  border: 1px solid #FFD700;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+
+/* Dropdown de status discreto no hover */
+.book-actions-hover {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  opacity: 0;
+  transition: opacity 0.2s;
+  z-index: 11;
+}
+
+.book-cover-card:hover .book-actions-hover {
+  opacity: 1;
+}
+
+.mini-select {
+  background: rgba(0,0,0,0.8);
+  color: #fff;
+  border: 1px solid #30363d;
+  font-size: 0.7rem;
+  border-radius: 4px;
+  padding: 2px;
+  cursor: pointer;
+}
+
+/* Placeholder se não tiver imagem */
+.no-cover {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #161b22 0%, #30363d 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  text-align: center;
+  font-size: 0.8rem;
+  color: #8b949e;
+  border: 1px solid #30363d;
+}
+
+/* Sidebar Explorar (Ajustes leves) */
+.coluna-explorar h2 { color: #FFD700; }
+.explorar-item { 
+    display: flex; justify-content: space-between; 
+    padding: 10px; border-bottom: 1px solid #30363d; 
+}
+.explorar-item a { color: #c9d1d9; text-decoration: none; font-size: 0.9rem; }
+.explorar-item a:hover { color: #00f0ff; }
+.add-button { background: none; border: none; color: #238636; cursor: pointer; }
+.add-button:hover { color: #2ea043; transform: scale(1.1); }

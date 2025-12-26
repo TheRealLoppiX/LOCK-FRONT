@@ -27,6 +27,8 @@ import XSSLab3 from './pages/labs/XSSLab3';
 import FormViewer from './pages/FormViewer';
 import ExercisePage from './pages/exercises/ExercisePage';
 import AdminQuestions from './pages/admin/AdminQuestions';
+import BookDetails from './pages/BookDetails';
+import AdminMaterials from './pages/admin/AdminMaterials';
 
 // Rodapé 
 import Footer from './components/Footer';
@@ -73,6 +75,7 @@ function AppRoutes() {
       <Route path="/settings" element={<PrivateRoute><Settings /></PrivateRoute>} />
       <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
       <Route path="/biblioteca" element={<PrivateRoute><Biblioteca /></PrivateRoute>} />
+      <Route path="/biblioteca/:id" element={<PrivateRoute><BookDetails /></PrivateRoute>} />
       
       {/* Rotas do Quiz */}
       <Route path="/quizzes/:topic" element={<PrivateRoute><QuizSelectionPage /></PrivateRoute>} />
@@ -127,6 +130,7 @@ function AppRoutes() {
 
       {/* Rotas de Admin */}
       <Route path="/admin/questions" element={<PrivateRoute><AdminQuestions /></PrivateRoute>} />
+      <Route path="/admin/materials" element={<PrivateRoute><AdminMaterials /></PrivateRoute>} />
 
     </Routes>
   );
