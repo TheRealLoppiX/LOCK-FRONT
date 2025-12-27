@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useAuth } from '../contexts/authContext';
-import { supabase } from '../supabase';
-import PDFReader from '../components/PDFReader';
-import HexagonBackground from '../components/hexagonobg';
-import { Star, BookOpen, BookmarkSimple, CheckCircle } from '@phosphor-icons/react';
-import './BookDetails.css'; // Vamos criar abaixo
+import { useAuth } from '../contexts/authContext'; // Ajuste o caminho se necessário
+import { supabase } from '../supabase'; // Ajuste o caminho se necessário
+import PDFReader from '../components/PDFReader'; // Ajuste o caminho se necessário
+import HexagonBackground from '../components/hexagonobg'; // Ajuste o caminho se necessário
+import { Star, CheckCircle } from '@phosphor-icons/react';
+import './BookDetails.css';
 
 const BookDetails: React.FC = () => {
   const { id } = useParams();
@@ -22,31 +22,41 @@ const BookDetails: React.FC = () => {
 
   useEffect(() => {
     fetchBookData();
-  }, [id]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, user]);
 
   const fetchBookData = async () => {
-    if (!id || !user) return;
+    if (!id) return;
 
-    // 1. Busca livro
-    const { data: bookData } = await supabase.from('books').select('*').eq('id', id).single();
-    setBook(bookData);
-
-    // 2. Busca progresso do usuário
-    const { data: progressData } = await supabase
-        .from('reading_progress')
+    // 1. Busca dados do livro
+    const { data: bookData } = await supabase
+        .from('books')
         .select('*')
-        .eq('user_id', user.id)
-        .eq('book_id', id)
-        .maybeSingle();
+        .eq('id', id)
+        .single();
     
-    setProgress(progressData || { current_page: 1 });
+    if (bookData) setBook(bookData);
 
-    // 3. Busca reviews
+    // 2. Busca progresso do usuário (se estiver logado)
+    if (user) {
+        const { data: progressData } = await supabase
+            .from('reading_progress')
+            .select('*')
+            .eq('user_id', user.id)
+            .eq('book_id', id)
+            .maybeSingle();
+        
+        // Se não tiver progresso, define página 1, mas não salva no banco ainda
+        setProgress(progressData || { current_page: 1, is_completed: false });
+    }
+
+    // 3. Busca reviews (Removemos maybeSingle, pois queremos VÁRIOS reviews)
     const { data: reviewsData } = await supabase
         .from('book_reviews')
         .select('*, users(name, avatar_url)')
         .eq('book_id', id)
-        .maybeSingle();
+        .order('created_at', { ascending: false }); // Ordena do mais recente
+    
     setReviews(reviewsData || []);
   };
 
@@ -54,8 +64,8 @@ const BookDetails: React.FC = () => {
   const handleProgressUpdate = async (page: number, total: number) => {
     if (!user || !id) return;
 
-    // Calcula se completou
-    const isCompleted = page >= total;
+    // Calcula se completou (margem de erro de 1 página)
+    const isCompleted = page >= (total - 1);
 
     const { error } = await supabase.from('reading_progress').upsert({
         user_id: user.id,
@@ -66,34 +76,47 @@ const BookDetails: React.FC = () => {
     }, { onConflict: 'user_id, book_id' });
 
     if (!error) {
-        setProgress({ ...progress, current_page: page, is_completed: isCompleted });
+        // Atualiza estado local com segurança
+        setProgress((prev: any) => ({ 
+            ...prev, 
+            current_page: page, 
+            is_completed: isCompleted 
+        }));
     }
   };
 
   const handleSendReview = async () => {
-      if(userRating === 0) return alert("Selecione uma nota!");
+      if (!user) return alert("Você precisa estar logado!");
+      if (userRating === 0) return alert("Selecione uma nota!");
       
       const { error } = await supabase.from('book_reviews').insert({
-          user_id: user?.id,
+          user_id: user.id,
           book_id: id,
           rating: userRating,
           comment: userComment
       });
 
-      if(!error) {
+      if (!error) {
           alert("Avaliação enviada!");
-          fetchBookData(); // Recarrega reviews
+          fetchBookData(); // Recarrega reviews para aparecer o novo
           setUserComment('');
           setUserRating(0);
+      } else {
+          alert("Erro ao enviar avaliação.");
       }
   };
 
+  // --- RENDERIZAÇÃO ---
+
+  // 1. Loading State
   if (!book) return <div className="loading">Carregando dados da Matrix...</div>;
 
-  // Calculo de porcentagem visual
-  // Nota: Se o 'total_pages' no banco for 0, usamos 1 para evitar divisão por zero até o PDF carregar
-  const totalPagesRef = book.total_pages || 100; 
- const percentage = progress ? Math.min(100, Math.round((progress.current_page / (totalPagesRef || 1)) * 100)) : 0;
+  // 2. Variáveis Seguras (Calculadas SÓ depois que 'book' existe)
+  const totalPages = book.total_pages || 100; // Evita divisão por zero
+  const safeCurrentPage = progress?.current_page || 1;
+  
+  // 3. Cálculo de porcentagem seguro
+  const percentage = Math.min(100, Math.round((safeCurrentPage / totalPages) * 100));
 
   return (
     <div className="book-details-container">
@@ -104,7 +127,10 @@ const BookDetails: React.FC = () => {
         {/* Lado Esquerdo: Capa e Status */}
         <aside className="book-sidebar">
             <div className="book-cover-large">
-                <img src={book.cover_url || "https://placehold.co/300x450/000/FFF?text=No+Cover"} alt={book.title} />
+                <img 
+                    src={book.cover_url || "https://placehold.co/300x450/000/FFF?text=No+Cover"} 
+                    alt={book.title} 
+                />
             </div>
 
             <div className="reading-status-card">
@@ -114,7 +140,8 @@ const BookDetails: React.FC = () => {
                 </div>
                 <div className="progress-text">
                     <span>{percentage}% Concluído</span>
-                    {progress.is_completed && <CheckCircle color="#00ff41" weight="fill" />}
+                    {/* Uso seguro do progress?.is_completed */}
+                    {progress?.is_completed && <CheckCircle color="#00ff41" weight="fill" />}
                 </div>
                 <button 
                     className="read-btn" 
@@ -133,9 +160,10 @@ const BookDetails: React.FC = () => {
                     <button className="close-reader" onClick={() => setIsReading(false)}>
                         X Fechar Leitor
                     </button>
+                    {/* Passamos o onPageChange para salvar automaticamente */}
                     <PDFReader 
                         pdfUrl={book.pdf_url} 
-                        initialPage={progress.current_page}
+                        initialPage={safeCurrentPage}
                         onPageChange={handleProgressUpdate}
                     />
                 </div>
@@ -161,6 +189,7 @@ const BookDetails: React.FC = () => {
                                         weight={star <= userRating ? "fill" : "regular"}
                                         className="star-icon"
                                         onClick={() => setUserRating(star)}
+                                        style={{cursor: 'pointer', marginRight: '5px'}}
                                     />
                                 ))}
                             </div>
@@ -174,18 +203,31 @@ const BookDetails: React.FC = () => {
 
                         {/* Lista de Reviews */}
                         <div className="reviews-list">
+                            {reviews.length === 0 && <p>Seja o primeiro a avaliar!</p>}
+                            
                             {reviews.map(rev => (
                                 <div key={rev.id} className="review-item">
                                     <div className="review-header">
-                                        <img src={rev.users?.avatar_url} alt="avatar" />
-                                        <strong>{rev.users?.name}</strong>
-                                        <div className="stars">
-                                            {[...Array(5)].map((_, i) => (
-                                                <Star key={i} weight={i < rev.rating ? "fill" : "regular"} size={14} color="#FFD700"/>
-                                            ))}
+                                        <img 
+                                            src={rev.users?.avatar_url || "https://placehold.co/50"} 
+                                            alt="avatar" 
+                                            style={{width: 40, height: 40, borderRadius: '50%'}}
+                                        />
+                                        <div>
+                                            <strong>{rev.users?.name || "Usuário"}</strong>
+                                            <div className="stars">
+                                                {[...Array(5)].map((_, i) => (
+                                                    <Star 
+                                                        key={i} 
+                                                        weight={i < rev.rating ? "fill" : "regular"} 
+                                                        size={14} 
+                                                        color="#FFD700"
+                                                    />
+                                                ))}
+                                            </div>
                                         </div>
                                     </div>
-                                    <p>"{rev.comment}"</p>
+                                    <p className="review-comment">"{rev.comment}"</p>
                                 </div>
                             ))}
                         </div>
