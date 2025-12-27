@@ -5,7 +5,7 @@ import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
 import './PDFReader.css'; 
 
-pdfjs.GlobalWorkerOptions.workerSrc = './pdf.worker.min.js';
+pdfjs.GlobalWorkerOptions.workerSrc = `${window.location.origin}/pdf.worker.min.js`;
 
 interface PDFReaderProps {
   pdfUrl: string;
@@ -30,8 +30,8 @@ const PDFReader: React.FC<PDFReaderProps> = ({ pdfUrl, initialPage, onPageChange
   }
 
   function onDocumentLoadError(err: Error) {
-    console.error("Erro no Leitor PDF:", err);
-    setError("Erro ao carregar. Tente recarregar a página.");
+    console.error("Erro no Leitor:", err);
+    setError("Erro ao carregar o documento. Tente recarregar a página.");
   }
 
   const changePage = (offset: number) => {
@@ -44,30 +44,16 @@ const PDFReader: React.FC<PDFReaderProps> = ({ pdfUrl, initialPage, onPageChange
 
   return (
     <div className="pdf-reader-container">
-      {/* Controles */}
       <div className="pdf-controls">
         <div className="nav-group">
-            <button 
-                disabled={pageNumber <= 1} 
-                onClick={() => changePage(-1)}
-                className="control-btn"
-            >
+            <button disabled={pageNumber <= 1} onClick={() => changePage(-1)} className="control-btn">
               <CaretLeft size={20} />
             </button>
-            
-            <span className="page-info">
-               {pageNumber} / {numPages || '--'}
-            </span>
-
-            <button 
-                disabled={pageNumber >= numPages} 
-                onClick={() => changePage(1)}
-                className="control-btn"
-            >
+            <span className="page-info">{pageNumber} / {numPages || '--'}</span>
+            <button disabled={pageNumber >= numPages} onClick={() => changePage(1)} className="control-btn">
               <CaretRight size={20} />
             </button>
         </div>
-
         <div className="zoom-group">
             <button onClick={() => setScale(s => Math.max(0.5, s - 0.2))} className="zoom-btn">
                 <MagnifyingGlassMinus size={18} />
@@ -79,26 +65,22 @@ const PDFReader: React.FC<PDFReaderProps> = ({ pdfUrl, initialPage, onPageChange
         </div>
       </div>
 
-      {/* Visualizador */}
       <div className="pdf-document-wrapper">
         {error ? (
-            <div className="error-message">
-                <p>{error}</p>
-            </div>
+            <div className="error-message"><p>{error}</p></div>
         ) : (
             <Document
               file={pdfUrl}
               onLoadSuccess={onDocumentLoadSuccess}
               onLoadError={onDocumentLoadError}
               loading={<div className="loading-pdf">Carregando PDF...</div>}
-              noData={<div className="loading-pdf">Nenhum PDF selecionado.</div>}
+              noData={<div className="loading-pdf">PDF não encontrado.</div>}
             >
               <Page 
                 pageNumber={pageNumber} 
                 scale={scale} 
                 renderTextLayer={false} 
                 renderAnnotationLayer={false}
-                className="pdf-page"
               />
             </Document>
         )}
