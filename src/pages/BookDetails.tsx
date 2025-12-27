@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useAuth } from '../contexts/authContext'; // Ajuste o caminho se necessário
-import { supabase } from '../supabase'; // Ajuste o caminho se necessário
-import PDFReader from '../components/PDFReader'; // Ajuste o caminho se necessário
-import HexagonBackground from '../components/hexagonobg'; // Ajuste o caminho se necessário
+import { useAuth } from '../contexts/authContext';
+import { supabase } from '../supabase';
+import PDFReader from '../components/PDFReader';
+import HexagonBackground from '../components/hexagonobg';
 import { Star, CheckCircle } from '@phosphor-icons/react';
 import './BookDetails.css';
 
@@ -12,7 +12,10 @@ const BookDetails: React.FC = () => {
   const { user } = useAuth();
   
   const [book, setBook] = useState<any>(null);
-  const [progress, setProgress] = useState<any>(null);
+
+  // MUDANÇA IMPORTANTE: Iniciamos com um objeto padrão para NUNCA ser null
+  const [progress, setProgress] = useState<any>({ current_page: 1, is_completed: false });
+  
   const [isReading, setIsReading] = useState(false);
   const [reviews, setReviews] = useState<any[]>([]);
   
@@ -46,16 +49,18 @@ const BookDetails: React.FC = () => {
             .eq('book_id', id)
             .maybeSingle();
         
-        // Se não tiver progresso, define página 1, mas não salva no banco ainda
-        setProgress(progressData || { current_page: 1, is_completed: false });
+        // Se achou no banco, usa. Se não, mantém o padrão (página 1)
+        if (progressData) {
+            setProgress(progressData);
+        }
     }
 
-    // 3. Busca reviews (Removemos maybeSingle, pois queremos VÁRIOS reviews)
+    // 3. Busca reviews
     const { data: reviewsData } = await supabase
         .from('book_reviews')
         .select('*, users(name, avatar_url)')
         .eq('book_id', id)
-        .order('created_at', { ascending: false }); // Ordena do mais recente
+        .order('created_at', { ascending: false });
     
     setReviews(reviewsData || []);
   };
@@ -64,25 +69,23 @@ const BookDetails: React.FC = () => {
   const handleProgressUpdate = async (page: number, total: number) => {
     if (!user || !id) return;
 
-    // Calcula se completou (margem de erro de 1 página)
     const isCompleted = page >= (total - 1);
 
-    const { error } = await supabase.from('reading_progress').upsert({
+    // Atualiza estado local imediatamente para feedback visual rápido
+    setProgress((prev: any) => ({ 
+        ...prev, 
+        current_page: page, 
+        is_completed: isCompleted 
+    }));
+
+    // Salva no banco em background
+    await supabase.from('reading_progress').upsert({
         user_id: user.id,
         book_id: id,
         current_page: page,
         is_completed: isCompleted,
         last_read_at: new Date()
     }, { onConflict: 'user_id, book_id' });
-
-    if (!error) {
-        // Atualiza estado local com segurança
-        setProgress((prev: any) => ({ 
-            ...prev, 
-            current_page: page, 
-            is_completed: isCompleted 
-        }));
-    }
   };
 
   const handleSendReview = async () => {
@@ -98,7 +101,7 @@ const BookDetails: React.FC = () => {
 
       if (!error) {
           alert("Avaliação enviada!");
-          fetchBookData(); // Recarrega reviews para aparecer o novo
+          fetchBookData(); 
           setUserComment('');
           setUserRating(0);
       } else {
@@ -108,15 +111,13 @@ const BookDetails: React.FC = () => {
 
   // --- RENDERIZAÇÃO ---
 
-  // 1. Loading State
   if (!book) return <div className="loading">Carregando dados da Matrix...</div>;
 
-  // 2. Variáveis Seguras (Calculadas SÓ depois que 'book' existe)
-  const totalPages = book.total_pages || 100; // Evita divisão por zero
-  const safeCurrentPage = progress?.current_page || 1;
-  
-  // 3. Cálculo de porcentagem seguro
-  const percentage = Math.min(100, Math.round((safeCurrentPage / totalPages) * 100));
+  // Cálculos seguros (Progress nunca é null agora)
+  const totalPages = book.total_pages || 100;
+  // Garante que current_page existe, senão usa 1
+  const currentPage = progress.current_page || 1; 
+  const percentage = Math.min(100, Math.round((currentPage / totalPages) * 100));
 
   return (
     <div className="book-details-container">
@@ -140,8 +141,10 @@ const BookDetails: React.FC = () => {
                 </div>
                 <div className="progress-text">
                     <span>{percentage}% Concluído</span>
-                    {/* Uso seguro do progress?.is_completed */}
-                    {progress?.is_completed && <CheckCircle color="#00ff41" weight="fill" />}
+                    
+                    {/* AQUI ESTAVA O ERRO: Agora é seguro ler progress.is_completed */}
+                    {progress.is_completed && <CheckCircle color="#00ff41" weight="fill" />}
+                
                 </div>
                 <button 
                     className="read-btn" 
@@ -160,10 +163,9 @@ const BookDetails: React.FC = () => {
                     <button className="close-reader" onClick={() => setIsReading(false)}>
                         X Fechar Leitor
                     </button>
-                    {/* Passamos o onPageChange para salvar automaticamente */}
                     <PDFReader 
                         pdfUrl={book.pdf_url} 
-                        initialPage={safeCurrentPage}
+                        initialPage={currentPage}
                         onPageChange={handleProgressUpdate}
                     />
                 </div>
@@ -180,7 +182,6 @@ const BookDetails: React.FC = () => {
                     <div className="book-reviews-section">
                         <h3>Avaliações da Comunidade</h3>
                         
-                        {/* Formulário de Review */}
                         <div className="add-review-box">
                             <div className="star-rating-input">
                                 {[1,2,3,4,5].map(star => (
@@ -201,7 +202,6 @@ const BookDetails: React.FC = () => {
                             <button onClick={handleSendReview}>Enviar Avaliação</button>
                         </div>
 
-                        {/* Lista de Reviews */}
                         <div className="reviews-list">
                             {reviews.length === 0 && <p>Seja o primeiro a avaliar!</p>}
                             
