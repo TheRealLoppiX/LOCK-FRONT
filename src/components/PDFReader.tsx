@@ -5,10 +5,7 @@ import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
 import './PDFReader.css'; 
 
-// --- SOLUÇÃO FINAL (LOCAL) ---
-// Apontamos para o arquivo que está na sua pasta /public.
-// O navegador trata isso como "mesma origem", eliminando o erro de CORS.
-pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.js';
+pdfjs.GlobalWorkerOptions.workerSrc = './pdf.worker.min.js';
 
 interface PDFReaderProps {
   pdfUrl: string;
