@@ -16,7 +16,7 @@
     "@types/react-dom": "^19.1.9",
     "axios": "^1.11.0",
     "jwt-decode": "^4.0.0",
-    "pdfjs-dist": "^4.8.69",
+    "pdfjs-dist": "^4.4.168",
     "phosphor": "^0.7.1",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",

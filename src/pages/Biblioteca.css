@@ -20,7 +20,7 @@
 
 .biblioteca-header h1 {
   font-size: 3rem;
-  color: #FFD700;
+  color: #00f0ff;
   margin-bottom: 10px;
   text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
 }
@@ -112,7 +112,7 @@
   padding: 5px 10px;
   border-radius: 4px;
   font-size: 0.8rem;
-  border: 1px solid #FFD700;
+  border: 1px solid #00f0ff;
   box-shadow: 0 4px 10px rgba(0,0,0,0.5);
 }
 
@@ -156,7 +156,7 @@
 }
 
 /* Sidebar Explorar (Ajustes leves) */
-.coluna-explorar h2 { color: #FFD700; }
+.coluna-explorar h2 { color: #00f0ff; }
 .explorar-item { 
     display: flex; justify-content: space-between; 
     padding: 10px; border-bottom: 1px solid #30363d; 

@@ -67,7 +67,7 @@
 /* Main Area */
 .book-title {
     font-size: 2.5rem;
-    color: #FFD700;
+    color: #00f0ff;
 }
 
 .book-author {
@@ -80,7 +80,7 @@
     background: rgba(13, 17, 23, 0.8);
     padding: 20px;
     border-radius: 8px;
-    border-left: 4px solid #FFD700;
+    border-left: 4px solid #00f0ff;
     margin-bottom: 30px;
     line-height: 1.6;
 }
@@ -98,7 +98,7 @@
 
 .star-icon {
     cursor: pointer;
-    color: #FFD700;
+    color: #00f0ff;
     font-size: 24px;
 }
 
