@@ -37,7 +37,7 @@ const BookDetails: React.FC = () => {
         .select('*')
         .eq('user_id', user.id)
         .eq('book_id', id)
-        .maybeSingle(); // maybeSingle não dá erro se não existir
+        .maybeSingle();
     
     setProgress(progressData || { current_page: 1 });
 
@@ -45,7 +45,8 @@ const BookDetails: React.FC = () => {
     const { data: reviewsData } = await supabase
         .from('book_reviews')
         .select('*, users(name, avatar_url)')
-        .eq('book_id', id);
+        .eq('book_id', id)
+        .maybeSingle();
     setReviews(reviewsData || []);
   };
 
