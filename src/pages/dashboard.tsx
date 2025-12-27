@@ -146,6 +146,13 @@ const Dashboard: React.FC = () => {
                 >
                   ➕ Cadastrar Questões
                 </Link>
+                <Link
+                  to="/admin/materials"
+                  className="dropdown-item"
+                  style={{ color: "#FFD700" }}
+                >
+                  ➕ Cadastrar Materiais
+                </Link>
               </div>
             </div>
           )}

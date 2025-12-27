@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/authContext'; 
 import HexagonBackground from '../../components/hexagonobg';
 import { CaretLeft, CheckCircle, Warning, UploadSimple } from '@phosphor-icons/react';
-import './AdminQuestions.css'; // Podemos reaproveitar o CSS das questões!
+import './AdminQuestions.css';
 
 const AdminMaterials: React.FC = () => {
   const { token } = useAuth();
