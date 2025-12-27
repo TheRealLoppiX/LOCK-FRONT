@@ -5,7 +5,10 @@ import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
 import './PDFReader.css'; 
 
-pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@4.4.168/build/pdf.worker.min.js`;
+// --- SOLUÇÃO FINAL (LOCAL) ---
+// Apontamos para o arquivo que está na sua pasta /public.
+// O navegador trata isso como "mesma origem", eliminando o erro de CORS.
+pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.js';
 
 interface PDFReaderProps {
   pdfUrl: string;
@@ -19,7 +22,6 @@ const PDFReader: React.FC<PDFReaderProps> = ({ pdfUrl, initialPage, onPageChange
   const [scale, setScale] = useState(1.0);
   const [error, setError] = useState<string | null>(null);
 
-  // Reinicia estados quando muda o PDF
   useEffect(() => {
     setPageNumber(initialPage || 1);
     setError(null);
@@ -31,9 +33,8 @@ const PDFReader: React.FC<PDFReaderProps> = ({ pdfUrl, initialPage, onPageChange
   }
 
   function onDocumentLoadError(err: Error) {
-    console.error("Erro PDF Reader:", err);
-    // Mensagem amigável para o usuário
-    setError("Erro ao carregar o PDF. Verifique a conexão ou se o link é válido.");
+    console.error("Erro no Leitor PDF:", err);
+    setError("Erro ao carregar. Tente recarregar a página.");
   }
 
   const changePage = (offset: number) => {
@@ -86,9 +87,6 @@ const PDFReader: React.FC<PDFReaderProps> = ({ pdfUrl, initialPage, onPageChange
         {error ? (
             <div className="error-message">
                 <p>{error}</p>
-                <button onClick={() => window.location.reload()} className="retry-btn">
-                    Tentar Novamente
-                </button>
             </div>
         ) : (
             <Document
@@ -96,12 +94,7 @@ const PDFReader: React.FC<PDFReaderProps> = ({ pdfUrl, initialPage, onPageChange
               onLoadSuccess={onDocumentLoadSuccess}
               onLoadError={onDocumentLoadError}
               loading={<div className="loading-pdf">Carregando PDF...</div>}
-              noData={<div className="loading-pdf">PDF não encontrado.</div>}
-              // Opções extras para evitar CORS no arquivo PDF em si
-              options={{
-                cMapUrl: `https://unpkg.com/pdfjs-dist@4.4.168/cmaps/`,
-                cMapPacked: true,
-              }}
+              noData={<div className="loading-pdf">Nenhum PDF selecionado.</div>}
             >
               <Page 
                 pageNumber={pageNumber} 
