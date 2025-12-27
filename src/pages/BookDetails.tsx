@@ -93,7 +93,7 @@ const BookDetails: React.FC = () => {
   // Calculo de porcentagem visual
   // Nota: Se o 'total_pages' no banco for 0, usamos 1 para evitar divisão por zero até o PDF carregar
   const totalPagesRef = book.total_pages || 100; 
-  const percentage = Math.min(100, Math.round((progress.current_page / totalPagesRef) * 100));
+ const percentage = progress ? Math.min(100, Math.round((progress.current_page / (totalPagesRef || 1)) * 100)) : 0;
 
   return (
     <div className="book-details-container">
