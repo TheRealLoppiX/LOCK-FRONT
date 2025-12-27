@@ -5,10 +5,7 @@ import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
 import './PDFReader.css'; 
 
-// --- CONFIGURAÇÃO CORRIGIDA ---
-// Usamos o unpkg com HTTPS explícito. 
-// A variável ${pdfjs.version} agora vai pegar a versão 4.4.168 que instalamos.
-pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
+pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@4.4.168/build/pdf.worker.min.js`;
 
 interface PDFReaderProps {
   pdfUrl: string;
@@ -19,9 +16,10 @@ interface PDFReaderProps {
 const PDFReader: React.FC<PDFReaderProps> = ({ pdfUrl, initialPage, onPageChange }) => {
   const [numPages, setNumPages] = useState<number>(0);
   const [pageNumber, setPageNumber] = useState<number>(initialPage || 1);
-  const [scale, setScale] = useState(1.0); // Zoom padrão 100%
+  const [scale, setScale] = useState(1.0);
   const [error, setError] = useState<string | null>(null);
 
+  // Reinicia estados quando muda o PDF
   useEffect(() => {
     setPageNumber(initialPage || 1);
     setError(null);
@@ -33,8 +31,9 @@ const PDFReader: React.FC<PDFReaderProps> = ({ pdfUrl, initialPage, onPageChange
   }
 
   function onDocumentLoadError(err: Error) {
-    console.error("Erro no PDFReader:", err);
-    setError("Erro ao carregar o PDF. Verifique sua internet ou se o link é válido.");
+    console.error("Erro PDF Reader:", err);
+    // Mensagem amigável para o usuário
+    setError("Erro ao carregar o PDF. Verifique a conexão ou se o link é válido.");
   }
 
   const changePage = (offset: number) => {
@@ -47,14 +46,13 @@ const PDFReader: React.FC<PDFReaderProps> = ({ pdfUrl, initialPage, onPageChange
 
   return (
     <div className="pdf-reader-container">
-      {/* Barra de Ferramentas */}
+      {/* Controles */}
       <div className="pdf-controls">
         <div className="nav-group">
             <button 
                 disabled={pageNumber <= 1} 
                 onClick={() => changePage(-1)}
                 className="control-btn"
-                title="Página Anterior"
             >
               <CaretLeft size={20} />
             </button>
@@ -67,7 +65,6 @@ const PDFReader: React.FC<PDFReaderProps> = ({ pdfUrl, initialPage, onPageChange
                 disabled={pageNumber >= numPages} 
                 onClick={() => changePage(1)}
                 className="control-btn"
-                title="Próxima Página"
             >
               <CaretRight size={20} />
             </button>
@@ -84,7 +81,7 @@ const PDFReader: React.FC<PDFReaderProps> = ({ pdfUrl, initialPage, onPageChange
         </div>
       </div>
 
-      {/* Área de Visualização */}
+      {/* Visualizador */}
       <div className="pdf-document-wrapper">
         {error ? (
             <div className="error-message">
@@ -98,8 +95,13 @@ const PDFReader: React.FC<PDFReaderProps> = ({ pdfUrl, initialPage, onPageChange
               file={pdfUrl}
               onLoadSuccess={onDocumentLoadSuccess}
               onLoadError={onDocumentLoadError}
-              loading={<div className="loading-pdf">Carregando documento...</div>}
+              loading={<div className="loading-pdf">Carregando PDF...</div>}
               noData={<div className="loading-pdf">PDF não encontrado.</div>}
+              // Opções extras para evitar CORS no arquivo PDF em si
+              options={{
+                cMapUrl: `https://unpkg.com/pdfjs-dist@4.4.168/cmaps/`,
+                cMapPacked: true,
+              }}
             >
               <Page 
                 pageNumber={pageNumber} 
