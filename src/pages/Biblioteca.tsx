@@ -5,7 +5,7 @@ import HexagonBackground from '../components/hexagonobg';
 import { FilePdf, Article, Book, Link as LinkIcon, PlusCircle, CircleNotch } from '@phosphor-icons/react';
 import './Biblioteca.css';
 
-// Atualizamos a interface para ter capa
+// Interface para ter capa
 interface Material {
   id: string;
   title: string;
