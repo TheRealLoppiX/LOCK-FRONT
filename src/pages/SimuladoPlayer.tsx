@@ -2,15 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/authContext';
 import HexagonBackground from '../components/hexagonobg';
-import { CaretLeft, CaretRight, CheckCircle, XCircle, Trophy, Timer, Warning } from '@phosphor-icons/react';
+import { CaretLeft, CaretRight, Trophy, Timer, Warning } from '@phosphor-icons/react';
 import './SimuladoPlayer.css';
 
-// Interfaces para tipagem dos dados
+// Interfaces atualizadas para refletir a estrutura do banco (índice numérico)
 interface Question {
   id: string;
   question: string;
-  options: string[]; // Vem como JSONB do banco, aqui será array de strings
-  correct_answer: string; // O texto da resposta correta
+  options: string[]; 
+  correct_answer_index: number; // Agora é um número, não string
 }
 
 interface ExamModule {
@@ -30,7 +30,7 @@ const SimuladoPlayer: React.FC = () => {
   
   // Estados do Jogo/Prova
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [selectedAnswers, setSelectedAnswers] = useState<Record<string, string>>({}); // Guarda { "id_da_questao": "Texto da Opção Escolhida" }
+  const [selectedAnswers, setSelectedAnswers] = useState<Record<string, string>>({}); // { "id_da_questao": "Texto da Opção Escolhida" }
   const [isFinished, setIsFinished] = useState(false);
   const [score, setScore] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -87,10 +87,14 @@ const SimuladoPlayer: React.FC = () => {
     setIsSubmitting(true);
     let finalScore = 0;
 
-    // Calcula acertos
     questions.forEach(q => {
-      // Compara a resposta escolhida com a correta
-      if (selectedAnswers[q.id] === q.correct_answer) {
+      // LÓGICA CORRIGIDA:
+      // O banco nos dá o ÍNDICE da correta (ex: 1).
+      // Buscamos o texto correspondente no array options (ex: options[1]).
+      // Comparamos com o texto que o aluno clicou.
+      const correctOptionText = q.options[q.correct_answer_index];
+      
+      if (selectedAnswers[q.id] === correctOptionText) {
         finalScore++;
       }
     });
@@ -126,10 +130,11 @@ const SimuladoPlayer: React.FC = () => {
   if (questions.length === 0) {
     return (
         <div className="player-container">
+            <HexagonBackground />
             <div className="empty-warning">
                 <Warning size={48} color="#FFD700" />
                 <h2>Este simulado ainda não tem questões cadastradas.</h2>
-                <button onClick={() => navigate('/simulados')} className="nav-btn">Voltar</button>
+                <button onClick={() => navigate('/simulados')} className="nav-btn" style={{marginTop: '20px'}}>Voltar</button>
             </div>
         </div>
     )
@@ -239,7 +244,7 @@ const SimuladoPlayer: React.FC = () => {
             disabled={!selectedAnswers[currentQ.id]} // Obriga a responder antes de avançar
           >
             {currentQuestionIndex === questions.length - 1 ? (
-                isSubmitting ? "Finalizando..." : "Finalizar Prova"
+                isSubmitting ? "A finalizar..." : "Finalizar Prova"
             ) : (
                 <>Próxima <CaretRight /></>
             )}
