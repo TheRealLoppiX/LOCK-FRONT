@@ -217,8 +217,6 @@ const Dashboard: React.FC = () => {
           {/* 2. Card: APRENDIZADO GUIADO */}
           <div className="guided-learning-wrapper">
              {/* Tag Visual */}
-             <div className="beginner-tag">Indicado para Iniciantes</div>
-
              <div className="dashboard-card">
                 <div className="dropdown-header" onClick={() => setIsGuidedOpen(!isGuidedOpen)}>
                   <div className="card-icon"><RocketLaunch weight="bold" /></div>
