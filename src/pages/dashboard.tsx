@@ -311,13 +311,13 @@ const Dashboard: React.FC = () => {
             </div>
           </div>
           <Link to="/simulados" className="dashboard-card-link">
-            <div className="dashboard-card" style={{borderColor: '#FFD700'}}>
+            <div className="dashboard-card" style={{borderColor: '#009dff'}}>
               <div className="dropdown-header">
-                <div className="card-icon" style={{color: '#FFD700'}}>
+                <div className="card-icon" style={{color: '#009dff'}}>
                     <FilePdf weight="bold" />
                 </div>
                 <div className="card-content">
-                  <h2 style={{color: '#FFD700'}}>Simulados & Certificações</h2>
+                  <h2 style={{color: '#009dff'}}>Simulados & Certificações</h2>
                   <p>Treine para provas reais (CompTIA, CEH, LPI).</p>
                 </div>
               </div>

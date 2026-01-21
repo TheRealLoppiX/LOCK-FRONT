@@ -30,10 +30,10 @@ import AdminQuestions from './pages/admin/AdminQuestions';
 import BookDetails from './pages/BookDetails';
 import AdminMaterials from './pages/admin/AdminMaterials';
 import Simulados from './pages/simulados';
+import CreateModule from './pages/admin/CreateModule';
 
 // Rodapé 
 import Footer from './components/Footer';
-
 
 // ===================================================================
 // COMPONENTE PARA PROTEGER ROTAS
@@ -133,6 +133,7 @@ function AppRoutes() {
       {/* Rotas de Admin */}
       <Route path="/admin/questions" element={<PrivateRoute><AdminQuestions /></PrivateRoute>} />
       <Route path="/admin/materials" element={<PrivateRoute><AdminMaterials /></PrivateRoute>} />
+      <Route path="/admin/module" element={<PrivateRoute><CreateModule /></PrivateRoute>} />
 
     </Routes>
   );
