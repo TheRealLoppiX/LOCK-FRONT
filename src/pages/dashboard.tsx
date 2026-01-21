@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { 
   CaretDown, Gear, SignOut, Flask, BookOpen, Exam, 
   Question, Info, Shuffle,
-  RocketLaunch, FilePdf, Crown, ListPlus 
+  RocketLaunch, FilePdf, Crown, ListPlus, Certificate
 } from '@phosphor-icons/react';
 import HexagonBackground from '../components/hexagonobg';
 import InfoModal from '../components/InfoModal';
@@ -291,30 +291,11 @@ const Dashboard: React.FC = () => {
              </div>
           </div>
 
-          {/* 3. Card "Sobre o LOCK" */}
-          <div className="dashboard-card">
-            <div className="dropdown-header" onClick={() => setIsAboutUsOpen(!isAboutUsOpen)}>
-              <div className="card-icon">
-                <img src={logoLock} alt="Logo LOCK" className="card-logo-icon" />
-              </div>
-              <div className="card-content">
-                <h2>Sobre o LOCK</h2>
-                <p>Conheça o projeto.</p>
-              </div>
-              <CaretDown weight="bold" className={`caret-icon ${isAboutUsOpen ? 'open' : ''}`} />
-            </div>
-            <div className={`dropdown-content ${isAboutUsOpen ? 'open' : ''}`}>
-              <div className="about-us-text">
-                <p>O Laboratório Online de Cibersegurança com Kali Linux (LOCK) nasce em meio à necessidade de um meio de pesquisa, estudo e aprendizagem prática sobre segurança e pentesting, principalmente na realidade do Instituto Federal do Sertão Pernambucano (IFSertão-PE) - Campus Salgueiro.</p>
-                <p>A equipe, composta por membros do Campus Salgueiro do IFSertão-PE, tem como objetivo investigar, pesquisar, desenvolver, comprovar e aplicar tecnologias relacionadas ao contexto da cibersegurança em estado da atualidade.</p>
-              </div>
-            </div>
-          </div>
           <Link to="/simulados" className="dashboard-card-link">
             <div className="dashboard-card" style={{borderColor: '#009dff'}}>
               <div className="dropdown-header">
                 <div className="card-icon" style={{color: '#009dff'}}>
-                    <FilePdf weight="bold" />
+                    <Certificate weight="bold" />
                 </div>
                 <div className="card-content">
                   <h2 style={{color: '#009dff'}}>Simulados & Certificações</h2>
