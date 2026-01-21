@@ -29,6 +29,7 @@ import ExercisePage from './pages/exercises/ExercisePage';
 import AdminQuestions from './pages/admin/AdminQuestions';
 import BookDetails from './pages/BookDetails';
 import AdminMaterials from './pages/admin/AdminMaterials';
+import Simulados from './pages/simulados';
 
 // Rodapé 
 import Footer from './components/Footer';
@@ -76,7 +77,8 @@ function AppRoutes() {
       <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
       <Route path="/biblioteca" element={<PrivateRoute><Biblioteca /></PrivateRoute>} />
       <Route path="/biblioteca/:id" element={<PrivateRoute><BookDetails /></PrivateRoute>} />
-      
+      <Route path="/simulados" element={<PrivateRoute><Simulados /></PrivateRoute>} />
+
       {/* Rotas do Quiz */}
       <Route path="/quizzes/:topic" element={<PrivateRoute><QuizSelectionPage /></PrivateRoute>} />
       <Route path="/quiz/player/:topic/:difficulty" element={<PrivateRoute><QuizPlayer /></PrivateRoute>} />
