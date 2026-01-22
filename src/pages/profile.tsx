@@ -8,7 +8,7 @@ import {
   Trophy, DownloadSimple, Camera, FloppyDisk, 
   Cpu, TerminalWindow 
 } from '@phosphor-icons/react';
-import './Profile.css';
+import './profile.css';
 
 // Tipos
 interface UserStats {
