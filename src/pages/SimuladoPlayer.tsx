@@ -2,20 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/authContext';
 import HexagonBackground from '../components/hexagonobg';
-import { CaretLeft, CaretRight, Trophy, Timer, Warning } from '@phosphor-icons/react';
+import { CaretLeft, CaretRight, Trophy, Timer, Warning, Clock } from '@phosphor-icons/react';
 import './SimuladoPlayer.css';
 
-// Interfaces atualizadas para refletir a estrutura do banco (índice numérico)
 interface Question {
   id: string;
   question: string;
   options: string[]; 
-  correct_answer_index: number; // Agora é um número, não string
+  correct_answer_index: number;
 }
 
 interface ExamModule {
   title: string;
   difficulty_level: number;
+  duration_minutes: number; // Novo campo
 }
 
 const SimuladoPlayer: React.FC = () => {
@@ -23,26 +23,47 @@ const SimuladoPlayer: React.FC = () => {
   const { token } = useAuth();
   const navigate = useNavigate();
 
-  // Estados de Dados
   const [loading, setLoading] = useState(true);
+  const [errorMsg, setErrorMsg] = useState(''); // Para mostrar erro de "Já fez hoje"
+  
   const [moduleData, setModuleData] = useState<ExamModule | null>(null);
   const [questions, setQuestions] = useState<Question[]>([]);
   
-  // Estados do Jogo/Prova
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [selectedAnswers, setSelectedAnswers] = useState<Record<string, string>>({}); // { "id_da_questao": "Texto da Opção Escolhida" }
+  const [selectedAnswers, setSelectedAnswers] = useState<Record<string, string>>({}); 
   const [isFinished, setIsFinished] = useState(false);
   const [score, setScore] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Carrega os dados ao abrir a página
+  // CRONÔMETRO
+  const [timeLeft, setTimeLeft] = useState(0); // Em segundos
+
   useEffect(() => {
     fetchExamData();
   }, [id]);
 
+  // Lógica do Timer
+  useEffect(() => {
+    if (!loading && !isFinished && timeLeft > 0) {
+      const timerId = setInterval(() => {
+        setTimeLeft((prev) => prev - 1);
+      }, 1000);
+      return () => clearInterval(timerId);
+    } else if (timeLeft === 0 && !loading && !isFinished && moduleData) {
+      // TEMPO ACABOU!
+      finishExam();
+    }
+  }, [timeLeft, loading, isFinished]);
+
+  // Formata segundos para MM:SS
+  const formatTime = (seconds: number) => {
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+  };
+
   const fetchExamData = async () => {
     try {
-      // 1. Busca as questões específicas deste módulo
       const res = await fetch(`${process.env.REACT_APP_API_URL}/modules/${id}/questions`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -50,21 +71,23 @@ const SimuladoPlayer: React.FC = () => {
       
       if (res.ok) {
         setModuleData(data.module);
-        // Embaralha as questões para que a ordem nunca seja a mesma
+        // Define o tempo inicial (minutos * 60)
+        setTimeLeft(data.module.duration_minutes * 60);
+        
         const shuffledQuestions = data.questions.sort(() => Math.random() - 0.5);
         setQuestions(shuffledQuestions);
       } else {
-        alert("Erro ao carregar o simulado. Tente novamente.");
-        navigate('/simulados');
+        // Trata erro de "Já realizou hoje"
+        setErrorMsg(data.message || "Erro ao carregar simulado.");
       }
     } catch (error) {
       console.error("Erro de conexão:", error);
+      setErrorMsg("Erro de conexão.");
     } finally {
       setLoading(false);
     }
   };
 
-  // Regista a opção selecionada pelo utilizador
   const handleOptionSelect = (option: string) => {
     const currentQ = questions[currentQuestionIndex];
     setSelectedAnswers(prev => ({
@@ -73,7 +96,6 @@ const SimuladoPlayer: React.FC = () => {
     }));
   };
 
-  // Avança para a próxima pergunta ou finaliza
   const handleNext = () => {
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(prev => prev + 1);
@@ -82,18 +104,13 @@ const SimuladoPlayer: React.FC = () => {
     }
   };
 
-  // Calcula a nota e envia para o backend
   const finishExam = async () => {
+    if (isFinished) return; // Evita duplo envio
     setIsSubmitting(true);
     let finalScore = 0;
 
     questions.forEach(q => {
-      // LÓGICA CORRIGIDA:
-      // O banco nos dá o ÍNDICE da correta (ex: 1).
-      // Buscamos o texto correspondente no array options (ex: options[1]).
-      // Comparamos com o texto que o aluno clicou.
       const correctOptionText = q.options[q.correct_answer_index];
-      
       if (selectedAnswers[q.id] === correctOptionText) {
         finalScore++;
       }
@@ -102,7 +119,6 @@ const SimuladoPlayer: React.FC = () => {
     setScore(finalScore);
     setIsFinished(true);
 
-    // Envia o resultado para o banco de dados
     try {
       await fetch(`${process.env.REACT_APP_API_URL}/modules/${id}/attempt`, {
         method: 'POST',
@@ -117,41 +133,39 @@ const SimuladoPlayer: React.FC = () => {
       });
     } catch (error) {
       console.error("Erro ao salvar nota:", error);
-      // Não bloqueamos o utilizador se falhar o salvamento, apenas mostramos o resultado local
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  // --- RENDERIZAÇÃO ---
+  if (loading) return <div className="loading-screen">Preparando ambiente de prova...</div>;
 
-  if (loading) return <div className="loading-screen">A carregar Simulado...</div>;
-
-  if (questions.length === 0) {
+  // TELA DE ERRO (Ex: Já fez hoje)
+  if (errorMsg) {
     return (
         <div className="player-container">
             <HexagonBackground />
-            <div className="empty-warning">
-                <Warning size={48} color="#FFD700" />
-                <h2>Este simulado ainda não tem questões cadastradas.</h2>
+            <div className="empty-warning" style={{borderColor: '#ff3232'}}>
+                <Warning size={48} color="#ff3232" />
+                <h2 style={{color: '#ff3232', marginTop: '10px'}}>Acesso Negado</h2>
+                <p>{errorMsg}</p>
                 <button onClick={() => navigate('/simulados')} className="nav-btn" style={{marginTop: '20px'}}>Voltar</button>
             </div>
         </div>
     )
   }
 
-  // TELA DE RESULTADO FINAL
+  // TELA DE RESULTADO
   if (isFinished) {
     const percentage = Math.round((score / questions.length) * 100);
-    const passed = percentage >= 70; // Critério de aprovação (70%)
+    const passed = percentage >= 70;
 
     return (
       <div className="player-container">
         <HexagonBackground />
         <div className="result-card">
           <Trophy size={64} color={passed ? "#00ff41" : "#ff3232"} weight="duotone" />
-          
-          <h1>{passed ? "Aprovado!" : "Não foi desta vez"}</h1>
+          <h1>{timeLeft === 0 && percentage < 70 ? "Tempo Esgotado!" : (passed ? "Aprovado!" : "Reprovado")}</h1>
           
           <div className="score-details">
             <p>Você acertou <strong>{score}</strong> de <strong>{questions.length}</strong> questões.</p>
@@ -161,12 +175,6 @@ const SimuladoPlayer: React.FC = () => {
             <span className="score-percentage">{percentage}%</span>
             <span className="score-label">Nota Final</span>
           </div>
-
-          <p className="feedback-text">
-            {passed 
-                ? "Parabéns! Você demonstrou um excelente domínio sobre o tema." 
-                : "Continue estudando os materiais da biblioteca e tente novamente."}
-          </p>
 
           <button onClick={() => navigate('/simulados')} className="finish-btn">
             Voltar para Certificações
@@ -178,41 +186,41 @@ const SimuladoPlayer: React.FC = () => {
 
   // TELA DE PERGUNTA (JOGO)
   const currentQ = questions[currentQuestionIndex];
-  // Calcula o progresso (ex: Questão 5 de 10 = 50%)
   const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+  
+  // Cor do timer muda se tiver menos de 1 minuto
+  const timerColor = timeLeft < 60 ? '#ff3232' : '#FFD700';
 
   return (
     <div className="player-container">
       <HexagonBackground />
       
-      {/* Cabeçalho do Exame */}
       <div className="exam-header">
         <div className="exam-title-box">
             <h2>{moduleData?.title}</h2>
-            <div className="timer-badge"><Timer size={20} /> Modo Simulado</div>
+            {/* TIMER VISUAL */}
+            <div className="timer-badge" style={{ borderColor: timerColor, color: timerColor }}>
+                <Clock size={20} weight={timeLeft < 60 ? "fill" : "regular"} /> 
+                {formatTime(timeLeft)}
+            </div>
         </div>
       </div>
 
-      {/* Barra de Progresso */}
       <div className="progress-bar-exam-container">
         <div className="progress-label">
-            <span>Questão {currentQuestionIndex + 1}</span>
-            <span>{questions.length} total</span>
+            <span>Questão {currentQuestionIndex + 1} de {questions.length}</span>
         </div>
         <div className="progress-bar-exam">
             <div className="fill" style={{width: `${progress}%`}}></div>
         </div>
       </div>
 
-      {/* Cartão da Questão */}
       <div className="question-card">
         <h3 className="q-text">{currentQ.question}</h3>
 
         <div className="options-list">
           {currentQ.options.map((opt, idx) => {
-            // Verifica se esta opção está selecionada
             const isSelected = selectedAnswers[currentQ.id] === opt;
-            
             return (
               <button 
                 key={idx} 
@@ -228,7 +236,6 @@ const SimuladoPlayer: React.FC = () => {
           })}
         </div>
 
-        {/* Rodapé com Navegação */}
         <div className="exam-footer">
           <button 
             className="nav-btn" 
@@ -241,10 +248,10 @@ const SimuladoPlayer: React.FC = () => {
           <button 
             className="nav-btn next" 
             onClick={handleNext}
-            disabled={!selectedAnswers[currentQ.id]} // Obriga a responder antes de avançar
+            disabled={!selectedAnswers[currentQ.id]} 
           >
             {currentQuestionIndex === questions.length - 1 ? (
-                isSubmitting ? "A finalizar..." : "Finalizar Prova"
+                isSubmitting ? "Finalizando..." : "Entregar Prova"
             ) : (
                 <>Próxima <CaretRight /></>
             )}

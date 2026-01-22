@@ -10,6 +10,7 @@ const AdminModules: React.FC = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [feedback, setFeedback] = useState<{ type: 'success' | 'error', msg: string } | null>(null);
+  const [duration, setDuration] = useState(60);
 
   // Campos do Formulário
   const [title, setTitle] = useState('');
@@ -26,7 +27,8 @@ const AdminModules: React.FC = () => {
       title,
       description,
       difficulty_level: Number(difficulty),
-      cover_url: coverUrl || 'https://placehold.co/600x400/1a1a1a/FFD700?text=LOCK' // Imagem padrão se vazio
+      cover_url: coverUrl || 'https://placehold.co/600x400/1a1a1a/FFD700?text=LOCK', 
+      duration_minutes: Number(duration)
     };
 
     try {
@@ -91,7 +93,16 @@ const AdminModules: React.FC = () => {
               required 
             />
           </div>
-
+          <div className="input-group">
+            <label>Tempo Limite (minutos)</label>
+            <input 
+                type="number" 
+                min="5" 
+                value={duration} 
+                onChange={e => setDuration(Number(e.target.value))} 
+                placeholder="60"
+            />
+          </div>
           <div className="input-group">
             <label>Descrição Curta</label>
             <textarea 
