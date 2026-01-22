@@ -7,7 +7,7 @@ import './SimuladoPlayer.css';
 
 interface Question {
   id: string;
-  question: string;
+  question_text: string;
   options: string[]; 
   correct_answer_index: number;
 }
@@ -216,7 +216,7 @@ const SimuladoPlayer: React.FC = () => {
       </div>
 
       <div className="question-card">
-        <h3 className="q-text">{currentQ.question}</h3>
+        <h3 className="q-text">{currentQ.question_text}</h3>
 
         <div className="options-list">
           {currentQ.options.map((opt, idx) => {
