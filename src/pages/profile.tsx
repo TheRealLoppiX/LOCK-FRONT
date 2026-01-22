@@ -138,53 +138,103 @@ const Profile: React.FC = () => {
         format: 'a4'
     });
 
-    // Fundo Escuro
-    doc.setFillColor(20, 20, 25);
-    doc.rect(0, 0, doc.internal.pageSize.width, doc.internal.pageSize.height, 'F');
+    const width = doc.internal.pageSize.getWidth();
+    const height = doc.internal.pageSize.getHeight();
 
-    // Borda Dourada
-    doc.setDrawColor(255, 215, 0);
+    // 1. FUNDO (Preto Profundo - Estilo Terminal)
+    doc.setFillColor(10, 10, 15); 
+    doc.rect(0, 0, width, height, 'F');
+
+    // 2. BORDAS NEON (Azul Ciano Brilhante)
+    doc.setDrawColor(0, 243, 255); // Cyan Neon
     doc.setLineWidth(3);
-    doc.rect(20, 20, doc.internal.pageSize.width - 40, doc.internal.pageSize.height - 40);
+    doc.rect(15, 15, width - 30, height - 30); // Borda Externa
 
-    // Título LOCK
-    doc.setTextColor(0, 240, 255); // Cyan Neon
-    doc.setFontSize(40);
-    doc.text("LOCK CERTIFICATION", doc.internal.pageSize.width / 2, 80, { align: 'center' });
+    doc.setLineWidth(1);
+    doc.setDrawColor(0, 243, 255); 
+    doc.rect(22, 22, width - 44, height - 44); // Borda Interna Fina (Efeito tech)
 
-    // Texto Principal
-    doc.setTextColor(255, 255, 255);
-    doc.setFontSize(16);
-    doc.text("Certificamos que", doc.internal.pageSize.width / 2, 140, { align: 'center' });
+    // Detalhe nos cantos (Cantoneiras)
+    doc.setLineWidth(5);
+    const cornerSize = 40;
+    // Canto Superior Esquerdo
+    doc.line(15, 15 + cornerSize, 15, 15); 
+    doc.line(15, 15, 15 + cornerSize, 15);
+    // Canto Inferior Direito
+    doc.line(width - 15, height - 15 - cornerSize, width - 15, height - 15);
+    doc.line(width - 15, height - 15, width - 15 - cornerSize, height - 15);
 
-    // Nome do Aluno
-    doc.setTextColor(255, 215, 0); // Dourado
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(32);
-    doc.text(user?.name || "Aluno LOCK", doc.internal.pageSize.width / 2, 180, { align: 'center' });
+    // 3. TÍTULO (Fonte Courier para vibe Hacker)
+    doc.setTextColor(0, 243, 255); // Cyan Neon
+    doc.setFont("courier", "bold"); // Fonte Monoespaçada
+    doc.setFontSize(42);
+    doc.text("LOCK CERTIFICATION", width / 2, 80, { align: 'center' });
 
-    // Descrição
-    doc.setTextColor(255, 255, 255);
+    // Linha decorativa abaixo do título
+    doc.setLineWidth(2);
+    doc.line(width / 2 - 150, 90, width / 2 + 150, 90);
+
+    // 4. TEXTO INTRODUTÓRIO
+    doc.setTextColor(200, 200, 200); // Cinza claro
     doc.setFont("helvetica", "normal");
-    doc.setFontSize(16);
-    doc.text(`Concluiu com êxito o simulado prático de:`, doc.internal.pageSize.width / 2, 220, { align: 'center' });
+    doc.setFontSize(14);
+    doc.text("Este documento digital certifica que o operador", width / 2, 140, { align: 'center' });
 
-    // Nome do Exame
-    doc.setTextColor(0, 240, 255);
-    doc.setFontSize(24);
-    doc.text(examTitle, doc.internal.pageSize.width / 2, 250, { align: 'center' });
+    // 5. NOME DO USUÁRIO (VERDE NEON & GRANDE)
+    doc.setTextColor(57, 255, 20); // Verde Matrix/Neon
+    doc.setFont("courier", "bold");
+    doc.setFontSize(38);
+    // Uppercase para ficar mais imponente
+    doc.text((user?.name || "USUÁRIO DESCONHECIDO").toUpperCase(), width / 2, 180, { align: 'center' });
 
-    // Data e Assinatura
-    doc.setFontSize(12);
+    // 6. TEXTO DE CONCLUSÃO
+    doc.setTextColor(200, 200, 200);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(14);
+    doc.text("Demonstrou proficiência técnica e completou com êxito o módulo:", width / 2, 220, { align: 'center' });
+
+    // 7. NOME DO CURSO
+    doc.setTextColor(0, 243, 255); // Cyan
+    doc.setFont("courier", "bold");
+    doc.setFontSize(22);
+    doc.text(examTitle, width / 2, 250, { align: 'center' });
+
+    // 8. RODAPÉ E LOGO
+    const footerY = height - 50;
+
+    // Data (Esquerda)
+    doc.setFontSize(10);
     doc.setTextColor(150, 150, 150);
+    doc.setFont("courier", "normal");
     const date = new Date(dateStr).toLocaleDateString();
-    doc.text(`Data de Conclusão: ${date}`, 60, 350);
-    doc.text("LOCK - Laboratório Online de Cibersegurança", doc.internal.pageSize.width - 60, 350, { align: 'right' });
+    doc.text(`DATA_PROCESSAMENTO: ${date}`, 40, footerY);
+    doc.text(`HASH_VALIDACAO: ${Math.random().toString(36).substring(7).toUpperCase()}`, 40, footerY + 12);
+
+    // Texto LOCK (Direita)
+    doc.text("LOCK_SYSTEMS // SECURE_PROTOCOL_V1", width - 40, footerY, { align: 'right' });
+    
+    // --- LOGO CENTRALIZADA (Simulada com Vetor) ---
+    // Como não tenho a URL da sua imagem, desenhei um Escudo Tech com código
+    // Se quiser usar imagem real, use doc.addImage()
+    
+    const logoX = width / 2;
+    const logoY = footerY - 10;
+    
+    doc.setDrawColor(0, 243, 255); // Cyan
+    doc.setLineWidth(2);
+    
+    // Desenho do Escudo (Vector)
+    doc.lines([
+        [20, 0], [10, 30], [-30, 20], [-30, -20], [10, -30]
+    ], logoX, logoY - 20, [1,1], 'S', true); // 'S' = Stroke (apenas contorno)
+    
+    doc.setFontSize(16);
+    doc.setFont("courier", "bold");
+    doc.text("LOCK", logoX, logoY + 5, { align: 'center' });
 
     // Salvar
-    doc.save(`Certificado_LOCK_${examTitle.replace(/\s+/g, '_')}.pdf`);
+    doc.save(`Certificado_LOCK_${user?.name?.split(' ')[0]}_${examTitle}.pdf`);
   };
-
   if (loading) return <div className="loading-screen">Decriptando identidade...</div>;
 
   return (
