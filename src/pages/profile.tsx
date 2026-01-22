@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/authContext';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../lib/supabase'; // Ajuste se seu import for diferente
 import HexagonBackground from '../components/hexagonobg';
+import { jsPDF } from 'jspdf';
 import { 
   User, ShieldCheck, BookBookmark, Gear, 
   Trophy, DownloadSimple, Camera, FloppyDisk, 
   Cpu, TerminalWindow 
 } from '@phosphor-icons/react';
-import './profile.css';
+import './Profile.css';
 
 // Tipos
 interface UserStats {
@@ -32,7 +33,7 @@ interface CompletedBook {
 }
 
 const Profile: React.FC = () => {
-  const { user, token } = useAuth();
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState<'overview' | 'certificates' | 'library' | 'settings'>('overview');
   const [loading, setLoading] = useState(true);
   
@@ -46,8 +47,10 @@ const Profile: React.FC = () => {
   const [editAvatar, setEditAvatar] = useState('');
   const [isSaving, setIsSaving] = useState(false);
 
-  // Configurações Visuais (Apenas estado local para demonstrar interatividade)
-  const [terminalMode, setTerminalMode] = useState(false);
+  // Configurações Visuais (Lê do localStorage)
+  const [terminalMode, setTerminalMode] = useState(() => {
+    return localStorage.getItem('lock-theme') === 'terminal';
+  });
 
   useEffect(() => {
     if (user) {
@@ -56,6 +59,11 @@ const Profile: React.FC = () => {
       fetchUserData();
     }
   }, [user]);
+
+  // Salva preferência de tema
+  useEffect(() => {
+    localStorage.setItem('lock-theme', terminalMode ? 'terminal' : 'cyberpunk');
+  }, [terminalMode]);
 
   const fetchUserData = async () => {
     if (!user) return;
@@ -73,12 +81,12 @@ const Profile: React.FC = () => {
         .select('id, score, total_questions, completed_at, module:exam_modules(title, cover_url)')
         .eq('user_id', user.id);
 
+      // Filtra apenas aprovados
       const passedExams = examsData?.filter(e => (e.score / e.total_questions) >= 0.7) || [];
       
       // 3. Calcular Stats e Rank
       const booksCount = booksData?.length || 0;
       const examsCount = passedExams.length;
-      // Exemplo: Cada livro = 50xp, Cada Certificado = 500xp
       const totalXp = (booksCount * 50) + (examsCount * 500); 
       
       let rank = "Script Kiddie";
@@ -90,7 +98,7 @@ const Profile: React.FC = () => {
       setReadBooks(booksData as any || []);
       setAttempts(passedExams as any);
       setStats({
-        completedLabs: 0, // Implementar quando tiver tabela de labs concluídos
+        completedLabs: 0,
         completedBooks: booksCount,
         passedExams: examsCount,
         totalXp,
@@ -113,17 +121,68 @@ const Profile: React.FC = () => {
             .eq('id', user?.id);
         
         if (error) throw error;
-        alert("Perfil atualizado! Recarregue para ver as mudanças no menu.");
+        alert("Perfil atualizado! Recarregue a página para ver as mudanças no menu.");
     } catch (error) {
-        alert("Erro ao atualizar.");
+        console.error(error);
+        alert("Erro ao atualizar. Verifique se você tem permissão.");
     } finally {
         setIsSaving(false);
     }
   };
 
-  const handleDownloadCertificate = (examTitle: string) => {
-    // Aqui você integraria com jsPDF. Por enquanto, um alerta visual.
-    alert(`Gerando certificado criptografado para: ${examTitle}...\n(Funcionalidade de PDF em breve)`);
+  // --- GERADOR DE CERTIFICADO PDF ---
+  const generateCertificate = (examTitle: string, dateStr: string) => {
+    const doc = new jsPDF({
+        orientation: 'landscape',
+        unit: 'px',
+        format: 'a4'
+    });
+
+    // Fundo Escuro
+    doc.setFillColor(20, 20, 25);
+    doc.rect(0, 0, doc.internal.pageSize.width, doc.internal.pageSize.height, 'F');
+
+    // Borda Dourada
+    doc.setDrawColor(255, 215, 0);
+    doc.setLineWidth(3);
+    doc.rect(20, 20, doc.internal.pageSize.width - 40, doc.internal.pageSize.height - 40);
+
+    // Título LOCK
+    doc.setTextColor(0, 240, 255); // Cyan Neon
+    doc.setFontSize(40);
+    doc.text("LOCK CERTIFICATION", doc.internal.pageSize.width / 2, 80, { align: 'center' });
+
+    // Texto Principal
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(16);
+    doc.text("Certificamos que", doc.internal.pageSize.width / 2, 140, { align: 'center' });
+
+    // Nome do Aluno
+    doc.setTextColor(255, 215, 0); // Dourado
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(32);
+    doc.text(user?.name || "Aluno LOCK", doc.internal.pageSize.width / 2, 180, { align: 'center' });
+
+    // Descrição
+    doc.setTextColor(255, 255, 255);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(16);
+    doc.text(`Concluiu com êxito o simulado prático de:`, doc.internal.pageSize.width / 2, 220, { align: 'center' });
+
+    // Nome do Exame
+    doc.setTextColor(0, 240, 255);
+    doc.setFontSize(24);
+    doc.text(examTitle, doc.internal.pageSize.width / 2, 250, { align: 'center' });
+
+    // Data e Assinatura
+    doc.setFontSize(12);
+    doc.setTextColor(150, 150, 150);
+    const date = new Date(dateStr).toLocaleDateString();
+    doc.text(`Data de Conclusão: ${date}`, 60, 350);
+    doc.text("LOCK - Laboratório Online de Cibersegurança", doc.internal.pageSize.width - 60, 350, { align: 'right' });
+
+    // Salvar
+    doc.save(`Certificado_LOCK_${examTitle.replace(/\s+/g, '_')}.pdf`);
   };
 
   if (loading) return <div className="loading-screen">Decriptando identidade...</div>;
@@ -160,28 +219,16 @@ const Profile: React.FC = () => {
             </div>
 
             <nav className="profile-nav">
-                <button 
-                    className={activeTab === 'overview' ? 'active' : ''} 
-                    onClick={() => setActiveTab('overview')}
-                >
+                <button className={activeTab === 'overview' ? 'active' : ''} onClick={() => setActiveTab('overview')}>
                     <User size={20} /> Visão Geral
                 </button>
-                <button 
-                    className={activeTab === 'certificates' ? 'active' : ''} 
-                    onClick={() => setActiveTab('certificates')}
-                >
+                <button className={activeTab === 'certificates' ? 'active' : ''} onClick={() => setActiveTab('certificates')}>
                     <Trophy size={20} /> Certificados
                 </button>
-                <button 
-                    className={activeTab === 'library' ? 'active' : ''} 
-                    onClick={() => setActiveTab('library')}
-                >
+                <button className={activeTab === 'library' ? 'active' : ''} onClick={() => setActiveTab('library')}>
                     <BookBookmark size={20} /> Histórico de Leitura
                 </button>
-                <button 
-                    className={activeTab === 'settings' ? 'active' : ''} 
-                    onClick={() => setActiveTab('settings')}
-                >
+                <button className={activeTab === 'settings' ? 'active' : ''} onClick={() => setActiveTab('settings')}>
                     <Gear size={20} /> Configurações
                 </button>
             </nav>
@@ -197,33 +244,28 @@ const Profile: React.FC = () => {
                     <div className="stats-grid">
                         <div className="stat-card">
                             <div className="icon-box blue"><ShieldCheck size={32} /></div>
-                            <div>
-                                <h3>{stats.passedExams}</h3>
-                                <p>Certificações</p>
-                            </div>
+                            <div><h3>{stats.passedExams}</h3><p>Certificações</p></div>
                         </div>
                         <div className="stat-card">
                             <div className="icon-box green"><BookBookmark size={32} /></div>
-                            <div>
-                                <h3>{stats.completedBooks}</h3>
-                                <p>Livros Lidos</p>
-                            </div>
+                            <div><h3>{stats.completedBooks}</h3><p>Livros Lidos</p></div>
                         </div>
                         <div className="stat-card">
                             <div className="icon-box purple"><Cpu size={32} /></div>
-                            <div>
-                                <h3>{stats.completedLabs}</h3>
-                                <p>Labs Pwned</p>
-                            </div>
+                            <div><h3>{stats.completedLabs}</h3><p>Labs Pwned</p></div>
                         </div>
                     </div>
 
                     <div className="recent-activity">
                         <h2><TerminalWindow size={24} /> Log de Atividades</h2>
                         <div className="terminal-log">
-                            <p><span className="log-time">[10:42]</span> Login efetuado com sucesso.</p>
-                            {attempts.length > 0 && (
-                                <p><span className="log-time">[{new Date(attempts[0].completed_at).toLocaleDateString()}]</span> Certificação "{attempts[0].module.title}" obtida.</p>
+                            <p><span className="log-time">[SYSTEM]</span> Usuário autenticado.</p>
+                            {attempts.length > 0 ? (
+                                attempts.map(att => (
+                                    <p key={att.id}><span className="log-time">[{new Date(att.completed_at).toLocaleDateString()}]</span> Aprovado em: {att.module.title}.</p>
+                                ))
+                            ) : (
+                                <p><span className="log-time">[INFO]</span> Nenhuma atividade recente de simulado.</p>
                             )}
                             <p><span className="log-cursor">_</span></p>
                         </div>
@@ -238,7 +280,7 @@ const Profile: React.FC = () => {
                     {attempts.length === 0 ? (
                         <div className="empty-state-profile">
                             <ShieldCheck size={48} color="#444" />
-                            <p>Você ainda não passou em nenhum simulado. Estude e tente novamente!</p>
+                            <p>Você ainda não passou em nenhum simulado com nota acima de 70%.</p>
                         </div>
                     ) : (
                         <div className="certificates-grid">
@@ -249,8 +291,8 @@ const Profile: React.FC = () => {
                                     <div className="cert-info">
                                         <h3>{attempt.module.title}</h3>
                                         <p>Aprovado em {new Date(attempt.completed_at).toLocaleDateString()}</p>
-                                        <button onClick={() => handleDownloadCertificate(attempt.module.title)}>
-                                            <DownloadSimple size={18} /> Baixar PDF
+                                        <button onClick={() => generateCertificate(attempt.module.title, attempt.completed_at)}>
+                                            <DownloadSimple size={18} /> Baixar Certificado
                                         </button>
                                     </div>
                                 </div>
@@ -273,7 +315,7 @@ const Profile: React.FC = () => {
                                     <span className="status-tag">Lido</span>
                                 </div>
                             </div>
-                        )) : <p className="text-muted">Nenhum livro marcado como lido.</p>}
+                        )) : <p className="text-muted">Nenhum livro marcado como lido ainda.</p>}
                     </div>
                 </div>
             )}
@@ -287,38 +329,23 @@ const Profile: React.FC = () => {
                         <h3>Dados Pessoais</h3>
                         <div className="input-group-profile">
                             <label>Nome de Exibição</label>
-                            <input 
-                                type="text" 
-                                value={editName} 
-                                onChange={e => setEditName(e.target.value)} 
-                            />
+                            <input type="text" value={editName} onChange={e => setEditName(e.target.value)} />
                         </div>
                         <div className="input-group-profile">
                             <label>URL do Avatar</label>
-                            <div className="avatar-input-wrapper">
-                                <input 
-                                    type="text" 
-                                    value={editAvatar} 
-                                    onChange={e => setEditAvatar(e.target.value)} 
-                                />
-                                <button className="icon-btn" title="Upload (Em breve)"><Camera size={20} /></button>
-                            </div>
+                            <input type="text" value={editAvatar} onChange={e => setEditAvatar(e.target.value)} placeholder="https://..." />
                         </div>
                     </div>
 
                     <div className="settings-section">
-                        <h3>Preferências do Sistema</h3>
+                        <h3>Interface</h3>
                         <div className="toggle-option">
                             <div>
-                                <h4>Modo Terminal (Fonte Mono)</h4>
-                                <p>Altera a fonte de todo o perfil para estilo hacker.</p>
+                                <h4>Modo Terminal (Hacker Font)</h4>
+                                <p>Altera a fonte de todo o perfil para estilo monoespaçado.</p>
                             </div>
                             <label className="switch">
-                                <input 
-                                    type="checkbox" 
-                                    checked={terminalMode} 
-                                    onChange={() => setTerminalMode(!terminalMode)} 
-                                />
+                                <input type="checkbox" checked={terminalMode} onChange={() => setTerminalMode(!terminalMode)} />
                                 <span className="slider round"></span>
                             </label>
                         </div>
