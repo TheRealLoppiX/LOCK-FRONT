@@ -1,14 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/authContext';
-import { supabase } from '../lib/supabase'; // Ajuste se seu import for diferente
+import { supabase } from '../lib/supabase'; 
 import HexagonBackground from '../components/hexagonobg';
-import { jsPDF } from 'jspdf';
 import { 
   User, ShieldCheck, BookBookmark, Gear, 
   Trophy, DownloadSimple, Camera, FloppyDisk, 
   Cpu, TerminalWindow 
 } from '@phosphor-icons/react';
+import { jsPDF } from 'jspdf';
+import lockLogo from '../assets/Logo lock.png';
 import './profile.css';
+
+const getBase64ImageFromURL = (url: string): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.setAttribute('crossOrigin', 'anonymous');
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext('2d');
+      ctx?.drawImage(img, 0, 0);
+      const dataURL = canvas.toDataURL('image/png');
+      resolve(dataURL);
+    };
+    img.onerror = error => reject("Erro ao carregar imagem: " + error);
+    img.src = url;
+  });
+};
 
 // Tipos
 interface UserStats {
@@ -131,109 +150,111 @@ const Profile: React.FC = () => {
   };
 
   // --- GERADOR DE CERTIFICADO PDF ---
-  const generateCertificate = (examTitle: string, dateStr: string) => {
-    const doc = new jsPDF({
-        orientation: 'landscape',
-        unit: 'px',
-        format: 'a4'
-    });
+  const generateCertificate = async (examTitle: string, dateStr: string) => {
+    // Feedback visual simples para o usuário saber que está processando
+    const originalText = (document.activeElement as HTMLButtonElement).innerText;
+    (document.activeElement as HTMLButtonElement).innerText = "Gerando PDF...";
+    (document.activeElement as HTMLButtonElement).disabled = true;
 
-    const width = doc.internal.pageSize.getWidth();
-    const height = doc.internal.pageSize.getHeight();
+    try {
+        // 1. PREPARAR A IMAGEM (Carrega antes de desenhar o PDF)
+        const logoBase64 = await getBase64ImageFromURL(lockLogo);
 
-    // 1. FUNDO (Preto Profundo - Estilo Terminal)
-    doc.setFillColor(10, 10, 15); 
-    doc.rect(0, 0, width, height, 'F');
+        const doc = new jsPDF({
+            orientation: 'landscape',
+            unit: 'px',
+            format: 'a4'
+        });
 
-    // 2. BORDAS NEON (Azul Ciano Brilhante)
-    doc.setDrawColor(0, 243, 255); // Cyan Neon
-    doc.setLineWidth(3);
-    doc.rect(15, 15, width - 30, height - 30); // Borda Externa
+        const width = doc.internal.pageSize.getWidth();
+        const height = doc.internal.pageSize.getHeight();
 
-    doc.setLineWidth(1);
-    doc.setDrawColor(0, 243, 255); 
-    doc.rect(22, 22, width - 44, height - 44); // Borda Interna Fina (Efeito tech)
+        // --- [INÍCIO DO DESENHO DO FUNDO E BORDAS] ---
+        // (Mesmo código de antes...)
+        doc.setFillColor(10, 10, 15); 
+        doc.rect(0, 0, width, height, 'F');
 
-    // Detalhe nos cantos (Cantoneiras)
-    doc.setLineWidth(5);
-    const cornerSize = 40;
-    // Canto Superior Esquerdo
-    doc.line(15, 15 + cornerSize, 15, 15); 
-    doc.line(15, 15, 15 + cornerSize, 15);
-    // Canto Inferior Direito
-    doc.line(width - 15, height - 15 - cornerSize, width - 15, height - 15);
-    doc.line(width - 15, height - 15, width - 15 - cornerSize, height - 15);
+        doc.setDrawColor(0, 243, 255); // Cyan Neon
+        doc.setLineWidth(3);
+        doc.rect(15, 15, width - 30, height - 30);
 
-    // 3. TÍTULO (Fonte Courier para vibe Hacker)
-    doc.setTextColor(0, 243, 255); // Cyan Neon
-    doc.setFont("courier", "bold"); // Fonte Monoespaçada
-    doc.setFontSize(42);
-    doc.text("LOCK CERTIFICATION", width / 2, 80, { align: 'center' });
+        doc.setLineWidth(1);
+        doc.rect(22, 22, width - 44, height - 44);
 
-    // Linha decorativa abaixo do título
-    doc.setLineWidth(2);
-    doc.line(width / 2 - 150, 90, width / 2 + 150, 90);
+        doc.setLineWidth(5);
+        const cornerSize = 40;
+        doc.line(15, 15 + cornerSize, 15, 15); doc.line(15, 15, 15 + cornerSize, 15);
+        doc.line(width - 15, height - 15 - cornerSize, width - 15, height - 15);
+        doc.line(width - 15, height - 15, width - 15 - cornerSize, height - 15);
+        // --- [FIM DO DESENHO DO FUNDO] ---
 
-    // 4. TEXTO INTRODUTÓRIO
-    doc.setTextColor(200, 200, 200); // Cinza claro
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(14);
-    doc.text("Este documento digital certifica que o operador", width / 2, 140, { align: 'center' });
 
-    // 5. NOME DO USUÁRIO (VERDE NEON & GRANDE)
-    doc.setTextColor(57, 255, 20); // Verde Matrix/Neon
-    doc.setFont("courier", "bold");
-    doc.setFontSize(38);
-    // Uppercase para ficar mais imponente
-    doc.text((user?.name || "USUÁRIO DESCONHECIDO").toUpperCase(), width / 2, 180, { align: 'center' });
+        // --- [TEXTOS PRINCIPAIS] ---
+        doc.setTextColor(0, 243, 255);
+        doc.setFont("courier", "bold");
+        doc.setFontSize(42);
+        doc.text("LOCK CERTIFICATION", width / 2, 80, { align: 'center' });
 
-    // 6. TEXTO DE CONCLUSÃO
-    doc.setTextColor(200, 200, 200);
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(14);
-    doc.text("Demonstrou proficiência técnica e completou com êxito o módulo:", width / 2, 220, { align: 'center' });
+        doc.setLineWidth(2);
+        doc.line(width / 2 - 150, 90, width / 2 + 150, 90);
 
-    // 7. NOME DO CURSO
-    doc.setTextColor(0, 243, 255); // Cyan
-    doc.setFont("courier", "bold");
-    doc.setFontSize(22);
-    doc.text(examTitle, width / 2, 250, { align: 'center' });
+        doc.setTextColor(200, 200, 200);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(14);
+        doc.text("Este documento digital certifica que o operador", width / 2, 140, { align: 'center' });
 
-    // 8. RODAPÉ E LOGO
-    const footerY = height - 50;
+        // NOME (Verde Neon e Negrito)
+        doc.setTextColor(57, 255, 20); 
+        doc.setFont("courier", "bold");
+        doc.setFontSize(38);
+        doc.text((user?.name || "USUÁRIO").toUpperCase(), width / 2, 180, { align: 'center' });
 
-    // Data (Esquerda)
-    doc.setFontSize(10);
-    doc.setTextColor(150, 150, 150);
-    doc.setFont("courier", "normal");
-    const date = new Date(dateStr).toLocaleDateString();
-    doc.text(`DATA_PROCESSAMENTO: ${date}`, 40, footerY);
-    doc.text(`HASH_VALIDACAO: ${Math.random().toString(36).substring(7).toUpperCase()}`, 40, footerY + 12);
+        doc.setTextColor(200, 200, 200);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(14);
+        doc.text("Demonstrou proficiência técnica e completou com êxito o módulo:", width / 2, 220, { align: 'center' });
 
-    // Texto LOCK (Direita)
-    doc.text("LOCK_SYSTEMS // SECURE_PROTOCOL_V1", width - 40, footerY, { align: 'right' });
-    
-    // --- LOGO CENTRALIZADA (Simulada com Vetor) ---
-    // Como não tenho a URL da sua imagem, desenhei um Escudo Tech com código
-    // Se quiser usar imagem real, use doc.addImage()
-    
-    const logoX = width / 2;
-    const logoY = footerY - 10;
-    
-    doc.setDrawColor(0, 243, 255); // Cyan
-    doc.setLineWidth(2);
-    
-    // Desenho do Escudo (Vector)
-    doc.lines([
-        [20, 0], [10, 30], [-30, 20], [-30, -20], [10, -30]
-    ], logoX, logoY - 20, [1,1], 'S', true); // 'S' = Stroke (apenas contorno)
-    
-    doc.setFontSize(16);
-    doc.setFont("courier", "bold");
-    doc.text("LOCK", logoX, logoY + 5, { align: 'center' });
+        // CURSO (Azul Neon)
+        doc.setTextColor(0, 243, 255);
+        doc.setFont("courier", "bold");
+        doc.setFontSize(22);
+        doc.text(examTitle, width / 2, 250, { align: 'center' });
 
-    // Salvar
-    doc.save(`Certificado_LOCK_${user?.name?.split(' ')[0]}_${examTitle}.pdf`);
+
+        // --- [RODAPÉ E LOGO] ---
+        const footerY = height - 50;
+
+        // Data
+        doc.setFontSize(10);
+        doc.setTextColor(150, 150, 150);
+        doc.setFont("courier", "normal");
+        const date = new Date(dateStr).toLocaleDateString();
+        doc.text(`DATA_PROCESSAMENTO: ${date}`, 40, footerY);
+        doc.text(`HASH: ${Math.random().toString(36).substring(2, 10).toUpperCase()}`, 40, footerY + 12);
+
+        // Texto direito
+        doc.text("LOCK_SYSTEMS // SECURE_PROTOCOL", width - 40, footerY, { align: 'right' });
+        
+        const logoWidth = 80;  
+        const logoHeight = 80; 
+        const logoX = (width / 2) - (logoWidth / 2);
+        const logoY = footerY - 70; // Posição vertical acima do rodapé
+
+        doc.addImage(logoBase64, 'PNG', logoX, logoY, logoWidth, logoHeight);
+
+        // Salvar o arquivo
+        doc.save(`Certificado_LOCK_${examTitle.replace(/\s+/g, '_')}.pdf`);
+
+    } catch (error) {
+        console.error("Erro ao gerar PDF:", error);
+        alert("Erro ao gerar o certificado. Verifique se a imagem da logo existe.");
+    } finally {
+        // Restaura o botão
+        if (document.activeElement instanceof HTMLButtonElement) {
+            (document.activeElement as HTMLButtonElement).innerText = originalText;
+            (document.activeElement as HTMLButtonElement).disabled = false;
+        }
+    }
   };
   if (loading) return <div className="loading-screen">Decriptando identidade...</div>;
 
