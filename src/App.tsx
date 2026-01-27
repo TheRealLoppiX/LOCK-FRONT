@@ -33,6 +33,7 @@ import Simulados from './pages/simulados';
 import CreateModule from './pages/admin/CreateModule';
 import AdminModules from './pages/admin/AdminModules';
 import SimuladoPlayer from './pages/SimuladoPlayer';
+import ManualPage from './pages/ManualPage';
 
 // Rodapé 
 import Footer from './components/Footer';
@@ -80,8 +81,8 @@ function AppRoutes() {
       <Route path="/biblioteca" element={<PrivateRoute><Biblioteca /></PrivateRoute>} />
       <Route path="/biblioteca/:id" element={<PrivateRoute><BookDetails /></PrivateRoute>} />
       <Route path="/simulados" element={<PrivateRoute><Simulados /></PrivateRoute>} />
-      <Route path="/simulados/:id/play" element={<PrivateRoute><SimuladoPlayer /></PrivateRoute>} 
-    />
+      <Route path="/simulados/:id/play" element={<PrivateRoute><SimuladoPlayer /></PrivateRoute>} />
+      <Route path="/manual" element={<PrivateRoute><ManualPage /></PrivateRoute>} />
 
       {/* Rotas do Quiz */}
       <Route path="/quizzes/:topic" element={<PrivateRoute><QuizSelectionPage /></PrivateRoute>} />
