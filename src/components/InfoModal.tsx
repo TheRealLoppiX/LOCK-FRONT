@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { 
   X, Users, Question, Envelope, FileText, Atom, CaretLeft, MagnifyingGlass,
-  BookOpen, Student, ChalkboardTeacher // Novos ícones
+  BookOpen, Student, ChalkboardTeacher
 } from '@phosphor-icons/react';
-import { useAuth } from '../contexts/authContext'; // Importe o contexto de auth
+import { useAuth } from '../contexts/authContext';
 import './InfoModal.css'; 
 
 interface InfoModalProps {
@@ -11,7 +11,6 @@ interface InfoModalProps {
   onClose: () => void;
 }
 
-// Interface para verificar admin
 interface UserWithRole {
   is_admin?: boolean;
 }
@@ -22,7 +21,6 @@ const InfoModal: React.FC<InfoModalProps> = ({ isOpen, onClose }) => {
   const [view, setView] = useState<ModalView>('main');
   const { user } = useAuth();
   
-  // Verifica se é admin para mostrar o manual extra
   const isAdmin = (user as unknown as UserWithRole)?.is_admin;
 
   useEffect(() => {
@@ -39,21 +37,26 @@ const InfoModal: React.FC<InfoModalProps> = ({ isOpen, onClose }) => {
     // ========================
     if (view === 'manual') {
       return (
-        <>
-          <h2 className="modal-title">
-            <button className="modal-back-button" onClick={() => setView('main')}>
-              <CaretLeft size={20} weight="bold" />
-            </button>
-            Manual do Sistema
-          </h2>
+        <div className="modal-layout-column">
+          {/* Cabeçalho Fixo */}
+          <div className="modal-header-fixed">
+            <h2 className="modal-title">
+                <button className="modal-back-button" onClick={() => setView('main')}>
+                <CaretLeft size={20} weight="bold" />
+                </button>
+                Manual do Sistema
+            </h2>
+          </div>
           
-          <div className="modal-body" style={{ textAlign: 'left' }}>
+          {/* Corpo com Scroll Independente */}
+          <div className="modal-body manual-scroll-area">
+            
             {/* MANUAL DO ALUNO */}
-            <div className="manual-block" style={{ marginBottom: '25px' }}>
-              <h3 style={{ color: '#00f0ff', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '1.1rem', marginBottom: '10px' }}>
+            <div className="manual-block">
+              <h3 className="manual-subtitle student">
                 <Student size={22} /> Guia do Discente
               </h3>
-              <div style={{ paddingLeft: '10px', fontSize: '0.9rem', color: '#c9d1d9', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <div className="manual-text">
                 <p>
                   <strong>1. Dashboard & Rank:</strong> Sua tela inicial é seu centro de comando. Use o checklist "Aprendizado Guiado" na direita para saber seu próximo passo e acompanhe seu XP no Perfil.
                 </p>
@@ -63,19 +66,22 @@ const InfoModal: React.FC<InfoModalProps> = ({ isOpen, onClose }) => {
                 <p>
                   <strong>3. Simulados (Certificações):</strong> 
                   <br/>• Treine para provas reais (CompTIA, CEH).
-                  <br/>• <u>Regra:</u> Você só pode tentar o mesmo simulado uma vez a cada 24h.
-                  <br/>• <u>Aprovação:</u> Acerte 70% ou mais para liberar seu certificado.
+                  <br/>• <u>Regra:</u> Você só pode tentar o mesmo simulado uma vez a cada 24h para incentivar o estudo.
+                  <br/>• <u>Aprovação:</u> Acerte 70% ou mais para liberar seu certificado no perfil.
+                </p>
+                <p>
+                  <strong>4. Laboratórios:</strong> Pratique ataques reais em ambiente seguro. Complete os desafios para ganhar XP e subir de nível.
                 </p>
               </div>
             </div>
 
             {/* MANUAL DO INSTRUTOR (SÓ APARECE PARA ADMIN) */}
             {isAdmin && (
-              <div className="manual-block" style={{ borderTop: '1px solid #30363d', paddingTop: '20px' }}>
-                <h3 style={{ color: '#FFD700', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '1.1rem', marginBottom: '10px' }}>
+              <div className="manual-block admin-block">
+                <h3 className="manual-subtitle admin">
                   <ChalkboardTeacher size={22} /> Guia do Instrutor
                 </h3>
-                <div style={{ paddingLeft: '10px', fontSize: '0.9rem', color: '#c9d1d9', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                <div className="manual-text">
                   <p>
                     <strong>1. Painel Admin:</strong> Acesse o card dourado no topo da Dashboard para gerenciar o sistema.
                   </p>
@@ -85,11 +91,18 @@ const InfoModal: React.FC<InfoModalProps> = ({ isOpen, onClose }) => {
                   <p>
                     <strong>3. Banco de Questões:</strong> Ao cadastrar uma questão, selecione o Simulado correspondente no menu superior para vinculá-la à prova correta.
                   </p>
+                  <p>
+                    <strong>4. Materiais:</strong> Cadastre novos livros e PDFs inserindo os links públicos do Storage.
+                  </p>
                 </div>
               </div>
             )}
+            
+            <div className="manual-footer">
+                <p>Versão 1.1 - IFSertãoPE</p>
+            </div>
           </div>
-        </>
+        </div>
       );
     }
 
@@ -98,14 +111,16 @@ const InfoModal: React.FC<InfoModalProps> = ({ isOpen, onClose }) => {
     // ========================
     if (view === 'about') {
       return (
-        <>
-          <h2 className="modal-title">
-            <button className="modal-back-button" onClick={() => setView('main')}>
-              <CaretLeft size={20} weight="bold" />
-            </button>
-            Sobre o App
-          </h2>
-          <div className="modal-body">
+        <div className="modal-layout-column">
+          <div className="modal-header-fixed">
+            <h2 className="modal-title">
+                <button className="modal-back-button" onClick={() => setView('main')}>
+                <CaretLeft size={20} weight="bold" />
+                </button>
+                Sobre o App
+            </h2>
+          </div>
+          <div className="modal-body manual-scroll-area">
             <p>
               O Laboratório Online de Cibersegurança (LOCK) nasce em meio à 
               necessidade de um meio de pesquisa, estudo e aprendizagem 
@@ -124,7 +139,7 @@ const InfoModal: React.FC<InfoModalProps> = ({ isOpen, onClose }) => {
               discentes e docentes para enfrentar cenários reais de ameaças.
             </p>
           </div>
-        </>
+        </div>
       );
     }
 
@@ -132,49 +147,45 @@ const InfoModal: React.FC<InfoModalProps> = ({ isOpen, onClose }) => {
     // TELA PRINCIPAL (MENU)
     // ========================
     return (
-      <>
-        {/* Título com o cursor neon */}
-        <h2 className="modal-title with-cursor">Informações</h2>
+      <div className="modal-layout-column">
+        <div className="modal-header-fixed">
+            <h2 className="modal-title with-cursor">Informações</h2>
+        </div>
+        
         <div className="modal-menu">
           
-          {/* Item estilo "Input" (desabilitado) */}
           <div className="menu-item-input disabled">
             <Users size={20} />
             <span>Equipe</span>
           </div>
 
-          {/* BOTÃO MANUAL (Substituindo o antigo "Ajuda" desabilitado) */}
           <button className="menu-item-button" onClick={() => setView('manual')}>
             <BookOpen size={20} weight="bold" />
             <span>Manual do Sistema</span>
           </button>
 
-          {/* Item estilo "Botão" (Link de email) */}
           <a className="menu-item-button" href="mailto:contato.lock@ifsertaope.edu.br">
             <Envelope size={20} weight="bold" />
             <span>Contato</span>
           </a>
 
-          {/* Item estilo "Botão" (Link de download) */}
           <a className="menu-item-button" href="/Termos_de_Uso_LOCK.pdf" download>
             <FileText size={20} weight="bold" />
             <span>Termos de Uso</span>
           </a>
 
-          {/* NOVO: Item de Política de Privacidade */}
           <a className="menu-item-button" href="/Politica_de_Privacidade_LOCK.pdf" download>
             <FileText size={20} weight="bold" />
             <span>Política de Privacidade</span>
           </a>
 
-          {/* Item estilo "Botão" (Muda a tela) */}
           <button className="menu-item-button" onClick={() => setView('about')}>
             <Atom size={20} weight="bold" />
             <span>Sobre o App</span>
           </button>
 
         </div>
-      </>
+      </div>
     );
   };
 
