@@ -3,13 +3,14 @@
     min-height: 100vh;
     padding: 40px;
     box-sizing: border-box;
+    position: relative;
 }
 
 .dashboard-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 50px;
+    margin-bottom: 40px;
     position: relative;
     z-index: 2;
 }
@@ -20,176 +21,20 @@
     gap: 20px;
 }
 
-.profile-avatar-link { display: block; }
-.profile-avatar { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent-color); transition: transform 0.3s ease; }
-.profile-avatar:hover { transform: scale(1.1); }
-.welcome-message h1 { font-family: 'Space Grotesk', sans-serif; color: var(--text-primary); font-size: 2.5rem; margin: 0; }
-.welcome-message p { font-family: 'Inter', sans-serif; font-size: 1.1rem; margin: 5px 0 0; }
-.settings-icon-link { color: var(--text-secondary); display: flex; align-items: center; }
-.settings-icon { font-size: 1.6rem; transition: all 0.4s ease; }
-.settings-icon:hover { color: var(--accent-color); transform: rotate(120deg); }
-.logout-btn { background: transparent; color: #ff4d4d; border: none; padding: 10px; border-radius: 8px; cursor: pointer; font-size: 1.6rem; display: flex; align-items: center; transition: all 0.3s ease; }
-.logout-btn:hover { color: #fff; background-color: #ff4d4d; box-shadow: 0 0 15px rgba(255, 77, 77, 0.5); }
+.welcome-message h1 { font-family: 'Space Grotesk', sans-serif; color: var(--text-primary); font-size: 2.2rem; margin: 0; }
+.welcome-message p { font-family: 'Inter', sans-serif; font-size: 1rem; margin: 5px 0 0; color: var(--text-secondary); }
 
-/* --- Grid Principal e Colunas --- */
-.dashboard-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 30px;
-    align-items: start;
-    position: relative;
-    z-index: 2;
-}
-
-.left-column, .right-column {
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-}
-
-/* --- Estilo dos Cards Expansíveis --- */
-.dashboard-card {
-    background: var(--background-secondary);
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    transition: all 0.3s ease;
-    overflow: visible;
-    position: relative;
-}
-
-.dashboard-card:hover {
-    border-color: var(--accent-color);
-    box-shadow: 0 0 15px var(--accent-color-translucent);
-}
-
-.dropdown-header {
-    padding: 25px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 20px;
-}
-
-.card-icon {
-    background-color: var(--accent-color-translucent);
-    color: var(--accent-color);
-    min-width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
-}
-
-.card-content { flex-grow: 1; }
-.card-content h2 { color: var(--text-primary); font-size: 1.6rem; margin: 0 0 5px 0; }
-.card-content p { font-size: 1rem; line-height: 1.5; color: var(--text-secondary); margin: 0; }
-.caret-icon { color: var(--accent-color); font-size: 1.5rem; transition: transform 0.3s ease; margin-left: auto; }
-.caret-icon.open { transform: rotate(180deg); }
-
-/* --- Animação de Expansão --- */
-.dropdown-content {
-    /* Estado Fechado */
-    max-height: 0;
-    overflow: hidden;
-    padding: 0 25px;
-    opacity: 0;
-    border-top: 1px solid transparent;
-    
-    /* A Transição */
-    transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out, opacity 0.3s ease-in-out;
-}
-
-.dropdown-content.open {
-    /* Estado Aberto */
-    max-height: 500px; /* Um valor alto para caber qualquer conteúdo */
-    padding: 0 25px 25px 25px;
-    opacity: 1;
-    border-top: 1px solid var(--border-color);
-}
-
-/* --- Itens Dentro do Dropdown --- */
-.dropdown-item {
-    color: var(--text-secondary);
-    text-decoration: none;
-    font-size: 1.1rem;
-    padding: 10px 15px;
-    border-radius: 8px;
-    transition: background-color 0.2s ease, color 0.2s ease;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.dropdown-item:hover {
-    background-color: var(--accent-color-translucent);
-    color: var(--text-primary);
-}
-.card-icon {
-  /* Remove a cor de fundo para que a imagem apareça sem o círculo colorido */
-  background-color: transparent; 
-}
-
-.card-logo-icon {
-  width: 100%; /* Faz a imagem ocupar todo o espaço do container do ícone */
-  height: 100%;
-  object-fit: contain; /* Garante que a imagem caiba sem distorcer */
-}
-.card-title-with-logo {
-  display: flex;
-  align-items: center;
-  gap: 10px; /* Espaço entre o título e o logo */
-}
-
-.card-title-with-logo h2 {
-  margin: 0;
-}
-
-.header-logo-icon {
-  height: 28px;
-  /* Aplica as duas animações: a de rotação e a de brilho */
-  animation: 
-    spin 10s linear infinite,
-    glow 3s ease-in-out infinite;
-}
-
-/* Animação de Rotação */
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* NOVA Animação de Brilho (Glow) */
-@keyframes glow {
-  0%, 100% {
-    /* O drop-shadow é melhor que o box-shadow para PNGs, pois segue o contorno da imagem */
-    filter: drop-shadow(0 0 4px var(--accent-color-translucent));
-  }
-  50% {
-    filter: drop-shadow(0 0 12px var(--accent-color));
-  }
-}
-.dashboard-card-link {
-  text-decoration: none; /* Remove o sublinhado do link */
-  color: inherit; /* Mantém a cor do texto original */
-}
 /* Seção para os ícones no header */
 .header-icons {
   display: flex;
   align-items: center;
-  gap: 16px; /* Espaço entre os ícones */
+  gap: 16px;
 }
 
-/* Estilo base para os botões de ícone */
 .icon-button {
   background: none;
   border: none;
-  color: #c9d1d9; /* Cinza claro padrão */
+  color: #c9d1d9;
   cursor: pointer;
   padding: 4px;
   display: flex;
@@ -199,86 +44,289 @@
 }
 
 .icon-button:hover {
-  color: #00f0ff; /* Efeito neon azul */
+  color: #00f0ff;
   text-shadow: 0 0 5px #009dff;
 }
-.beginner-tag {
-  /* Estilos visuais (idênticos) */
-  background-color: #009dff;
-  color: #0d1117;
-  font-family: 'Consolas', 'Courier New', monospace;
-  font-size: 0.7rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  padding: 4px 8px;
-  animation: pulseTag 2s infinite alternate;
-  clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 10px 50%);
-  
-  /* NOVO Posicionamento "Saindo da Caixa" */
-  position: absolute;
-  top: -10px;   /* Puxa para CIMA, ficando metade fora */
-  left: 15px;   /* Alinha com o padding do conteúdo do card */
-  z-index: 2;   /* Garante que a tag fique EM CIMA da borda */
+
+.edit-dashboard-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  padding: 9px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
 }
 
-@keyframes pulseTag {
-  from {
-    box-shadow: 0 0 5px #00ff00;
-  }
-  to {
-    box-shadow: 0 0 15px #00ff00, 0 0 10px #fff;
-  }
+.edit-dashboard-btn:hover {
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+}
+
+.edit-dashboard-btn.active {
+  background-color: var(--accent-color);
+  border-color: var(--accent-color);
+  color: var(--background-primary);
+  font-weight: 600;
+}
+
+/* --- Grid Principal --- */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    align-items: start;
+    position: relative;
+    z-index: 2;
+}
+
+@media (max-width: 1100px) {
+  .dashboard-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 700px) {
+  .dashboard-grid { grid-template-columns: 1fr; }
+  .dashboard-container { padding: 20px; }
+}
+
+/* --- Cards --- */
+.dashboard-card {
+    background: var(--background-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.dashboard-card:hover {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 15px var(--accent-color-translucent);
+}
+
+.dashboard-card.edit-mode {
+  cursor: grab;
+  border-style: dashed;
+}
+
+.dashboard-card.edit-mode:active {
+  cursor: grabbing;
+}
+
+.dashboard-card.admin-card {
+  border-color: #FFD700 !important;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+}
+
+.dashboard-card.admin-card:hover {
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+}
+
+.card-header-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.card-header-row {
+  padding: 22px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.drag-handle {
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  cursor: grab;
+  flex-shrink: 0;
+}
+
+.card-icon {
+    background-color: var(--accent-color-translucent);
+    color: var(--accent-color);
+    min-width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    flex-shrink: 0;
+}
+
+.card-content { flex-grow: 1; min-width: 0; }
+.card-content h2 { color: var(--text-primary); font-size: 1.25rem; margin: 0 0 4px 0; }
+.card-content p { font-size: 0.88rem; line-height: 1.4; color: var(--text-secondary); margin: 0; }
+
+/* --- Corpo do card: listas de sub-itens --- */
+.card-body {
+  padding: 0 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.list-item {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.98rem;
+  padding: 10px 12px;
+  border-radius: 8px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.list-item .list-item-arrow {
+  margin-left: auto;
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.list-item:hover {
+  background-color: var(--accent-color-translucent);
+  color: var(--text-primary);
+}
+
+.list-item:hover .list-item-arrow {
+  opacity: 1;
+  transform: translateX(2px);
+}
+
+/* --- Card Perfil --- */
+.perfil-card-body {
+  padding: 0 22px 22px;
+  gap: 14px;
+}
+
+.perfil-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.perfil-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--accent-color);
+}
+
+.perfil-top h2 {
+  margin: 0 0 4px;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+}
+
+.rank-badge {
+  display: inline-block;
+  background-color: var(--accent-color-translucent);
+  color: var(--accent-color);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 20px;
+}
+
+.xp-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.xp-next-label {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.perfil-stats-row {
+  display: flex;
+  gap: 24px;
+  border-top: 1px solid var(--border-color);
+  padding-top: 14px;
+}
+
+.perfil-stats-row strong {
+  display: block;
+  font-size: 1.3rem;
+  color: var(--text-primary);
+}
+
+.perfil-stats-row span {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+
+/* --- Barra de progresso genérica --- */
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--accent-color), #00ff41);
+  transition: width 0.4s ease;
 }
 
 /* ===================================
- * NOVO: Lista de Passos Guiados
+ * Lista de Passos Guiados
  * =================================== */
 .guided-step-list {
   list-style: none;
   padding: 0;
   margin: 0;
-  background-color: rgba(36, 41, 47, 0.5); /* Fundo sutil */
 }
 
 .guided-step-item {
   display: flex;
-  align-items: flex-start; /* Alinha no topo para textos longos */
-  padding: 16px 20px;
-  border-top: 1px solid #30363d;
+  align-items: flex-start;
+  padding: 12px 14px;
+  border-top: 1px solid var(--border-color);
+  border-radius: 8px;
   transition: background-color 0.3s ease;
 }
 
 .guided-step-item:hover {
-  background-color: rgba(0, 240, 255, 0.1); /* Destaque neon azul */
+  background-color: var(--accent-color-translucent);
 }
 
-/* Estilizando o checkbox */
 .guided-step-item input[type="checkbox"] {
-  /* Esconde o checkbox padrão */
   appearance: none;
   -webkit-appearance: none;
   background-color: transparent;
-  
-  /* Cria o nosso */
   width: 18px;
   height: 18px;
-  border: 2px solid #00f0ff; /* Borda neon */
+  border: 2px solid var(--accent-color);
   border-radius: 3px;
   margin-right: 15px;
-  margin-top: 3px; /* Alinha com a primeira linha do texto */
+  margin-top: 3px;
   cursor: pointer;
   flex-shrink: 0;
   position: relative;
   transition: all 0.2s ease;
 }
 
-/* Efeito de "check" */
 .guided-step-item input[type="checkbox"]:checked {
-  background-color: #00f0ff;
-  box-shadow: 0 0 10px #00f0ff;
+  background-color: var(--accent-color);
+  box-shadow: 0 0 10px var(--accent-color);
 }
 
-/* O "V" de check (usando pseudo-elemento) */
 .guided-step-item input[type="checkbox"]:checked::after {
   content: '';
   position: absolute;
@@ -286,27 +334,26 @@
   top: 1px;
   width: 5px;
   height: 10px;
-  border: solid #0d1117; /* Cor escura do fundo */
+  border: solid var(--background-primary);
   border-width: 0 3px 3px 0;
   transform: rotate(45deg);
 }
 
-/* O label (texto) do passo */
 .guided-step-item label {
-  color: #c9d1d9;
+  color: var(--text-secondary);
   line-height: 1.5;
   cursor: pointer;
+  font-size: 0.92rem;
 }
 
 .guided-step-item label strong {
-  color: #fff; /* Destaque para o título do passo */
+  color: var(--text-primary);
   display: block;
   margin-bottom: 2px;
 }
 
-/* Links dentro dos passos */
 .guided-step-item label a {
-  color: #00f0ff;
+  color: var(--accent-color);
   text-decoration: none;
   font-weight: 600;
 }
@@ -314,20 +361,11 @@
   text-decoration: underline;
 }
 
-/* Efeito ao completar (riscado) */
 .guided-step-item input[type="checkbox"]:checked + label {
-  color: #8b949e; /* Cinza */
+  color: var(--text-secondary);
   text-decoration: line-through;
 }
 
 .guided-step-item input[type="checkbox"]:checked + label strong {
-  color: #8b949e; /* Cinza */
-}
-.admin-card {
-  border-color: #FFD700 !important; /* Dourado */
-  box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
-}
-
-.admin-card:hover {
-  box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+  color: var(--text-secondary);
 }

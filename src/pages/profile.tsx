@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/authContext';
-import { supabase } from '../lib/supabase'; 
+import { supabase } from '../lib/supabase';
+import { computeRank } from '../hooks/useProfileStats';
 import HexagonBackground from '../components/hexagonobg';
 import { 
   User, ShieldCheck, BookBookmark, Gear, 
@@ -47,7 +48,7 @@ interface ExamAttempt {
 }
 
 interface CompletedBook {
-  id: string;
+  book_id: string;
   book: { title: string; cover_url: string };
 }
 
@@ -90,7 +91,7 @@ const Profile: React.FC = () => {
       // 1. Buscar Livros Lidos
       const { data: booksData } = await supabase
         .from('user_library')
-        .select('id, book:books(title, cover_url)')
+        .select('book_id, book:books(title, cover_url)')
         .eq('user_id', user.id)
         .eq('status', 'Lido');
 
@@ -106,13 +107,8 @@ const Profile: React.FC = () => {
       // 3. Calcular Stats e Rank
       const booksCount = booksData?.length || 0;
       const examsCount = passedExams.length;
-      const totalXp = (booksCount * 50) + (examsCount * 500); 
-      
-      let rank = "Script Kiddie";
-      if (totalXp > 500) rank = "White Hat";
-      if (totalXp > 1500) rank = "Grey Hat";
-      if (totalXp > 3000) rank = "Elite Hacker";
-      if (totalXp > 5000) rank = "Cyber God";
+      const totalXp = (booksCount * 50) + (examsCount * 500);
+      const { rank } = computeRank(totalXp);
 
       setReadBooks(booksData as any || []);
       setAttempts(passedExams as any);
@@ -379,7 +375,7 @@ const Profile: React.FC = () => {
                     <h1>Livros Concluídos</h1>
                     <div className="library-history-list">
                         {readBooks.length > 0 ? readBooks.map((item) => (
-                            <div key={item.id} className="history-item">
+                            <div key={item.book_id} className="history-item">
                                 <img src={item.book.cover_url} alt="Capa" />
                                 <div>
                                     <h4>{item.book.title}</h4>

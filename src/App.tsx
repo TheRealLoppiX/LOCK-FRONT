@@ -34,9 +34,12 @@ import CreateModule from './pages/admin/CreateModule';
 import AdminModules from './pages/admin/AdminModules';
 import SimuladoPlayer from './pages/SimuladoPlayer';
 import ManualPage from './pages/ManualPage';
+import NotFound from './pages/NotFound';
 
-// Rodapé 
+// Rodapé e Navegação
 import Footer from './components/Footer';
+import TopNav from './components/TopNav';
+import ChatPage from './pages/ChatPage';
 
 // ===================================================================
 // COMPONENTE PARA PROTEGER ROTAS
@@ -83,6 +86,7 @@ function AppRoutes() {
       <Route path="/simulados" element={<PrivateRoute><Simulados /></PrivateRoute>} />
       <Route path="/simulados/:id/play" element={<PrivateRoute><SimuladoPlayer /></PrivateRoute>} />
       <Route path="/manual" element={<PrivateRoute><ManualPage /></PrivateRoute>} />
+      <Route path="/chat" element={<PrivateRoute><ChatPage /></PrivateRoute>} />
 
       {/* Rotas do Quiz */}
       <Route path="/quizzes/:topic" element={<PrivateRoute><QuizSelectionPage /></PrivateRoute>} />
@@ -140,7 +144,27 @@ function AppRoutes() {
       <Route path="/admin/materials" element={<PrivateRoute><AdminMaterials /></PrivateRoute>} />
       <Route path="/admin/modules" element={<PrivateRoute><CreateModule /></PrivateRoute>} />
 
+      {/* Rota Coringa (404) */}
+      <Route path="*" element={<NotFound />} />
+
     </Routes>
+  );
+}
+
+// ===================================================================
+// SHELL: NAVEGAÇÃO GLOBAL + ROTAS + RODAPÉ
+// ===================================================================
+function AppShell() {
+  const { isAuthenticated } = useAuth();
+
+  return (
+    <div className="app-container">
+      {isAuthenticated && <TopNav />}
+      <main className="main-content">
+        <AppRoutes />
+      </main>
+      <Footer />
+    </div>
   );
 }
 
@@ -151,12 +175,7 @@ function App() {
   return (
     <Router>
       <AuthProvider>
-        <div className="app-container">
-          <main className="main-content">
-            <AppRoutes />
-          </main>
-          <Footer />
-        </div>
+        <AppShell />
       </AuthProvider>
     </Router>
   );
