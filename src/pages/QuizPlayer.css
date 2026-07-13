@@ -125,9 +125,56 @@
 /* Estilo para a nova imagem da questão */
 .question-image {
   max-width: 100%;
-  max-height: 300px; /* Evita que imagens muito altas dominem a tela */
+  max-height: 300px;
   border-radius: 8px;
   margin-bottom: 20px;
-  object-fit: contain; /* Garante que a imagem escale sem distorcer */
+  object-fit: contain;
   border: 1px solid var(--border-color);
+}
+
+/* Análise de erros pela Aegis */
+.ai-analysis-box {
+  background: rgba(0, 255, 65, 0.06);
+  border: 1px solid rgba(0, 255, 65, 0.25);
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin: 20px 0;
+  text-align: left;
+}
+
+.ai-analysis-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #00ff41;
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+}
+
+.ai-analysis-loading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #8b949e;
+  font-size: 0.88rem;
+  font-style: italic;
+}
+
+.ai-analysis-text {
+  color: #c9d1d9;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  margin: 0;
+}
+
+@keyframes spinIcon {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.spin-icon {
+  animation: spinIcon 0.9s linear infinite;
+  flex-shrink: 0;
 }
