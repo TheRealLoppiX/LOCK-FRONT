@@ -83,6 +83,12 @@ const ChatPage: React.FC = () => {
     setAttachmentError(null);
   };
 
+  const handleDeleteConversation = (id: string) => {
+    const next = conversations.filter((c) => c.id !== id);
+    persist(next);
+    if (activeId === id) setActive(null);
+  };
+
   const handleAddAttachments = async (files: FileList) => {
     setAttachmentError(null);
     const incoming = Array.from(files);
@@ -181,7 +187,9 @@ const ChatPage: React.FC = () => {
       const data = await res.json();
       const reply: AegisMessage = {
         role: 'aegis',
-        content: data.response || 'Não consegui processar sua mensagem. Tente novamente.',
+        content: res.ok
+          ? data.response || 'Não consegui processar sua mensagem. Tente novamente.'
+          : data.message || 'Não consegui processar sua mensagem. Tente novamente.',
       };
       persist(withUserMessage.map((c) => (c.id === workingId ? { ...c, messages: [...c.messages, reply] } : c)));
     } catch {
@@ -202,6 +210,7 @@ const ChatPage: React.FC = () => {
         activeId={activeId}
         onSelect={setActive}
         onNewChat={handleNewChat}
+        onDelete={handleDeleteConversation}
       />
       <ChatPanel
         messages={activeMessages}

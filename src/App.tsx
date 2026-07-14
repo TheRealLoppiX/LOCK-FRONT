@@ -57,6 +57,21 @@ const PrivateRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   // Se não estiver carregando, decide se mostra a página ou redireciona
   return isAuthenticated ? children : <Navigate to="/login" />;
 };
+
+// ===================================================================
+// COMPONENTE PARA PÁGINAS SÓ-DESLOGADO (login, registro, etc.)
+// Evita que um usuário já autenticado veja a Sidebar sobreposta ao
+// formulário de login/registro ao navegar manualmente para essas rotas.
+// ===================================================================
+const PublicOnlyRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { isAuthenticated, loading } = useAuth();
+
+  if (loading) {
+    return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', backgroundColor: '#0d1117', color: 'white' }}>Carregando...</div>;
+  }
+
+  return isAuthenticated ? <Navigate to="/dashboard" /> : children;
+};
 const quizformsburp1 = "https://forms.gle/SYUA6qkz8tFiv3tC8"
 const quizformsburp2 = "https://forms.gle/eD1amS8RyNQpqNag7"
 const quizformsburp3 = "https://forms.gle/hVHYnHGnHixtckfm8"
@@ -74,10 +89,10 @@ function AppRoutes() {
     <Routes>
       {/* Rotas Públicas */}
       <Route path="/" element={<Home />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/forgot-password" element={<ForgotPassword />} />
-      <Route path="/reset-password/:token" element={<ResetPassword />} />
+      <Route path="/login" element={<PublicOnlyRoute><Login /></PublicOnlyRoute>} />
+      <Route path="/register" element={<PublicOnlyRoute><Register /></PublicOnlyRoute>} />
+      <Route path="/forgot-password" element={<PublicOnlyRoute><ForgotPassword /></PublicOnlyRoute>} />
+      <Route path="/reset-password/:token" element={<PublicOnlyRoute><ResetPassword /></PublicOnlyRoute>} />
 
       {/* Rotas Protegidas */}
       <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />

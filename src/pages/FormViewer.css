@@ -7,7 +7,7 @@
   max-width: 1200px;
   margin: 0 auto 20px auto;
   text-align: center;
-  color: #fff;
+  color: var(--text-primary);
 }
 
 .form-viewer-header h1 {

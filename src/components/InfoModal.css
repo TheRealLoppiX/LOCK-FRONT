@@ -15,7 +15,7 @@
 
 /* O container principal agora é flex column para suportar scroll interno */
 .modal-content {
-  background: #0d1117;
+  background: var(--background-primary);
   border: 1px solid #00f0ff;
   width: 90%;
   max-width: 500px;
@@ -27,7 +27,7 @@
   flex-direction: column;
   max-height: 85vh; /* Limita a altura para caber na tela */
   animation: fadeInContent 0.3s ease-out;
-  color: #c9d1d9;
+  color: var(--text-secondary);
 }
 
 /* Estrutura Flex para Header fixo + Body rolável */
@@ -147,23 +147,23 @@
 }
 
 .menu-item-button {
-  background: rgba(22, 27, 34, 0.8);
-  border: 1px solid #30363d;
-  color: #e6edf3;
+  background: var(--background-secondary);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
   cursor: pointer;
 }
 
 .menu-item-button:hover {
   border-color: #00f0ff;
-  color: #fff;
+  color: var(--text-primary);
   background: rgba(0, 240, 255, 0.1);
   transform: translateX(5px);
 }
 
 .menu-item-input {
-  background: #0d1117;
-  border: 1px solid #30363d;
-  color: #8b949e;
+  background: var(--background-secondary);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
 }
 
 .menu-item-input.disabled {

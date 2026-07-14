@@ -5,15 +5,12 @@ import {
   Flask, BookOpen, Exam,
   Question, Info, Shuffle,
   RocketLaunch, FilePdf, Crown, ListPlus, Certificate,
-  User, PencilSimple, Check, DotsSixVertical, CaretRight, X, Plus
+  User, PencilSimple, Check, DotsSixVertical, CaretRight, X, Plus, CircleDashed
 } from '@phosphor-icons/react';
 import HexagonBackground from '../components/hexagonobg';
 import InfoModal from '../components/InfoModal';
 import { useProfileStats } from '../hooks/useProfileStats';
 import './dashboard.css';
-
-// Define o tipo para as chaves dos passos
-type GuidedStepKey = 'step1' | 'step2' | 'step3' | 'step4' | 'step5';
 
 // Interface auxiliar para garantir que o TS entenda o campo is_admin
 interface UserWithRole {
@@ -29,6 +26,7 @@ const DEFAULT_CARD_ORDER = [
 ];
 const ORDER_STORAGE_KEY = 'lock-dashboard-order';
 const HIDDEN_STORAGE_KEY = 'lock-dashboard-hidden';
+const GUIDED_INFO_KEY = 'lock-guided-info-viewed';
 
 function loadCardOrder(): string[] {
   try {
@@ -85,25 +83,60 @@ const Dashboard: React.FC = () => {
     });
   };
 
-  // Estado para os 5 passos (lido do localStorage)
-  const [guidedSteps, setGuidedSteps] = useState(() => {
-    const savedSteps = localStorage.getItem('lock-guided-steps');
-    if (savedSteps) {
-      return JSON.parse(savedSteps);
-    }
-    return { step1: false, step2: false, step3: false, step4: false, step5: false };
-  });
+  // Passos do "Aprendizado Guiado" — auto-detectados a partir de dados que já
+  // existem (stats do servidor + se o usuário já abriu o modal de missão),
+  // sem checkboxes manuais que o usuário precisava marcar sozinho.
+  const [infoViewed, setInfoViewed] = useState<boolean>(
+    () => localStorage.getItem(GUIDED_INFO_KEY) === 'true'
+  );
 
-  const handleStepToggle = (step: GuidedStepKey) => {
-    setGuidedSteps((prev: Record<GuidedStepKey, boolean>) => {
-      const newSteps = { ...prev, [step]: !prev[step] };
-      localStorage.setItem('lock-guided-steps', JSON.stringify(newSteps));
-      return newSteps;
-    });
+  const openInfoModal = () => {
+    setIsInfoModalOpen(true);
+    setInfoViewed(true);
+    localStorage.setItem(GUIDED_INFO_KEY, 'true');
   };
 
-  const guidedDoneCount = Object.values(guidedSteps).filter(Boolean).length;
-  const guidedPercent = Math.round((guidedDoneCount / 5) * 100);
+  const guidedSteps = useMemo(() => [
+    {
+      key: 'mission',
+      title: 'Conheça a Missão',
+      description: 'Entenda o projeto e seus objetivos.',
+      done: infoViewed,
+      cta: { label: 'Ver Missão', linkTo: undefined as string | undefined, onClick: openInfoModal as (() => void) | undefined },
+    },
+    {
+      key: 'theory',
+      title: 'Base Teórica',
+      description: 'Leia um livro na Biblioteca para construir sua base teórica.',
+      done: stats.completedBooks > 0,
+      cta: { label: 'Ir para a Biblioteca', linkTo: '/biblioteca' as string | undefined, onClick: undefined as (() => void) | undefined },
+    },
+    {
+      key: 'quiz',
+      title: 'Teste seu Conhecimento',
+      description: 'Faça um quiz para testar o que você aprendeu.',
+      done: stats.completedQuizzes > 0,
+      cta: { label: 'Fazer um Quiz', linkTo: '/quizzes/variado' as string | undefined, onClick: undefined as (() => void) | undefined },
+    },
+    {
+      key: 'practice',
+      title: 'Primeira Prática',
+      description: 'Resolva seu primeiro laboratório prático.',
+      done: stats.completedLabs > 0,
+      cta: { label: 'Escolher um Laboratório', linkTo: '/labs/sql-injection' as string | undefined, onClick: undefined as (() => void) | undefined },
+    },
+    {
+      key: 'mastery',
+      title: 'Explore os Desafios',
+      description: 'Complete pelo menos 3 laboratórios para dominar o hacking ético.',
+      done: stats.completedLabs >= 3,
+      cta: { label: 'Continuar Praticando', linkTo: '/labs/sql-injection' as string | undefined, onClick: undefined as (() => void) | undefined },
+    },
+  ], [infoViewed, stats]);
+
+  const guidedDoneCount = guidedSteps.filter((s) => s.done).length;
+  const guidedPercent = Math.round((guidedDoneCount / guidedSteps.length) * 100);
+  const nextGuidedStepKey = guidedSteps.find((s) => !s.done)?.key;
 
   const xpPercent = stats.nextRankXp
     ? Math.min(Math.round((stats.totalXp / stats.nextRankXp) * 100), 100)
@@ -202,31 +235,39 @@ const Dashboard: React.FC = () => {
     ),
     trilha: (
       <div className="card-body">
-        <ul className="guided-step-list">
-          {([1, 2, 3, 4, 5] as const).map((n) => {
-            const key = `step${n}` as GuidedStepKey;
+        <ol className="guided-stepper">
+          {guidedSteps.map((step, i) => {
+            const isNext = step.key === nextGuidedStepKey;
             return (
-              <li className="guided-step-item" key={key}>
-                <input
-                  type="checkbox"
-                  id={key}
-                  checked={guidedSteps[key]}
-                  onChange={() => handleStepToggle(key)}
-                />
-                <label htmlFor={key}>
-                  {n === 1 && <><strong>1. Conheça a Missão:</strong> Entenda o projeto clicando no ícone de "Informações" (ℹ️) no topo.</>}
-                  {n === 2 && <><strong>2. Base Teórica:</strong> Leia o livro Testes de Invasão da Georgia Weidman, disponível na nossa <Link to="/biblioteca">Biblioteca</Link>.</>}
-                  {n === 3 && <><strong>3. Teste seu Conhecimento:</strong> Faça um <Link to="/quizzes/variado">Quiz Variado</Link> na dificuldade fácil para testar sua base teórica.</>}
-                  {n === 4 && <><strong>4. Primeira Interação com Ethical Hacking:</strong> Acesse o Guia para montar seu laboratório de Burp Suite, disponível na nossa <Link to="/biblioteca">Biblioteca</Link>.</>}
-                  {n === 5 && <><strong>5. Explore os Desafios:</strong> Use o conhecimento adquirido para solucionar os laboratórios disponíveis na plataforma.</>}
-                </label>
+              <li
+                key={step.key}
+                className={`guided-stepper-item ${step.done ? 'done' : ''} ${isNext ? 'next' : ''}`}
+              >
+                <span className="guided-stepper-icon">
+                  {step.done ? <Check weight="bold" /> : <CircleDashed weight="bold" />}
+                </span>
+                <div className="guided-stepper-content">
+                  <strong>{i + 1}. {step.title}</strong>
+                  <p>{step.description}</p>
+                  {!step.done && (
+                    step.cta.linkTo ? (
+                      <Link to={step.cta.linkTo} className="guided-stepper-cta">
+                        {step.cta.label} <CaretRight size={12} />
+                      </Link>
+                    ) : (
+                      <button type="button" className="guided-stepper-cta" onClick={step.cta.onClick}>
+                        {step.cta.label} <CaretRight size={12} />
+                      </button>
+                    )
+                  )}
+                </div>
               </li>
             );
           })}
-        </ul>
+        </ol>
       </div>
     ),
-  }), [user, stats, xpPercent, isAdmin, guidedSteps]);
+  }), [user, stats, xpPercent, isAdmin, guidedSteps, nextGuidedStepKey]);
 
   const cardMeta: Record<string, { icon: React.ReactNode; title: string; subtitle: string; color?: string; linkTo?: string }> = {
     perfil: { icon: <User weight="bold" />, title: 'Perfil', subtitle: '', linkTo: '/profile' },
@@ -236,7 +277,7 @@ const Dashboard: React.FC = () => {
     exercicios: { icon: <Exam weight="bold" />, title: 'Exercícios', subtitle: 'Exercite o conhecimento adquirido nos laboratórios.' },
     biblioteca: { icon: <BookOpen weight="bold" />, title: 'Biblioteca', subtitle: 'Acesse guias, artigos e livros para aprofundar seu conhecimento.', linkTo: '/biblioteca' },
     trilha: { icon: <RocketLaunch weight="bold" />, title: 'Aprendizado Guiado', subtitle: `Siga estes 5 passos para começar no hacking ético. (${guidedPercent}%)` },
-    simulados: { icon: <Certificate weight="bold" />, title: 'Simulados & Certificações', subtitle: 'Treine para provas reais (CompTIA, CEH, LPI).', color: '#009dff', linkTo: '/simulados' },
+    simulados: { icon: <Certificate weight="bold" />, title: 'Simulados', subtitle: 'Treine para certificações reais (CompTIA, CEH, LPI).', color: '#009dff', linkTo: '/simulados' },
   };
 
   const visibleOrder = cardOrder
@@ -258,7 +299,7 @@ const Dashboard: React.FC = () => {
         <div className="header-right header-icons">
           <button
             className="icon-button"
-            onClick={() => setIsInfoModalOpen(true)}
+            onClick={openInfoModal}
             title="Sobre o Projeto"
           >
             <Info weight="bold" />

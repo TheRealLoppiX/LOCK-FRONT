@@ -69,10 +69,10 @@
 .input-group input {
   width: 100%;
   padding: 12px 15px;
-  background-color: #0d1117; /* Fundo do input */
-  border: 1px solid #30363d; /* Borda padrão */
+  background-color: var(--background-primary); /* Fundo do input */
+  border: 1px solid var(--border-color); /* Borda padrão */
   border-radius: 6px;
-  color: #c9d1d9; /* Cor do texto digitado */
+  color: var(--text-secondary); /* Cor do texto digitado */
   font-size: 1rem;
   box-sizing: border-box; /* Garante que o padding não mude o tamanho */
   transition: border-color 0.3s ease, box-shadow 0.3s ease;

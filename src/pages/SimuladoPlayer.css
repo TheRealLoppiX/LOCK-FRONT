@@ -5,7 +5,7 @@
   align-items: center;
   justify-content: center;
   padding: 20px 20px 60px 20px;
-  color: #fff;
+  color: var(--text-primary);
   position: relative;
   font-family: 'Inter', sans-serif;
 }
@@ -15,10 +15,10 @@
   font-family: 'Space Grotesk', sans-serif;
   font-size: 1.5rem;
   text-align: center;
-  background: rgba(13, 17, 23, 0.8);
+  background: var(--surface-glass-primary);
   padding: 40px;
   border-radius: 12px;
-  border: 1px solid #30363d;
+  border: 1px solid var(--border-color);
 }
 
 /* --- HEADER --- */
@@ -39,7 +39,7 @@
 .exam-title-box h2 {
   font-family: 'Space Grotesk', sans-serif;
   font-size: 1.5rem;
-  color: #e6edf3;
+  color: var(--text-primary);
   margin: 0;
 }
 
@@ -68,13 +68,13 @@
   display: flex;
   justify-content: space-between;
   font-size: 0.8rem;
-  color: #8b949e;
+  color: var(--text-secondary);
   margin-bottom: 5px;
 }
 
 .progress-bar-exam {
   height: 6px;
-  background: #21262d;
+  background: var(--background-secondary);
   border-radius: 3px;
   overflow: hidden;
 }
@@ -88,8 +88,8 @@
 
 /* --- CARD DA QUESTÃO --- */
 .question-card {
-  background: rgba(22, 27, 34, 0.95);
-  border: 1px solid #30363d;
+  background: var(--surface-glass);
+  border: 1px solid var(--border-color);
   padding: 40px;
   border-radius: 16px;
   width: 100%;
@@ -110,7 +110,7 @@
   margin: 0 0 30px 0;
   font-size: 1.3rem;
   line-height: 1.6;
-  color: #ffffff;
+  color: var(--text-primary);
   font-weight: 500;
 }
 
@@ -122,11 +122,11 @@
 }
 
 .option-btn {
-  background: rgba(13, 17, 23, 0.6);
-  border: 1px solid #30363d;
+  background: var(--surface-glass-primary);
+  border: 1px solid var(--border-color);
   padding: 16px 20px;
   border-radius: 10px;
-  color: #c9d1d9;
+  color: var(--text-secondary);
   text-align: left;
   cursor: pointer;
   display: flex;
@@ -145,7 +145,7 @@
 .option-btn.selected {
   border-color: #00f0ff;
   background: rgba(0, 240, 255, 0.1);
-  color: #fff;
+  color: var(--text-primary);
   box-shadow: 0 0 15px rgba(0, 240, 255, 0.1);
 }
 
@@ -178,13 +178,13 @@
   justify-content: space-between;
   margin-top: 40px;
   padding-top: 25px;
-  border-top: 1px solid #30363d;
+  border-top: 1px solid var(--border-color);
 }
 
 .nav-btn {
   background: transparent;
-  border: 1px solid #30363d;
-  color: #c9d1d9;
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
   padding: 12px 24px;
   border-radius: 8px;
   cursor: pointer;
@@ -196,8 +196,8 @@
 }
 
 .nav-btn:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.05);
-  color: #fff;
+  background: var(--accent-color-translucent);
+  color: var(--text-primary);
 }
 
 .nav-btn.next {
@@ -219,12 +219,12 @@
 
 /* --- TELA DE RESULTADO --- */
 .result-card {
-  background: rgba(13, 17, 23, 0.95);
+  background: var(--surface-glass-primary);
   padding: 50px;
   border-radius: 20px;
   text-align: center;
   z-index: 2;
-  border: 1px solid #30363d;
+  border: 1px solid var(--border-color);
   max-width: 500px;
   width: 100%;
   display: flex;
@@ -240,7 +240,7 @@
 }
 
 .score-details {
-  color: #8b949e;
+  color: var(--text-secondary);
   font-size: 1.1rem;
   margin-bottom: 30px;
 }
@@ -275,13 +275,13 @@
 .feedback-text {
   margin-bottom: 30px;
   line-height: 1.5;
-  color: #e6edf3;
+  color: var(--text-primary);
 }
 
 .finish-btn {
-  background: #21262d;
-  border: 1px solid #30363d;
-  color: #fff;
+  background: var(--background-secondary);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
   padding: 15px 30px;
   border-radius: 8px;
   cursor: pointer;
@@ -291,8 +291,8 @@
 }
 
 .finish-btn:hover {
-  background: #30363d;
-  border-color: #8b949e;
+  background: var(--accent-color-translucent);
+  border-color: var(--accent-color);
 }
 
 /* Responsividade */

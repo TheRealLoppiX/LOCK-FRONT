@@ -9,18 +9,18 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #161b22;
+    background: var(--background-secondary);
     padding: 10px 20px;
     border-radius: 8px;
     margin-bottom: 20px;
     width: 100%;
-    border: 1px solid #30363d;
+    border: 1px solid var(--border-color);
 }
 
 .pdf-controls button {
-    background: #21262d;
-    border: 1px solid #30363d;
-    color: #c9d1d9;
+    background: var(--background-primary);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
     padding: 5px 15px;
     border-radius: 6px;
     cursor: pointer;
@@ -39,7 +39,7 @@
     justify-content: center;
     width: 100%;
     overflow: auto;
-    border: 1px solid #30363d;
+    border: 1px solid var(--border-color);
     box-shadow: 0 0 20px rgba(0,0,0,0.5);
 }
 

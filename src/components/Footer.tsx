@@ -16,10 +16,10 @@ const Footer: React.FC = () => {
             target="_blank" 
             rel="noopener noreferrer"
           >
-            <img 
-              src={logoIf} 
-              alt="Logo IFSertãoPE" 
-              className="footer-logo" 
+            <img
+              src={logoIf}
+              alt="Logo IFSertãoPE"
+              className="footer-logo footer-logo-if"
             />
           </a>
         </div>

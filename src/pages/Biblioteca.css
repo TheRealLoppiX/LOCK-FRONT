@@ -2,7 +2,7 @@
 .biblioteca-container {
   min-height: 100vh;
   position: relative;
-  color: #fff;
+  color: var(--text-primary);
 }
 
 .biblioteca-content {
@@ -35,15 +35,15 @@
 /* --- ESTILO DA ESTANTE (GRID DE CAPAS) --- */
 .estante-section {
   margin-bottom: 50px;
-  background: rgba(13, 17, 23, 0.6);
+  background: var(--surface-glass-primary);
   padding: 20px;
   border-radius: 12px;
-  border: 1px solid #30363d;
+  border: 1px solid var(--border-color);
 }
 
 .estante-section h2 {
-  color: #8b949e;
-  border-bottom: 1px solid #30363d;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-color);
   padding-bottom: 10px;
   margin-bottom: 20px;
   font-size: 1.2rem;
@@ -161,7 +161,7 @@
     display: flex; justify-content: space-between; 
     padding: 10px; border-bottom: 1px solid #30363d; 
 }
-.explorar-item a { color: #c9d1d9; text-decoration: none; font-size: 0.9rem; }
+.explorar-item a { color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; }
 .explorar-item a:hover { color: #00f0ff; }
 .add-button { background: none; border: none; color: #238636; cursor: pointer; }
 .add-button:hover { color: #2ea043; transform: scale(1.1); }

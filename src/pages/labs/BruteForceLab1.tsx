@@ -3,34 +3,61 @@ import { Link } from 'react-router-dom';
 import HexagonBackground from '../../components/hexagonobg';
 import { useAuth } from '../../contexts/authContext';
 import { markLabComplete } from '../../utils/labProgress';
-import './LabPage.css'; // Reutiliza o mesmo estilo dos outros laboratórios
+import './LabPage.css';
 
-const BruteForceLab: React.FC = () => {
+interface Attempt {
+  username: string;
+  message: string;
+  exists: boolean;
+}
+
+const BruteForceLab1: React.FC = () => {
   const { token } = useAuth();
-  const [password, setPassword] = useState('');
-  const [result, setResult] = useState<{ success: boolean; message: string } | null>(null);
+  const [username, setUsername] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [attempts, setAttempts] = useState(0);
+  const [attempts, setAttempts] = useState<Attempt[]>([]);
+  const [selected, setSelected] = useState<string[]>([]);
+  const [result, setResult] = useState<{ success: boolean; message: string } | null>(null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const testedUsernames = attempts.map((a) => a.username);
+  const realUsernames = attempts.filter((a) => a.exists).map((a) => a.username);
+
+  const handleTest = async (e: React.FormEvent) => {
     e.preventDefault();
-    setResult(null);
+    const candidate = username.trim();
+    if (!candidate || testedUsernames.includes(candidate)) return;
     setIsLoading(true);
-    setAttempts(prev => prev + 1); // Incrementa o contador de tentativas
 
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/labs/brute-force/1`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password }),
+        body: JSON.stringify({ username: candidate }),
       });
       const data = await response.json();
-      setResult(data);
-      if (data.success) markLabComplete(token, 'brute-force-1');
+      setAttempts((prev) => [...prev, { username: candidate, message: data.message, exists: data.message === 'Senha incorreta.' }]);
+      setUsername('');
     } catch (error) {
-      setResult({ success: false, message: "Erro de conexão com a API. Verifique se ela está no ar." });
+      setAttempts((prev) => [...prev, { username: candidate, message: 'Erro de conexão com a API.', exists: false }]);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const toggleSelected = (name: string) => {
+    setSelected((prev) => (prev.includes(name) ? prev.filter((n) => n !== name) : [...prev, name]));
+  };
+
+  const handleConfirm = () => {
+    const guessed = [...selected].sort();
+    const real = [...realUsernames].sort();
+    const isCorrect = guessed.length === real.length && guessed.every((u, i) => u === real[i]);
+
+    if (isCorrect) {
+      setResult({ success: true, message: `Correto! Você identificou os usuários reais (${real.join(', ')}) apenas observando as mensagens de erro diferentes.` });
+      markLabComplete(token, 'brute-force-1');
+    } else {
+      setResult({ success: false, message: 'Ainda não está certo. Teste mais usuários e observe com atenção quais mensagens dizem "Senha incorreta" (usuário existe) e quais dizem "Usuário não encontrado".' });
     }
   };
 
@@ -38,31 +65,74 @@ const BruteForceLab: React.FC = () => {
     <div className="lab-page-container">
       <HexagonBackground />
       <div className="lab-content">
-        <h1>Laboratório: Força Bruta em Login</h1>
+        <h1>Laboratório: Reconhecimento por Força Bruta</h1>
         <p className="lab-objective">
-          O objetivo é descobrir a senha do usuário, um padrão numérico de três dígitos.
+          Teste nomes de usuário e observe a mensagem de erro retornada. Contas que existem respondem
+          "Senha incorreta.", contas que não existem respondem "Usuário não encontrado." — essa diferença
+          é uma vulnerabilidade real de enumeração de usuários. Depois de testar, marque abaixo quais
+          usuários você acredita que realmente existem.
         </p>
-        
-        <form onSubmit={handleSubmit} className="lab-form">
-          <input 
-            type="password" 
-            value={password} 
-            onChange={e => setPassword(e.target.value)} 
-            placeholder="Tentativa de senha" 
+
+        <form onSubmit={handleTest} className="lab-form">
+          <input
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            placeholder="Nome de usuário para testar (ex: admin)"
           />
-          <button type="submit" disabled={isLoading}>{isLoading ? 'Testando...' : 'Tentar Senha'}</button>
+          <button type="submit" disabled={isLoading || !username.trim()}>
+            {isLoading ? 'Testando...' : 'Testar Usuário'}
+          </button>
         </form>
 
-        {/* Mostra o resultado da tentativa */}
+        {attempts.length > 0 && (
+          <div style={{ marginTop: 24, textAlign: 'left' }}>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: 8 }}>
+              Usuários testados — marque os que você acha que existem:
+            </p>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {attempts.map((a) => (
+                <li
+                  key={a.username}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: 10,
+                    padding: '8px 12px',
+                    borderRadius: 8,
+                    background: 'var(--background-primary)',
+                    border: '1px solid var(--border-color)',
+                  }}
+                >
+                  <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
+                    <input
+                      type="checkbox"
+                      checked={selected.includes(a.username)}
+                      onChange={() => toggleSelected(a.username)}
+                    />
+                    <strong>{a.username}</strong>
+                  </label>
+                  <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>{a.message}</span>
+                </li>
+              ))}
+            </ul>
+
+            <button
+              type="button"
+              onClick={handleConfirm}
+              disabled={selected.length === 0}
+              style={{ marginTop: 16, width: '100%' }}
+            >
+              Confirmar Descoberta
+            </button>
+          </div>
+        )}
+
         {result && (
           <div className={`result-message ${result.success ? 'success' : 'error'}`}>
             {result.message}
           </div>
-        )}
-
-        {/* Contador de tentativas */}
-        {attempts > 0 && !result?.success && (
-            <p className="attempts-counter">Tentativas: {attempts}</p>
         )}
 
         <Link to="/labs/brute-force" className="back-link">← Voltar para a lista de laboratórios</Link>
@@ -71,4 +141,4 @@ const BruteForceLab: React.FC = () => {
   );
 };
 
-export default BruteForceLab;
+export default BruteForceLab1;

@@ -166,33 +166,55 @@
   background-color: #ff4d4d;
 }
 
-/* --- Colapsa para trilho de ícones em telas menores, mas continua colada à esquerda --- */
+/* --- Botão de menu (só aparece em telas pequenas) --- */
+.sidebar-mobile-toggle {
+  display: none;
+}
+
+.sidebar-backdrop {
+  display: none;
+}
+
+/* --- Telas pequenas: sidebar vira uma gaveta (drawer) que desliza por
+ * cima do conteúdo, em vez de um trilho fixo de ícones permanente que
+ * consumia espaço da tela o tempo todo. --- */
 @media (max-width: 900px) {
-  .sidebar {
-    width: 72px;
-    padding: 16px 8px;
+  .sidebar-mobile-toggle {
+    display: flex;
     align-items: center;
-  }
-
-  .sidebar-brand {
     justify-content: center;
-    padding: 0;
+    position: fixed;
+    top: 14px;
+    left: 14px;
+    z-index: 200;
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    background: var(--background-secondary);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
   }
 
-  .sidebar-brand-text,
-  .sidebar-link span,
-  .sidebar-user-name,
-  .sidebar-icon-btn span,
-  .sidebar-logout-btn span {
-    display: none;
+  .sidebar-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 140;
   }
 
-  .sidebar-link,
-  .sidebar-icon-btn,
-  .sidebar-logout-btn,
-  .sidebar-avatar-link {
-    width: 100%;
-    justify-content: center;
-    padding: 10px;
+  .sidebar {
+    width: 240px;
+    padding: 20px 14px;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    z-index: 150;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+  }
+
+  .sidebar.mobile-open {
+    transform: translateX(0);
   }
 }

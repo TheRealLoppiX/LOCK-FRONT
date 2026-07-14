@@ -1,7 +1,7 @@
 .manual-container {
   min-height: 100vh;
   padding: 40px;
-  color: #e6edf3;
+  color: var(--text-primary);
   font-family: 'Inter', sans-serif;
   position: relative;
 }
@@ -35,7 +35,7 @@
 }
 
 .header-title p {
-  color: #8b949e;
+  color: var(--text-secondary);
   margin: 5px 0 0 0;
 }
 
@@ -54,9 +54,9 @@
 }
 
 .sidebar-btn {
-  background: rgba(22, 27, 34, 0.6);
-  border: 1px solid #30363d;
-  color: #c9d1d9;
+  background: var(--surface-glass-soft);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
   padding: 15px 20px;
   text-align: left;
   border-radius: 8px;
@@ -70,7 +70,7 @@
 
 .sidebar-btn:hover {
   background: rgba(48, 54, 61, 0.6);
-  color: #fff;
+  color: var(--text-primary);
 }
 
 .sidebar-btn.active {
@@ -87,8 +87,8 @@
 
 /* Body */
 .manual-body {
-  background: rgba(13, 17, 23, 0.9);
-  border: 1px solid #30363d;
+  background: var(--surface-glass-primary);
+  border: 1px solid var(--border-color);
   border-radius: 16px;
   padding: 40px;
   box-shadow: 0 4px 20px rgba(0,0,0,0.3);
@@ -114,20 +114,20 @@ article {
 }
 
 article h3 {
-  color: #fff;
+  color: var(--text-primary);
   margin-bottom: 15px;
   font-size: 1.3rem;
 }
 
 article p {
-  color: #c9d1d9;
+  color: var(--text-secondary);
   line-height: 1.6;
   margin-bottom: 15px;
 }
 
 article ul, article ol {
   margin-left: 20px;
-  color: #c9d1d9;
+  color: var(--text-secondary);
   line-height: 1.8;
 }
 
@@ -146,7 +146,7 @@ article li {
 .info-box {
   background: rgba(0, 240, 255, 0.1);
   border-left: 4px solid #00f0ff;
-  color: #e6edf3;
+  color: var(--text-primary);
 }
 
 .warning-box {

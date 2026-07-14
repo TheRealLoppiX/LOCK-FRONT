@@ -11,7 +11,7 @@
   max-width: 800px;
   position: relative;
   z-index: 2;
-  background: rgba(13, 17, 23, 0.9);
+  background: var(--surface-glass-primary);
   padding: 40px;
   border-radius: 16px;
   border: 1px solid #FFD700; /* Borda Dourada para Admin */
@@ -27,7 +27,7 @@
 }
 
 .admin-subtitle {
-  color: #8b949e;
+  color: var(--text-secondary);
   text-align: center;
   margin-bottom: 30px;
   font-size: 0.9rem;
@@ -37,8 +37,8 @@
 
 .back-btn {
   background: transparent;
-  border: 1px solid #30363d;
-  color: #c9d1d9;
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
   padding: 8px 16px;
   border-radius: 6px;
   cursor: pointer;
@@ -73,7 +73,7 @@
 }
 
 .input-group label {
-  color: #e6edf3;
+  color: var(--text-primary);
   font-size: 0.9rem;
   font-weight: 600;
 }
@@ -81,9 +81,9 @@
 .input-group input,
 .input-group select,
 .input-group textarea {
-  background: #0d1117;
-  border: 1px solid #30363d;
-  color: #fff;
+  background: var(--background-primary);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
   padding: 12px;
   border-radius: 6px;
   font-size: 1rem;
@@ -176,9 +176,9 @@
 
 .ai-generate-row input[type="text"] {
   flex: 1;
-  background: #0d1117;
-  border: 1px solid #30363d;
-  color: #fff;
+  background: var(--background-primary);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
   padding: 10px 12px;
   border-radius: 6px;
   font-size: 0.95rem;
@@ -186,9 +186,9 @@
 
 .ai-generate-row input[type="number"] {
   width: 70px;
-  background: #0d1117;
-  border: 1px solid #30363d;
-  color: #fff;
+  background: var(--background-primary);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
   padding: 10px;
   border-radius: 6px;
   text-align: center;
@@ -235,14 +235,14 @@
 }
 
 .draft-question-card {
-  background: #0d1117;
-  border: 1px solid #30363d;
+  background: var(--background-primary);
+  border: 1px solid var(--border-color);
   border-radius: 8px;
   padding: 14px;
 }
 
 .draft-question-text {
-  color: #e6edf3;
+  color: var(--text-primary);
   font-weight: 600;
   margin: 0 0 10px;
 }

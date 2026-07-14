@@ -54,8 +54,8 @@ const Simulados: React.FC = () => {
           <div className="header-title">
             <Certificate size={48} color="#00d9ffff" weight="duotone" />
             <div>
-              <h1>Centro de Certificações</h1>
-              <p>Prepare-se para o mercado com simulados reais.</p>
+              <h1>Simulados</h1>
+              <p>Prepare-se para o mercado com simulados de certificações reais (CompTIA, CEH, LPI).</p>
             </div>
           </div>
         </header>

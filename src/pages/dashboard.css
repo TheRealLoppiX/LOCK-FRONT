@@ -34,7 +34,7 @@
 .icon-button {
   background: none;
   border: none;
-  color: #c9d1d9;
+  color: var(--text-secondary);
   cursor: pointer;
   padding: 4px;
   display: flex;
@@ -74,22 +74,24 @@
   font-weight: 600;
 }
 
-/* --- Grid Principal --- */
+/* --- Grid Principal ---
+ * Layout tipo masonry via CSS multi-column: cards de altura desigual (ex:
+ * Aprendizado Guiado, que é bem mais alto que os vizinhos) empilham no
+ * fluxo da coluna em vez de deixar buracos de espaço em branco embaixo dos
+ * cards mais curtos, como acontecia com grid-template-columns fixo. */
 .dashboard-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-    align-items: start;
+    columns: 3;
+    column-gap: 24px;
     position: relative;
     z-index: 2;
 }
 
 @media (max-width: 1100px) {
-  .dashboard-grid { grid-template-columns: repeat(2, 1fr); }
+  .dashboard-grid { columns: 2; }
 }
 
 @media (max-width: 700px) {
-  .dashboard-grid { grid-template-columns: 1fr; }
+  .dashboard-grid { columns: 1; }
   .dashboard-container { padding: 20px; }
 }
 
@@ -102,6 +104,8 @@
     position: relative;
     display: flex;
     flex-direction: column;
+    break-inside: avoid;
+    margin-bottom: 24px;
 }
 
 .dashboard-card:hover {
@@ -359,87 +363,111 @@
 }
 
 /* ===================================
- * Lista de Passos Guiados
+ * Stepper de Aprendizado Guiado (auto-detectado, read-only)
  * =================================== */
-.guided-step-list {
+.guided-stepper {
   list-style: none;
   padding: 0;
   margin: 0;
+  position: relative;
 }
 
-.guided-step-item {
+.guided-stepper-item {
   display: flex;
   align-items: flex-start;
-  padding: 12px 14px;
-  border-top: 1px solid var(--border-color);
-  border-radius: 8px;
-  transition: background-color 0.3s ease;
-}
-
-.guided-step-item:hover {
-  background-color: var(--accent-color-translucent);
-}
-
-.guided-step-item input[type="checkbox"] {
-  appearance: none;
-  -webkit-appearance: none;
-  background-color: transparent;
-  width: 18px;
-  height: 18px;
-  border: 2px solid var(--accent-color);
-  border-radius: 3px;
-  margin-right: 15px;
-  margin-top: 3px;
-  cursor: pointer;
-  flex-shrink: 0;
+  gap: 14px;
+  padding: 10px 4px;
   position: relative;
-  transition: all 0.2s ease;
 }
 
-.guided-step-item input[type="checkbox"]:checked {
-  background-color: var(--accent-color);
+.guided-stepper-item::before {
+  content: '';
+  position: absolute;
+  left: 13px;
+  top: 34px;
+  bottom: -6px;
+  width: 2px;
+  background: var(--border-color);
+}
+
+.guided-stepper-item:last-child::before {
+  display: none;
+}
+
+.guided-stepper-item.done::before {
+  background: var(--accent-color);
+}
+
+.guided-stepper-icon {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--border-color);
+  color: var(--text-secondary);
+  background: var(--background-primary);
+  z-index: 1;
+}
+
+.guided-stepper-item.done .guided-stepper-icon {
+  border-color: var(--accent-color);
+  background: var(--accent-color);
+  color: var(--background-primary);
   box-shadow: 0 0 10px var(--accent-color);
 }
 
-.guided-step-item input[type="checkbox"]:checked::after {
-  content: '';
-  position: absolute;
-  left: 5px;
-  top: 1px;
-  width: 5px;
-  height: 10px;
-  border: solid var(--background-primary);
-  border-width: 0 3px 3px 0;
-  transform: rotate(45deg);
+.guided-stepper-item.next .guided-stepper-icon {
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+  animation: guidedPulse 1.6s ease-in-out infinite;
 }
 
-.guided-step-item label {
-  color: var(--text-secondary);
-  line-height: 1.5;
-  cursor: pointer;
-  font-size: 0.92rem;
+@keyframes guidedPulse {
+  0%, 100% { box-shadow: 0 0 0 0 var(--accent-color-translucent); }
+  50% { box-shadow: 0 0 0 5px transparent; }
 }
 
-.guided-step-item label strong {
-  color: var(--text-primary);
+.guided-stepper-content {
+  flex: 1;
+  padding-bottom: 4px;
+}
+
+.guided-stepper-content strong {
   display: block;
+  color: var(--text-primary);
+  font-size: 0.92rem;
   margin-bottom: 2px;
 }
 
-.guided-step-item label a {
+.guided-stepper-item.done .guided-stepper-content strong {
+  color: var(--text-secondary);
+}
+
+.guided-stepper-content p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.guided-stepper-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+  background: none;
+  border: none;
   color: var(--accent-color);
-  text-decoration: none;
   font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  text-decoration: none;
+  padding: 0;
 }
-.guided-step-item label a:hover {
+
+.guided-stepper-cta:hover {
   text-decoration: underline;
-}
-
-.guided-step-item input[type="checkbox"]:checked + label {
-  color: var(--text-secondary);
-  text-decoration: line-through;
-}
-
-.guided-step-item input[type="checkbox"]:checked + label strong {
-  color: var(--text-secondary);
 }

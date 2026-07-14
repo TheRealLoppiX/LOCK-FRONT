@@ -3,7 +3,7 @@
     padding: 80px 20px 20px 20px;
     display: flex;
     justify-content: center;
-    color: #fff;
+    color: var(--text-primary);
 }
 
 .book-content-wrapper {
@@ -24,8 +24,8 @@
 }
 
 .reading-status-card {
-    background: #0d1117;
-    border: 1px solid #30363d;
+    background: var(--background-primary);
+    border: 1px solid var(--border-color);
     padding: 20px;
     border-radius: 8px;
     margin-top: 20px;
@@ -71,13 +71,13 @@
 }
 
 .book-author {
-    color: #8b949e;
+    color: var(--text-secondary);
     font-size: 1.2rem;
     margin-bottom: 20px;
 }
 
 .book-synopsis {
-    background: rgba(13, 17, 23, 0.8);
+    background: var(--surface-glass-primary);
     padding: 20px;
     border-radius: 8px;
     border-left: 4px solid #00f0ff;
@@ -88,9 +88,9 @@
 /* Reviews */
 .add-review-box textarea {
     width: 100%;
-    background: #0d1117;
-    border: 1px solid #30363d;
-    color: #fff;
+    background: var(--background-primary);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
     padding: 10px;
     margin-top: 10px;
     border-radius: 4px;

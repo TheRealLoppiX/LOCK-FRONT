@@ -1,5 +1,5 @@
 import React from 'react';
-import { Plus } from '@phosphor-icons/react';
+import { Plus, Trash } from '@phosphor-icons/react';
 import './ChatSidebar.css';
 
 export interface AegisConversationSummary {
@@ -28,9 +28,17 @@ interface ChatSidebarProps {
   activeId: string | null;
   onSelect: (id: string) => void;
   onNewChat: () => void;
+  onDelete: (id: string) => void;
 }
 
-const ChatSidebar: React.FC<ChatSidebarProps> = ({ conversations, activeId, onSelect, onNewChat }) => {
+const ChatSidebar: React.FC<ChatSidebarProps> = ({ conversations, activeId, onSelect, onNewChat, onDelete }) => {
+  const handleDelete = (e: React.MouseEvent, id: string) => {
+    e.stopPropagation();
+    if (window.confirm('Excluir esta conversa? Essa ação não pode ser desfeita.')) {
+      onDelete(id);
+    }
+  };
+
   return (
     <aside className="chat-sidebar">
       <button className="chat-new-btn" onClick={onNewChat}>
@@ -50,6 +58,15 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({ conversations, activeId, onSe
           >
             <span className="chat-history-title">{c.title}</span>
             <span className="chat-history-time">{formatRelativeTime(c.createdAt)}</span>
+            <span
+              className="chat-history-delete"
+              role="button"
+              aria-label="Excluir conversa"
+              title="Excluir conversa"
+              onClick={(e) => handleDelete(e, c.id)}
+            >
+              <Trash size={14} />
+            </span>
           </button>
         ))}
       </div>

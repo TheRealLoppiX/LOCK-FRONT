@@ -9,6 +9,14 @@
   --accent-color: #00bfff;
   --accent-color-translucent: rgba(0, 191, 255, 0.15);
   --border-color: rgba(0, 191, 255, 0.3);
+  /* Painéis "glassmorphism" (blur + translúcido) usados em várias páginas.
+     "-primary" deriva de --background-primary, "-secondary" de --background-secondary;
+     as diferentes opacidades do design original (0.5–0.95) foram unificadas em uma
+     só por variante — a diferença visual entre elas era sutil demais pra justificar
+     mais tokens. */
+  --surface-glass: rgba(22, 27, 34, 0.8);
+  --surface-glass-soft: rgba(22, 27, 34, 0.6);
+  --surface-glass-primary: rgba(13, 17, 23, 0.85);
 }
 
 /* Tema Claro (quando o body tiver o atributo data-theme="light") */
@@ -20,6 +28,9 @@
   --accent-color: #007bff;
   --accent-color-translucent: rgba(0, 123, 255, 0.12);
   --border-color: #ddd;
+  --surface-glass: rgba(255, 255, 255, 0.8);
+  --surface-glass-soft: rgba(255, 255, 255, 0.6);
+  --surface-glass-primary: rgba(255, 255, 255, 0.85);
 }
 
 /* Aplicação global básica */
@@ -51,9 +62,12 @@ html, body, #root {
   margin-left: 240px;
 }
 
+/* Em telas pequenas a sidebar vira uma gaveta que desliza por cima do
+   conteúdo (ver Sidebar.css) — não reserva mais espaço fixo. */
 @media (max-width: 900px) {
   .app-container.with-sidebar .app-body {
-    margin-left: 72px;
+    margin-left: 0;
+    padding-top: 64px; /* espaço pro botão de menu flutuante não cobrir o conteúdo */
   }
 }
 
