@@ -2,13 +2,24 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/authContext';
 import HexagonBackground from '../../components/hexagonobg';
-import { CaretLeft, CheckCircle, Warning, Question, ListBullets } from '@phosphor-icons/react';
+import { CaretLeft, CheckCircle, Warning, Question, ListBullets, Sparkle, CircleNotch } from '@phosphor-icons/react';
 import './AdminQuestions.css';
 
 // Interface para os módulos (Simulados)
 interface ExamModule {
   id: string;
   title: string;
+}
+
+interface GeneratedQuestion {
+  enunciado: string;
+  opcao_a: string;
+  opcao_b: string;
+  opcao_c: string;
+  opcao_d: string;
+  resposta_correta: string;
+  justificativa?: string;
+  referencia?: string;
 }
 
 const AdminQuestions: React.FC = () => {
@@ -33,7 +44,14 @@ const AdminQuestions: React.FC = () => {
   const [optionD, setOptionD] = useState('');
   
   // Resposta correta
-  const [correctOption, setCorrectOption] = useState('A'); 
+  const [correctOption, setCorrectOption] = useState('A');
+
+  // Geração de rascunhos com a Aegis
+  const [aiTema, setAiTema] = useState('');
+  const [aiQuantidade, setAiQuantidade] = useState(3);
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiError, setAiError] = useState<string | null>(null);
+  const [draftQuestions, setDraftQuestions] = useState<GeneratedQuestion[]>([]);
 
   // Carrega a lista de módulos ao abrir a página
   useEffect(() => {
@@ -51,6 +69,48 @@ const AdminQuestions: React.FC = () => {
     };
     fetchModules();
   }, []);
+
+  const handleGenerateDrafts = async () => {
+    if (!aiTema.trim()) {
+      setAiError('Digite um tema para gerar as questões.');
+      return;
+    }
+    setAiLoading(true);
+    setAiError(null);
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/admin/questions/generate`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ tema: aiTema, quantidade: aiQuantidade }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message || 'Falha ao gerar questões.');
+      setDraftQuestions(data.questoes || []);
+    } catch (error: any) {
+      setAiError(error.message || 'Erro ao gerar questões com a Aegis.');
+    } finally {
+      setAiLoading(false);
+    }
+  };
+
+  const handleUseDraft = (draft: GeneratedQuestion) => {
+    setQuestionText(draft.enunciado || '');
+    setOptionA(draft.opcao_a || '');
+    setOptionB(draft.opcao_b || '');
+    setOptionC(draft.opcao_c || '');
+    setOptionD(draft.opcao_d || '');
+    const letter = (draft.resposta_correta || 'A').trim().charAt(0).toUpperCase();
+    setCorrectOption(['A', 'B', 'C', 'D'].includes(letter) ? letter : 'A');
+    setFeedback(null);
+    document.querySelector('.admin-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  const handleDiscardDraft = (index: number) => {
+    setDraftQuestions((prev) => prev.filter((_, i) => i !== index));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -122,8 +182,56 @@ const AdminQuestions: React.FC = () => {
           </div>
         )}
 
+        <div className="ai-generate-panel">
+          <label style={{ color: '#FFD700', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Sparkle size={18} weight="fill" /> Gerar rascunhos com a Aegis
+          </label>
+          <div className="ai-generate-row">
+            <input
+              type="text"
+              placeholder="Tema (ex: SQL Injection, VPN, Criptografia...)"
+              value={aiTema}
+              onChange={(e) => setAiTema(e.target.value)}
+            />
+            <input
+              type="number"
+              min={1}
+              max={10}
+              value={aiQuantidade}
+              onChange={(e) => setAiQuantidade(Number(e.target.value))}
+              title="Quantidade de questões"
+            />
+            <button type="button" onClick={handleGenerateDrafts} disabled={aiLoading}>
+              {aiLoading ? <CircleNotch size={16} className="spin-icon" /> : <Sparkle size={16} />}
+              {aiLoading ? 'Gerando...' : 'Gerar'}
+            </button>
+          </div>
+          {aiError && <p className="ai-generate-error">{aiError}</p>}
+
+          {draftQuestions.length > 0 && (
+            <div className="draft-questions-list">
+              {draftQuestions.map((draft, i) => (
+                <div key={i} className="draft-question-card">
+                  <p className="draft-question-text">{draft.enunciado}</p>
+                  <ul className="draft-question-options">
+                    <li className={draft.resposta_correta?.trim().toUpperCase().startsWith('A') ? 'correct' : ''}>A) {draft.opcao_a}</li>
+                    <li className={draft.resposta_correta?.trim().toUpperCase().startsWith('B') ? 'correct' : ''}>B) {draft.opcao_b}</li>
+                    <li className={draft.resposta_correta?.trim().toUpperCase().startsWith('C') ? 'correct' : ''}>C) {draft.opcao_c}</li>
+                    <li className={draft.resposta_correta?.trim().toUpperCase().startsWith('D') ? 'correct' : ''}>D) {draft.opcao_d}</li>
+                  </ul>
+                  {draft.justificativa && <p className="draft-question-justification">{draft.justificativa}</p>}
+                  <div className="draft-question-actions">
+                    <button type="button" onClick={() => handleUseDraft(draft)}>Usar esta questão</button>
+                    <button type="button" className="discard" onClick={() => handleDiscardDraft(i)}>Descartar</button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
         <form onSubmit={handleSubmit} className="admin-form">
-          
+
           <div className="form-row">
             {/* Seleção de Módulo (Simulado) */}
             <div className="input-group" style={{gridColumn: '1 / -1'}}>

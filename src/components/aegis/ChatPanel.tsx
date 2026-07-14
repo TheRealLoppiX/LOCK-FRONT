@@ -1,10 +1,24 @@
 import React, { useEffect, useRef } from 'react';
-import { Robot, PaperPlaneTilt, Paperclip, CircleNotch } from '@phosphor-icons/react';
+import ReactMarkdown from 'react-markdown';
+import { Robot, PaperPlaneTilt, Paperclip, CircleNotch, X, FileText, Image as ImageIcon } from '@phosphor-icons/react';
 import './ChatPanel.css';
+
+export interface MessageAttachment {
+  name: string;
+  mimeType: string;
+}
 
 export interface AegisMessage {
   role: 'user' | 'aegis';
   content: string;
+  attachments?: MessageAttachment[];
+}
+
+export interface PendingAttachment {
+  name: string;
+  mimeType: string;
+  data: string; // base64, sem o prefixo data:...;base64,
+  previewUrl?: string;
 }
 
 const SUGGESTED_PROMPTS = [
@@ -14,17 +28,36 @@ const SUGGESTED_PROMPTS = [
   'Prepare-me para a prova CompTIA Security+',
 ];
 
+const ACCEPTED_TYPES = 'image/png,image/jpeg,image/webp,application/pdf,text/plain';
+const MAX_ATTACHMENTS = 3;
+const MAX_ATTACHMENT_MB = 5;
+
 interface ChatPanelProps {
   messages: AegisMessage[];
   isLoading: boolean;
   input: string;
   onInputChange: (value: string) => void;
   onSend: (message?: string) => void;
+  attachments: PendingAttachment[];
+  onAddAttachments: (files: FileList) => void;
+  onRemoveAttachment: (index: number) => void;
+  attachmentError: string | null;
 }
 
-const ChatPanel: React.FC<ChatPanelProps> = ({ messages, isLoading, input, onInputChange, onSend }) => {
+const ChatPanel: React.FC<ChatPanelProps> = ({
+  messages,
+  isLoading,
+  input,
+  onInputChange,
+  onSend,
+  attachments,
+  onAddAttachments,
+  onRemoveAttachment,
+  attachmentError,
+}) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -42,6 +75,15 @@ const ChatPanel: React.FC<ChatPanelProps> = ({ messages, isLoading, input, onInp
     e.target.style.height = 'auto';
     e.target.style.height = `${Math.min(e.target.scrollHeight, 160)}px`;
   };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      onAddAttachments(e.target.files);
+    }
+    e.target.value = ''; // permite selecionar o mesmo arquivo de novo
+  };
+
+  const canAttachMore = attachments.length < MAX_ATTACHMENTS;
 
   return (
     <div className="chat-panel">
@@ -70,7 +112,25 @@ const ChatPanel: React.FC<ChatPanelProps> = ({ messages, isLoading, input, onInp
           <>
             {messages.map((msg, i) => (
               <div key={i} className={`chat-message ${msg.role}`}>
-                <div className="chat-bubble">{msg.content}</div>
+                <div className="chat-bubble">
+                  {msg.attachments && msg.attachments.length > 0 && (
+                    <div className="chat-bubble-attachments">
+                      {msg.attachments.map((att, j) => (
+                        <span key={j} className="chat-attachment-chip">
+                          {att.mimeType.startsWith('image/') ? <ImageIcon size={14} /> : <FileText size={14} />}
+                          {att.name}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                  {msg.role === 'aegis' ? (
+                    <div className="chat-markdown">
+                      <ReactMarkdown>{msg.content}</ReactMarkdown>
+                    </div>
+                  ) : (
+                    msg.content
+                  )}
+                </div>
               </div>
             ))}
             {isLoading && (
@@ -86,8 +146,42 @@ const ChatPanel: React.FC<ChatPanelProps> = ({ messages, isLoading, input, onInp
       </div>
 
       <div className="chat-input-area">
+        {attachmentError && <p className="chat-attachment-error">{attachmentError}</p>}
+
+        {attachments.length > 0 && (
+          <div className="chat-pending-attachments">
+            {attachments.map((att, i) => (
+              <div key={i} className="chat-pending-chip">
+                {att.previewUrl ? (
+                  <img src={att.previewUrl} alt={att.name} className="chat-pending-thumb" />
+                ) : (
+                  <FileText size={16} />
+                )}
+                <span className="chat-pending-name">{att.name}</span>
+                <button onClick={() => onRemoveAttachment(i)} title="Remover anexo">
+                  <X size={12} />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+
         <div className="chat-input-bar">
-          <button className="chat-attach-btn" title="Anexar arquivo (em breve)" disabled>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept={ACCEPTED_TYPES}
+            multiple
+            hidden
+            onChange={handleFileChange}
+          />
+          <button
+            className="chat-attach-btn"
+            title={canAttachMore ? `Anexar imagem ou documento (máx. ${MAX_ATTACHMENT_MB}MB, até ${MAX_ATTACHMENTS} arquivos)` : `Limite de ${MAX_ATTACHMENTS} anexos atingido`}
+            onClick={() => fileInputRef.current?.click()}
+            disabled={isLoading || !canAttachMore}
+            type="button"
+          >
             <Paperclip size={18} />
           </button>
           <textarea
@@ -101,7 +195,7 @@ const ChatPanel: React.FC<ChatPanelProps> = ({ messages, isLoading, input, onInp
           />
           <button
             onClick={() => onSend()}
-            disabled={isLoading || !input.trim()}
+            disabled={isLoading || (!input.trim() && attachments.length === 0)}
             className="chat-send-btn"
             title="Enviar"
           >
