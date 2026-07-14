@@ -147,6 +147,79 @@
   flex-shrink: 0;
 }
 
+.card-hide-btn {
+  background: rgba(255, 77, 77, 0.1);
+  border: 1px solid rgba(255, 77, 77, 0.3);
+  color: #ff4d4d;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.card-hide-btn:hover {
+  background-color: #ff4d4d;
+  color: #fff;
+  transform: scale(1.08);
+}
+
+.hidden-cards-tray {
+  margin-top: 28px;
+  padding: 20px 22px;
+  border: 1px dashed var(--border-color);
+  border-radius: 12px;
+  position: relative;
+  z-index: 2;
+}
+
+.hidden-cards-tray h3 {
+  margin: 0 0 4px;
+  color: var(--text-primary);
+  font-size: 1.05rem;
+}
+
+.hidden-cards-tray p {
+  margin: 0 0 14px;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+
+.hidden-cards-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.hidden-card-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--background-secondary);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  padding: 8px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.88rem;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.hidden-card-chip:hover {
+  border-color: var(--accent-color);
+  background-color: var(--accent-color-translucent);
+}
+
+.hidden-card-icon {
+  display: flex;
+  align-items: center;
+  color: var(--accent-color);
+}
+
 .card-icon {
     background-color: var(--accent-color-translucent);
     color: var(--accent-color);

@@ -5,7 +5,7 @@ import {
   Flask, BookOpen, Exam,
   Question, Info, Shuffle,
   RocketLaunch, FilePdf, Crown, ListPlus, Certificate,
-  User, PencilSimple, Check, DotsSixVertical, CaretRight
+  User, PencilSimple, Check, DotsSixVertical, CaretRight, X, Plus
 } from '@phosphor-icons/react';
 import HexagonBackground from '../components/hexagonobg';
 import InfoModal from '../components/InfoModal';
@@ -28,6 +28,7 @@ const DEFAULT_CARD_ORDER = [
   'perfil', 'admin', 'laboratorios', 'quizzes', 'exercicios', 'biblioteca', 'trilha', 'simulados',
 ];
 const ORDER_STORAGE_KEY = 'lock-dashboard-order';
+const HIDDEN_STORAGE_KEY = 'lock-dashboard-hidden';
 
 function loadCardOrder(): string[] {
   try {
@@ -43,6 +44,16 @@ function loadCardOrder(): string[] {
   return DEFAULT_CARD_ORDER;
 }
 
+function loadHiddenCards(): string[] {
+  try {
+    const saved = JSON.parse(localStorage.getItem(HIDDEN_STORAGE_KEY) || '[]');
+    if (Array.isArray(saved)) return saved.filter((id) => DEFAULT_CARD_ORDER.includes(id));
+  } catch {
+    // ignora e usa a lista vazia
+  }
+  return [];
+}
+
 const Dashboard: React.FC = () => {
   const { user } = useAuth();
   const { stats } = useProfileStats();
@@ -54,7 +65,25 @@ const Dashboard: React.FC = () => {
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [cardOrder, setCardOrder] = useState<string[]>(loadCardOrder);
+  const [hiddenCards, setHiddenCards] = useState<string[]>(loadHiddenCards);
   const draggedIdRef = useRef<string | null>(null);
+
+  const handleHideCard = (id: string) => {
+    setHiddenCards((prev) => {
+      if (prev.includes(id)) return prev;
+      const next = [...prev, id];
+      localStorage.setItem(HIDDEN_STORAGE_KEY, JSON.stringify(next));
+      return next;
+    });
+  };
+
+  const handleRestoreCard = (id: string) => {
+    setHiddenCards((prev) => {
+      const next = prev.filter((cardId) => cardId !== id);
+      localStorage.setItem(HIDDEN_STORAGE_KEY, JSON.stringify(next));
+      return next;
+    });
+  };
 
   // Estado para os 5 passos (lido do localStorage)
   const [guidedSteps, setGuidedSteps] = useState(() => {
@@ -210,7 +239,9 @@ const Dashboard: React.FC = () => {
     simulados: { icon: <Certificate weight="bold" />, title: 'Simulados & Certificações', subtitle: 'Treine para provas reais (CompTIA, CEH, LPI).', color: '#009dff', linkTo: '/simulados' },
   };
 
-  const visibleOrder = cardOrder.filter((id) => id !== 'admin' || isAdmin);
+  const visibleOrder = cardOrder
+    .filter((id) => id !== 'admin' || isAdmin)
+    .filter((id) => !hiddenCards.includes(id));
 
   return (
     <div className="dashboard-container">
@@ -263,6 +294,19 @@ const Dashboard: React.FC = () => {
                 <h2 style={meta.color ? { color: meta.color } : undefined}>{meta.title}</h2>
                 {meta.subtitle && <p>{meta.subtitle}</p>}
               </div>
+              {isEditMode && (
+                <button
+                  className="card-hide-btn"
+                  title="Ocultar este card (você pode trazê-lo de volta depois)"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleHideCard(id);
+                  }}
+                >
+                  <X weight="bold" />
+                </button>
+              )}
             </div>
           );
 
@@ -285,6 +329,27 @@ const Dashboard: React.FC = () => {
           );
         })}
       </main>
+
+      {/* --- CARDS OCULTOS (modo de edição) --- */}
+      {isEditMode && hiddenCards.length > 0 && (
+        <section className="hidden-cards-tray">
+          <h3>Cards ocultos</h3>
+          <p>Clique para trazer de volta ao painel.</p>
+          <div className="hidden-cards-list">
+            {hiddenCards.map((id) => {
+              const meta = cardMeta[id];
+              if (!meta) return null;
+              return (
+                <button key={id} className="hidden-card-chip" onClick={() => handleRestoreCard(id)}>
+                  <span className="hidden-card-icon" style={meta.color ? { color: meta.color } : undefined}>{meta.icon}</span>
+                  {meta.title}
+                  <Plus weight="bold" />
+                </button>
+              );
+            })}
+          </div>
+        </section>
+      )}
 
       {/* Modal de Informações */}
       <InfoModal isOpen={isInfoModalOpen} onClose={() => setIsInfoModalOpen(false)} />
