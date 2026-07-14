@@ -39,6 +39,7 @@ import NotFound from './pages/NotFound';
 // Rodapé e Navegação
 import Footer from './components/Footer';
 import Sidebar from './components/Sidebar';
+import Breadcrumbs from './components/Breadcrumbs';
 import ChatPage from './pages/ChatPage';
 
 // ===================================================================
@@ -162,6 +163,7 @@ function AppShell() {
       {isAuthenticated && <Sidebar />}
       <div className="app-body">
         <main className="main-content">
+          {isAuthenticated && <Breadcrumbs />}
           <AppRoutes />
         </main>
         <Footer />
