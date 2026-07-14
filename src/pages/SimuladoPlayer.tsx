@@ -8,8 +8,7 @@ import './SimuladoPlayer.css';
 interface Question {
   id: string;
   question_text: string;
-  options: string[]; 
-  correct_answer_index: number;
+  options: string[];
 }
 
 interface ExamModule {
@@ -34,6 +33,7 @@ const SimuladoPlayer: React.FC = () => {
   const [isFinished, setIsFinished] = useState(false);
   const [score, setScore] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
 
   // CRONÔMETRO
   const [timeLeft, setTimeLeft] = useState(0); // Em segundos
@@ -105,34 +105,30 @@ const SimuladoPlayer: React.FC = () => {
   };
 
   const finishExam = async () => {
-    if (isFinished) return; // Evita duplo envio
+    if (isFinished || isSubmitting) return; // Evita duplo envio
     setIsSubmitting(true);
-    let finalScore = 0;
-
-    questions.forEach(q => {
-      const correctOptionText = q.options[q.correct_answer_index];
-      if (selectedAnswers[q.id] === correctOptionText) {
-        finalScore++;
-      }
-    });
-
-    setScore(finalScore);
-    setIsFinished(true);
+    setSubmitError('');
 
     try {
-      await fetch(`${process.env.REACT_APP_API_URL}/modules/${id}/attempt`, {
+      // A nota é calculada no servidor a partir do gabarito real — o
+      // cliente só envia as respostas escolhidas, nunca uma nota pronta.
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/modules/${id}/attempt`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({
-          score: finalScore,
-          total_questions: questions.length
-        })
+        body: JSON.stringify({ answers: selectedAnswers })
       });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Falha ao corrigir a prova.');
+
+      setScore(data.score);
+      setIsFinished(true);
     } catch (error) {
       console.error("Erro ao salvar nota:", error);
+      setSubmitError('Não foi possível corrigir sua prova. Verifique sua conexão e tente novamente.');
     } finally {
       setIsSubmitting(false);
     }
@@ -236,19 +232,23 @@ const SimuladoPlayer: React.FC = () => {
           })}
         </div>
 
+        {submitError && (
+          <p style={{ color: '#ff3232', textAlign: 'center', marginTop: '12px' }}>{submitError}</p>
+        )}
+
         <div className="exam-footer">
-          <button 
-            className="nav-btn" 
+          <button
+            className="nav-btn"
             disabled={currentQuestionIndex === 0}
             onClick={() => setCurrentQuestionIndex(p => p - 1)}
           >
             <CaretLeft /> Anterior
           </button>
 
-          <button 
-            className="nav-btn next" 
+          <button
+            className="nav-btn next"
             onClick={handleNext}
-            disabled={!selectedAnswers[currentQ.id]} 
+            disabled={!selectedAnswers[currentQ.id] || isSubmitting}
           >
             {currentQuestionIndex === questions.length - 1 ? (
                 isSubmitting ? "Finalizando..." : "Entregar Prova"

@@ -53,7 +53,7 @@ interface CompletedBook {
 }
 
 const Profile: React.FC = () => {
-  const { user } = useAuth();
+  const { user, token, setUser } = useAuth();
   const [activeTab, setActiveTab] = useState<'overview' | 'certificates' | 'library' | 'settings'>('overview');
   const [loading, setLoading] = useState(true);
   
@@ -130,16 +130,30 @@ const Profile: React.FC = () => {
   const handleUpdateProfile = async () => {
     setIsSaving(true);
     try {
-        const { error } = await supabase
-            .from('users')
-            .update({ name: editName, avatar_url: editAvatar })
-            .eq('id', user?.id);
-        
-        if (error) throw error;
-        alert("Perfil atualizado! Recarregue a página para ver as mudanças no menu.");
+        // Passa pela rota autenticada do backend em vez de escrever direto
+        // no Supabase com a chave anônima — o backend valida o dono do
+        // token antes de atualizar, a chave anônima não teria como.
+        const body: { name?: string; avatar_url?: string } = { name: editName };
+        if (editAvatar) body.avatar_url = editAvatar;
+
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/profile/update`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify(body),
+        });
+
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.message || 'Falha ao atualizar perfil.');
+
+        setUser(data.user);
+        localStorage.setItem('lock-user', JSON.stringify(data.user));
+        alert("Perfil atualizado!");
     } catch (error) {
         console.error(error);
-        alert("Erro ao atualizar. Verifique se você tem permissão.");
+        alert("Erro ao atualizar. Tente novamente.");
     } finally {
         setIsSaving(false);
     }

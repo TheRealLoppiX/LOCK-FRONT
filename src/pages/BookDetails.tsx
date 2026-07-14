@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useAuth } from '../contexts/authContext';
-import { supabase } from '../supabase';
+import { supabase } from '../lib/supabase';
 import PDFReader from '../components/PDFReader';
 import HexagonBackground from '../components/hexagonobg';
 import { Star, CheckCircle } from '@phosphor-icons/react';

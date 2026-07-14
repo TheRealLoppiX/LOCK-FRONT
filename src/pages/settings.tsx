@@ -34,7 +34,9 @@ const Settings: React.FC = () => {
           </div>
           <div className="settings-option">
             <p>Deletar Conta</p>
-            <button className="settings-btn danger">Deletar</button>
+            <button className="settings-btn danger" disabled title="Funcionalidade ainda não disponível">
+              Deletar
+            </button>
           </div>
         </div>
 
