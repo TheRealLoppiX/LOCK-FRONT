@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/authContext';
-import { supabase } from '../lib/supabase';
 import { computeRank } from '../hooks/useProfileStats';
 import HexagonBackground from '../components/hexagonobg';
 import { 
@@ -86,32 +85,28 @@ const Profile: React.FC = () => {
   }, [terminalMode]);
 
   const fetchUserData = async () => {
-    if (!user) return;
+    if (!user || !token) return;
     try {
-      // 1. Buscar Livros Lidos
-      const { data: booksData } = await supabase
-        .from('user_library')
-        .select('book_id, book:books(title, cover_url)')
-        .eq('user_id', user.id)
-        .eq('status', 'Lido');
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/profile/stats`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Falha ao buscar estatísticas.');
 
-      // 2. Buscar Tentativas de Simulado (Aprovados > 70%)
-      const { data: examsData } = await supabase
-        .from('user_exam_attempts')
-        .select('id, score, total_questions, completed_at, module:exam_modules(title, cover_url)')
-        .eq('user_id', user.id);
+      const booksData: CompletedBook[] = data.readBooks || [];
+      const examsData: ExamAttempt[] = data.examAttempts || [];
 
       // Filtra apenas aprovados
-      const passedExams = examsData?.filter(e => (e.score / e.total_questions) >= 0.7) || [];
-      
-      // 3. Calcular Stats e Rank
-      const booksCount = booksData?.length || 0;
+      const passedExams = examsData.filter(e => (e.score / e.total_questions) >= 0.7);
+
+      // Calcular Stats e Rank
+      const booksCount = booksData.length;
       const examsCount = passedExams.length;
       const totalXp = (booksCount * 50) + (examsCount * 500);
       const { rank } = computeRank(totalXp);
 
-      setReadBooks(booksData as any || []);
-      setAttempts(passedExams as any);
+      setReadBooks(booksData);
+      setAttempts(passedExams);
       setStats({
         completedLabs: 0,
         completedBooks: booksCount,

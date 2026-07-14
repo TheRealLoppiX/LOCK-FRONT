@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../contexts/authContext';
-import { supabase } from '../lib/supabase';
 
 export interface ProfileStats {
   completedBooks: number;
@@ -34,7 +33,7 @@ export function computeRank(totalXp: number): { rank: string; nextRank: string |
 }
 
 export function useProfileStats() {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const [stats, setStats] = useState<ProfileStats>({
     completedBooks: 0,
     passedExams: 0,
@@ -46,21 +45,17 @@ export function useProfileStats() {
   const [loading, setLoading] = useState(true);
 
   const fetchStats = useCallback(async () => {
-    if (!user) return;
+    if (!user || !token) return;
     try {
-      const { data: booksData } = await supabase
-        .from('user_library')
-        .select('book_id')
-        .eq('user_id', user.id)
-        .eq('status', 'Lido');
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/profile/stats`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Falha ao buscar estatísticas.');
 
-      const { data: examsData } = await supabase
-        .from('user_exam_attempts')
-        .select('id, score, total_questions')
-        .eq('user_id', user.id);
-
-      const passedExams = examsData?.filter((e) => e.score / e.total_questions >= 0.7) || [];
-      const completedBooks = booksData?.length || 0;
+      const examAttempts: { score: number; total_questions: number }[] = data.examAttempts || [];
+      const passedExams = examAttempts.filter((e) => e.score / e.total_questions >= 0.7);
+      const completedBooks = (data.readBooks || []).length;
       const passedExamsCount = passedExams.length;
       const totalXp = completedBooks * 50 + passedExamsCount * 500;
       const { rank, nextRank, nextRankXp } = computeRank(totalXp);
@@ -71,7 +66,7 @@ export function useProfileStats() {
     } finally {
       setLoading(false);
     }
-  }, [user]);
+  }, [user, token]);
 
   useEffect(() => {
     fetchStats();

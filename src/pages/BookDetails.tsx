@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useAuth } from '../contexts/authContext';
-import { supabase } from '../lib/supabase';
 import PDFReader from '../components/PDFReader';
 import HexagonBackground from '../components/hexagonobg';
 import { Star, CheckCircle } from '@phosphor-icons/react';
@@ -9,7 +8,7 @@ import './BookDetails.css';
 
 const BookDetails: React.FC = () => {
   const { id } = useParams();
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   
   const [book, setBook] = useState<any>(null);
 
@@ -29,79 +28,63 @@ const BookDetails: React.FC = () => {
   }, [id, user]);
 
   const fetchBookData = async () => {
-    if (!id) return;
+    if (!id || !token) return;
+    const apiUrl = process.env.REACT_APP_API_URL;
+    const authHeaders = { Authorization: `Bearer ${token}` };
 
     // 1. Busca dados do livro
-    const { data: bookData } = await supabase
-        .from('books')
-        .select('*')
-        .eq('id', id)
-        .single();
-    
-    if (bookData) setBook(bookData);
+    const bookRes = await fetch(`${apiUrl}/books/${id}`, { headers: authHeaders });
+    if (bookRes.ok) setBook(await bookRes.json());
 
-    // 2. Busca progresso do usuário (se estiver logado)
-    if (user) {
-        const { data: progressData } = await supabase
-            .from('reading_progress')
-            .select('*')
-            .eq('user_id', user.id)
-            .eq('book_id', id)
-            .maybeSingle();
-        
-        // Se achou no banco, usa. Se não, mantém o padrão (página 1)
-        if (progressData) {
-            setProgress(progressData);
-        }
-    }
+    // 2. Busca progresso do usuário
+    const progressRes = await fetch(`${apiUrl}/books/${id}/progress`, { headers: authHeaders });
+    if (progressRes.ok) setProgress(await progressRes.json());
 
     // 3. Busca reviews
-    const { data: reviewsData } = await supabase
-        .from('book_reviews')
-        .select('*, users(name, avatar_url)')
-        .eq('book_id', id)
-        .order('created_at', { ascending: false });
-    
-    setReviews(reviewsData || []);
+    const reviewsRes = await fetch(`${apiUrl}/books/${id}/reviews`, { headers: authHeaders });
+    if (reviewsRes.ok) setReviews(await reviewsRes.json());
   };
 
   // Salva o progresso a cada página virada
   const handleProgressUpdate = async (page: number, total: number) => {
-    if (!user || !id) return;
+    if (!user || !id || !token) return;
 
     const isCompleted = page >= (total - 1);
 
     // Atualiza estado local imediatamente para feedback visual rápido
-    setProgress((prev: any) => ({ 
-        ...prev, 
-        current_page: page, 
-        is_completed: isCompleted 
+    setProgress((prev: any) => ({
+        ...prev,
+        current_page: page,
+        is_completed: isCompleted
     }));
 
     // Salva no banco em background
-    await supabase.from('reading_progress').upsert({
-        user_id: user.id,
-        book_id: id,
-        current_page: page,
-        is_completed: isCompleted,
-        last_read_at: new Date()
-    }, { onConflict: 'user_id, book_id' });
+    await fetch(`${process.env.REACT_APP_API_URL}/books/${id}/progress`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ current_page: page, is_completed: isCompleted }),
+    });
   };
 
   const handleSendReview = async () => {
-      if (!user) return alert("Você precisa estar logado!");
+      if (!user || !token) return alert("Você precisa estar logado!");
       if (userRating === 0) return alert("Selecione uma nota!");
-      
-      const { error } = await supabase.from('book_reviews').insert({
-          user_id: user.id,
-          book_id: id,
-          rating: userRating,
-          comment: userComment
+
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/books/${id}/reviews`, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ rating: userRating, comment: userComment }),
       });
 
-      if (!error) {
+      if (res.ok) {
           alert("Avaliação enviada!");
-          fetchBookData(); 
+          fetchBookData();
           setUserComment('');
           setUserRating(0);
       } else {
