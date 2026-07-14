@@ -38,7 +38,7 @@ import NotFound from './pages/NotFound';
 
 // Rodapé e Navegação
 import Footer from './components/Footer';
-import TopNav from './components/TopNav';
+import Sidebar from './components/Sidebar';
 import ChatPage from './pages/ChatPage';
 
 // ===================================================================
@@ -158,12 +158,14 @@ function AppShell() {
   const { isAuthenticated } = useAuth();
 
   return (
-    <div className="app-container">
-      {isAuthenticated && <TopNav />}
-      <main className="main-content">
-        <AppRoutes />
-      </main>
-      <Footer />
+    <div className={`app-container ${isAuthenticated ? 'with-sidebar' : ''}`}>
+      {isAuthenticated && <Sidebar />}
+      <div className="app-body">
+        <main className="main-content">
+          <AppRoutes />
+        </main>
+        <Footer />
+      </div>
     </div>
   );
 }

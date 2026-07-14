@@ -35,9 +35,26 @@ html, body, #root {
 }
 
 .app-container {
+  min-height: 100vh;
+}
+
+/* A sidebar usa position: fixed (fora do fluxo), então basta reservar
+   espaço com margin-left — não precisamos de flexbox aqui. */
+.app-body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+}
+
+/* Reserva espaço para a sidebar fixa à esquerda quando logado */
+.app-container.with-sidebar .app-body {
+  margin-left: 240px;
+}
+
+@media (max-width: 900px) {
+  .app-container.with-sidebar .app-body {
+    margin-left: 72px;
+  }
 }
 
 .main-content {
