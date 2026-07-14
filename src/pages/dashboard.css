@@ -251,8 +251,9 @@
 }
 
 .perfil-stats-row {
-  display: flex;
-  gap: 24px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 24px;
   border-top: 1px solid var(--border-color);
   padding-top: 14px;
 }

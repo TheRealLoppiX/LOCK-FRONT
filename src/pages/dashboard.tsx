@@ -132,6 +132,8 @@ const Dashboard: React.FC = () => {
         <div className="perfil-stats-row">
           <div><strong>{stats.completedBooks}</strong><span>Livros lidos</span></div>
           <div><strong>{stats.passedExams}</strong><span>Simulados aprovados</span></div>
+          <div><strong>{stats.completedLabs}</strong><span>Labs concluídos</span></div>
+          <div><strong>{stats.completedQuizzes}</strong><span>Quizzes praticados</span></div>
         </div>
       </div>
     ),

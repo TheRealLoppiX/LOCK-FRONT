@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import HexagonBackground from '../../components/hexagonobg';
+import { useAuth } from '../../contexts/authContext';
+import { markLabComplete } from '../../utils/labProgress';
 import './LabPage.css'; // Reutiliza o mesmo estilo dos outros laboratórios
 
 const BruteForceLab: React.FC = () => {
+  const { token } = useAuth();
   const [password, setPassword] = useState('');
   const [result, setResult] = useState<{ success: boolean; message: string } | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -23,6 +26,7 @@ const BruteForceLab: React.FC = () => {
       });
       const data = await response.json();
       setResult(data);
+      if (data.success) markLabComplete(token, 'brute-force-1');
     } catch (error) {
       setResult({ success: false, message: "Erro de conexão com a API. Verifique se ela está no ar." });
     } finally {

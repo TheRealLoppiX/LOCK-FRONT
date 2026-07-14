@@ -4,6 +4,8 @@ import { useAuth } from '../contexts/authContext';
 export interface ProfileStats {
   completedBooks: number;
   passedExams: number;
+  completedLabs: number;
+  completedQuizzes: number;
   totalXp: number;
   rank: string;
   nextRank: string | null;
@@ -37,6 +39,8 @@ export function useProfileStats() {
   const [stats, setStats] = useState<ProfileStats>({
     completedBooks: 0,
     passedExams: 0,
+    completedLabs: 0,
+    completedQuizzes: 0,
     totalXp: 0,
     rank: 'Script Kiddie',
     nextRank: 'White Hat',
@@ -53,14 +57,26 @@ export function useProfileStats() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || 'Falha ao buscar estatísticas.');
 
+      // O XP é sempre calculado no servidor (mesma fórmula usada no
+      // leaderboard) — o front só exibe, nunca recalcula.
       const examAttempts: { score: number; total_questions: number }[] = data.examAttempts || [];
-      const passedExams = examAttempts.filter((e) => e.score / e.total_questions >= 0.7);
+      const passedExamsCount = examAttempts.filter((e) => e.score / e.total_questions >= 0.7).length;
       const completedBooks = (data.readBooks || []).length;
-      const passedExamsCount = passedExams.length;
-      const totalXp = completedBooks * 50 + passedExamsCount * 500;
+      const completedLabs = (data.labCompletions || []).length;
+      const quizCombos = new Set((data.quizCompletions || []).map((q: { topic: string; difficulty: string }) => `${q.topic}::${q.difficulty}`));
+      const totalXp: number = data.totalXp ?? 0;
       const { rank, nextRank, nextRankXp } = computeRank(totalXp);
 
-      setStats({ completedBooks, passedExams: passedExamsCount, totalXp, rank, nextRank, nextRankXp });
+      setStats({
+        completedBooks,
+        passedExams: passedExamsCount,
+        completedLabs,
+        completedQuizzes: quizCombos.size,
+        totalXp,
+        rank,
+        nextRank,
+        nextRankXp,
+      });
     } catch (error) {
       console.error('Erro ao carregar estatísticas do perfil', error);
     } finally {

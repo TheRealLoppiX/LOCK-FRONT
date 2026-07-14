@@ -1,15 +1,19 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import HexagonBackground from '../../components/hexagonobg';
+import { useAuth } from '../../contexts/authContext';
+import { markLabComplete, looksLikeXssPayload } from '../../utils/labProgress';
 import './LabPage.css';
 
 const XSSLab1: React.FC = () => {
+  const { token } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
   const [result, setResult] = useState('');
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     setResult(`Resultados da busca por: ${searchTerm}`);
+    if (looksLikeXssPayload(searchTerm)) markLabComplete(token, 'xss-1');
   };
 
   return (

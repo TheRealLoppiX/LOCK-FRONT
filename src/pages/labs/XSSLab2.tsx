@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import HexagonBackground from '../../components/hexagonobg';
+import { useAuth } from '../../contexts/authContext';
+import { markLabComplete, looksLikeXssPayload } from '../../utils/labProgress';
 import './LabPage.css';
 
 interface Comment {
@@ -10,6 +12,7 @@ interface Comment {
 }
 
 const XSSLab2: React.FC = () => {
+  const { token } = useAuth();
   const [comments, setComments] = useState<Comment[]>([]);
   const [author, setAuthor] = useState('');
   const [site, setSite] = useState('https://meusite.com');
@@ -32,6 +35,7 @@ const XSSLab2: React.FC = () => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ author, site, comment }),
     });
+    if (looksLikeXssPayload(comment) || looksLikeXssPayload(site)) markLabComplete(token, 'xss-2');
     setAuthor(''); setSite(''); setComment('');
     fetchComments();
   };

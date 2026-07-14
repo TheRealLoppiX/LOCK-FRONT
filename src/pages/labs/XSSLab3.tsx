@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import HexagonBackground from '../../components/hexagonobg';
+import { useAuth } from '../../contexts/authContext';
+import { markLabComplete } from '../../utils/labProgress';
 import './LabPage.css';
 
 interface Comment {
@@ -10,6 +12,7 @@ interface Comment {
 }
 
 const XSSLab3: React.FC = () => {
+  const { token } = useAuth();
   const [comments, setComments] = useState<Comment[]>([]);
   const [author, setAuthor] = useState('');
   const [site, setSite] = useState('');
@@ -32,6 +35,12 @@ const XSSLab3: React.FC = () => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ author, site, comment }),
     });
+    // Nível 3 filtra "alert" e "<script>" no servidor — o vetor esperado é
+    // o href da tag <a> (ex: javascript:...), então checamos por isso sem
+    // depender das palavras já removidas pelo filtro.
+    if (/^\s*javascript:/i.test(site) && site.trim().length > 'javascript:'.length) {
+      markLabComplete(token, 'xss-3');
+    }
     setAuthor(''); setSite(''); setComment('');
     fetchComments();
   };

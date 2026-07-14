@@ -34,6 +34,7 @@ import CreateModule from './pages/admin/CreateModule';
 import AdminModules from './pages/admin/AdminModules';
 import SimuladoPlayer from './pages/SimuladoPlayer';
 import ManualPage from './pages/ManualPage';
+import Leaderboard from './pages/Leaderboard';
 import NotFound from './pages/NotFound';
 
 // Rodapé e Navegação
@@ -88,6 +89,7 @@ function AppRoutes() {
       <Route path="/simulados/:id/play" element={<PrivateRoute><SimuladoPlayer /></PrivateRoute>} />
       <Route path="/manual" element={<PrivateRoute><ManualPage /></PrivateRoute>} />
       <Route path="/chat" element={<PrivateRoute><ChatPage /></PrivateRoute>} />
+      <Route path="/leaderboard" element={<PrivateRoute><Leaderboard /></PrivateRoute>} />
 
       {/* Rotas do Quiz */}
       <Route path="/quizzes/:topic" element={<PrivateRoute><QuizSelectionPage /></PrivateRoute>} />

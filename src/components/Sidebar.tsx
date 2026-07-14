@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { SquaresFour, ChatCircleDots, Gear, SignOut } from '@phosphor-icons/react';
+import { SquaresFour, ChatCircleDots, Trophy, Gear, SignOut } from '@phosphor-icons/react';
 import { useAuth } from '../contexts/authContext';
 import logoLock from '../assets/Logo lock.png';
 import './Sidebar.css';
@@ -32,6 +32,13 @@ const Sidebar: React.FC = () => {
         >
           <ChatCircleDots weight="bold" />
           <span>Chat — Aegis</span>
+        </NavLink>
+        <NavLink
+          to="/leaderboard"
+          className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}
+        >
+          <Trophy weight="bold" />
+          <span>Ranking</span>
         </NavLink>
       </nav>
 

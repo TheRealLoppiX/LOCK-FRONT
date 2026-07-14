@@ -95,22 +95,21 @@ const Profile: React.FC = () => {
 
       const booksData: CompletedBook[] = data.readBooks || [];
       const examsData: ExamAttempt[] = data.examAttempts || [];
+      const labCompletions: unknown[] = data.labCompletions || [];
 
       // Filtra apenas aprovados
       const passedExams = examsData.filter(e => (e.score / e.total_questions) >= 0.7);
 
-      // Calcular Stats e Rank
-      const booksCount = booksData.length;
-      const examsCount = passedExams.length;
-      const totalXp = (booksCount * 50) + (examsCount * 500);
+      // O XP é sempre calculado no servidor — o front só exibe.
+      const totalXp: number = data.totalXp ?? 0;
       const { rank } = computeRank(totalXp);
 
       setReadBooks(booksData);
       setAttempts(passedExams);
       setStats({
-        completedLabs: 0,
-        completedBooks: booksCount,
-        passedExams: examsCount,
+        completedLabs: labCompletions.length,
+        completedBooks: booksData.length,
+        passedExams: passedExams.length,
         totalXp,
         rank
       });

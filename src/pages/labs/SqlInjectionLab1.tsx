@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import HexagonBackground from '../../components/hexagonobg';
+import { useAuth } from '../../contexts/authContext';
+import { markLabComplete } from '../../utils/labProgress';
 import './LabPage.css';
 
 const SqlInjectionLab1: React.FC = () => {
+  const { token } = useAuth();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [result, setResult] = useState<{ success: boolean; message: string } | null>(null);
@@ -21,6 +24,7 @@ const SqlInjectionLab1: React.FC = () => {
       });
       const data = await response.json();
       setResult(data);
+      if (data.success) markLabComplete(token, 'sql-injection-1');
     } catch (error) {
       setResult({ success: false, message: "Erro de conexão com a API." });
     } finally {

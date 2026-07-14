@@ -12,6 +12,7 @@ const SEGMENT_LABELS: Record<string, string> = {
   simulados: 'Simulados',
   manual: 'Manual',
   chat: 'Chat — Aegis',
+  leaderboard: 'Ranking',
   quizzes: 'Quizzes',
   quiz: 'Quiz',
   player: 'Jogar',

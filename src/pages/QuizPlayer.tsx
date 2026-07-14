@@ -91,6 +91,18 @@ const QuizPlayer: React.FC = () => {
   }, [currentQuestionIndex, questions.length]);
 
   useEffect(() => {
+    if (!quizFinished || !token || !topic || !difficulty) return;
+    fetch(`${process.env.REACT_APP_API_URL}/quiz/complete`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ topic, difficulty, score, totalQuestions: questions.length }),
+    }).catch(() => {
+      // XP é um bônus — não bloqueia a tela de resultado se falhar
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [quizFinished]);
+
+  useEffect(() => {
     if (!quizFinished || !token) return;
     const wrong = wrongAnswersRef.current;
     if (wrong.length === 0) return;
