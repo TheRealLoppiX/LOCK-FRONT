@@ -3,7 +3,13 @@ import { Link } from 'react-router-dom';
 import HexagonBackground from '../../components/hexagonobg';
 import { useAuth } from '../../contexts/authContext';
 import { markLabComplete } from '../../utils/labProgress';
+import HintPanel from '../../components/labs/HintPanel';
 import './LabPage.css';
+
+const HINTS = [
+  'Teste nomes de usuário comuns como "admin", "root", "guest" e "test", e compare a mensagem de erro de cada um.',
+  'Se a resposta for "Senha incorreta.", o usuário existe. Se for "Usuário não encontrado.", não existe — essa diferença na resposta é a vulnerabilidade.',
+];
 
 interface Attempt {
   username: string;
@@ -134,6 +140,8 @@ const BruteForceLab1: React.FC = () => {
             {result.message}
           </div>
         )}
+
+        <HintPanel labTitle="Nível 1: Reconhecimento" hints={HINTS} />
 
         <Link to="/labs/brute-force" className="back-link">← Voltar para a lista de laboratórios</Link>
       </div>

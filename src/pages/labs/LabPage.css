@@ -3,11 +3,13 @@
 .lab-selection-content { max-width: 900px; margin: 0 auto; text-align: center; position: relative; z-index: 2; }
 .lab-selection-header h1 { font-family: 'Space Grotesk', sans-serif; color: var(--accent-color); font-size: 2.8rem; }
 .lab-selection-grid { display: grid; grid-template-columns: 1fr; gap: 20px; margin-top: 40px; }
-.lab-selection-card { display: block; background: var(--background-secondary); border: 1px solid var(--border-color); border-radius: 12px; padding: 25px; text-decoration: none; text-align: left; transition: all 0.3s ease; }
+.lab-selection-card { display: block; position: relative; background: var(--background-secondary); border: 1px solid var(--border-color); border-radius: 12px; padding: 25px; text-decoration: none; text-align: left; transition: all 0.3s ease; }
 .lab-selection-card:hover { transform: translateY(-5px); border-color: var(--accent-color); }
+.lab-selection-card.completed { border-color: #39FF14; }
 .lab-selection-card h2 { color: var(--text-primary); margin-top: 0; }
 .lab-selection-card p { color: var(--text-secondary); }
 .lab-action { display: block; margin-top: 20px; color: var(--accent-color); font-weight: 600; }
+.lab-completed-badge { display: inline-flex; align-items: center; gap: 6px; margin-bottom: 12px; padding: 3px 10px; border-radius: 20px; background: rgba(57, 255, 20, 0.12); color: #39FF14; font-size: 0.78rem; font-weight: 600; }
 .back-link { display: inline-block; margin-top: 30px; color: var(--text-secondary); text-decoration: none; }
 
 /* Estilo para a Página do Laboratório em si */

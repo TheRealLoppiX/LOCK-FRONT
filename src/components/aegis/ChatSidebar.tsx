@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Plus, Trash } from '@phosphor-icons/react';
+import ConfirmDialog from '../ConfirmDialog';
 import './ChatSidebar.css';
 
 export interface AegisConversationSummary {
@@ -32,11 +33,16 @@ interface ChatSidebarProps {
 }
 
 const ChatSidebar: React.FC<ChatSidebarProps> = ({ conversations, activeId, onSelect, onNewChat, onDelete }) => {
-  const handleDelete = (e: React.MouseEvent, id: string) => {
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
+
+  const handleDeleteClick = (e: React.MouseEvent, id: string) => {
     e.stopPropagation();
-    if (window.confirm('Excluir esta conversa? Essa ação não pode ser desfeita.')) {
-      onDelete(id);
-    }
+    setPendingDeleteId(id);
+  };
+
+  const confirmDelete = () => {
+    if (pendingDeleteId !== null) onDelete(pendingDeleteId);
+    setPendingDeleteId(null);
   };
 
   return (
@@ -63,13 +69,22 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({ conversations, activeId, onSe
               role="button"
               aria-label="Excluir conversa"
               title="Excluir conversa"
-              onClick={(e) => handleDelete(e, c.id)}
+              onClick={(e) => handleDeleteClick(e, c.id)}
             >
               <Trash size={14} />
             </span>
           </button>
         ))}
       </div>
+
+      <ConfirmDialog
+        isOpen={pendingDeleteId !== null}
+        title="Excluir conversa"
+        message="Essa ação não pode ser desfeita. O histórico dessa conversa será perdido."
+        confirmLabel="Excluir"
+        onConfirm={confirmDelete}
+        onCancel={() => setPendingDeleteId(null)}
+      />
     </aside>
   );
 };

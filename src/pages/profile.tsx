@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/authContext';
 import { computeRank } from '../hooks/useProfileStats';
+import { useToast } from '../contexts/toastContext';
 import HexagonBackground from '../components/hexagonobg';
 import { 
   User, ShieldCheck, BookBookmark, Gear, 
@@ -53,6 +54,7 @@ interface CompletedBook {
 
 const Profile: React.FC = () => {
   const { user, token, setUser } = useAuth();
+  const { showToast } = useToast();
   const [activeTab, setActiveTab] = useState<'overview' | 'certificates' | 'library' | 'settings'>('overview');
   const [loading, setLoading] = useState(true);
   
@@ -116,6 +118,11 @@ const Profile: React.FC = () => {
 
     } catch (error) {
       console.error("Erro ao carregar perfil", error);
+      showToast({
+        message: 'Não foi possível carregar seu perfil.',
+        actionLabel: 'Tentar novamente',
+        onAction: () => fetchUserData(),
+      });
     } finally {
       setLoading(false);
     }

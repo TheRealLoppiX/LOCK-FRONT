@@ -3,7 +3,13 @@ import { Link } from 'react-router-dom';
 import HexagonBackground from '../../components/hexagonobg';
 import { useAuth } from '../../contexts/authContext';
 import { markLabComplete } from '../../utils/labProgress';
+import HintPanel from '../../components/labs/HintPanel';
 import './LabPage.css';
+
+const HINTS = [
+  'Uma senha de 8 caracteres alfanuméricos tem bilhões de combinações — testar manualmente não é viável. Pense em uma ferramenta de automação (ex: Burp Intruder, Hydra, ou um script simples) que envie várias tentativas rapidamente.',
+  'A senha muda a cada carregamento da página — sua ferramenta precisa buscar a senha atual (veja como a página faz isso) e testá-la antes que ela expire.',
+];
 
 const BruteForceLab2: React.FC = () => {
   const { token } = useAuth();
@@ -88,6 +94,8 @@ const BruteForceLab2: React.FC = () => {
             {result.message}
           </div>
         )}
+        <HintPanel labTitle="Nível 2: Força Bruta em Senha Aleatória" hints={HINTS} />
+
         <Link to="/labs/brute-force" className="back-link">← Voltar</Link>
       </div>
     </div>

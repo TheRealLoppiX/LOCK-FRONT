@@ -1,11 +1,18 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../contexts/authContext';
+import { useToast } from '../contexts/toastContext';
+
+export interface LabCompletion {
+  lab_key: string;
+  completed_at: string;
+}
 
 export interface ProfileStats {
   completedBooks: number;
   passedExams: number;
   completedLabs: number;
   completedQuizzes: number;
+  labCompletions: LabCompletion[];
   totalXp: number;
   rank: string;
   nextRank: string | null;
@@ -36,11 +43,13 @@ export function computeRank(totalXp: number): { rank: string; nextRank: string |
 
 export function useProfileStats() {
   const { user, token } = useAuth();
+  const { showToast } = useToast();
   const [stats, setStats] = useState<ProfileStats>({
     completedBooks: 0,
     passedExams: 0,
     completedLabs: 0,
     completedQuizzes: 0,
+    labCompletions: [],
     totalXp: 0,
     rank: 'Script Kiddie',
     nextRank: 'White Hat',
@@ -62,7 +71,7 @@ export function useProfileStats() {
       const examAttempts: { score: number; total_questions: number }[] = data.examAttempts || [];
       const passedExamsCount = examAttempts.filter((e) => e.score / e.total_questions >= 0.7).length;
       const completedBooks = (data.readBooks || []).length;
-      const completedLabs = (data.labCompletions || []).length;
+      const labCompletions: LabCompletion[] = data.labCompletions || [];
       const quizCombos = new Set((data.quizCompletions || []).map((q: { topic: string; difficulty: string }) => `${q.topic}::${q.difficulty}`));
       const totalXp: number = data.totalXp ?? 0;
       const { rank, nextRank, nextRankXp } = computeRank(totalXp);
@@ -70,8 +79,9 @@ export function useProfileStats() {
       setStats({
         completedBooks,
         passedExams: passedExamsCount,
-        completedLabs,
+        completedLabs: labCompletions.length,
         completedQuizzes: quizCombos.size,
+        labCompletions,
         totalXp,
         rank,
         nextRank,
@@ -79,10 +89,16 @@ export function useProfileStats() {
       });
     } catch (error) {
       console.error('Erro ao carregar estatísticas do perfil', error);
+      showToast({
+        message: 'Não foi possível carregar suas estatísticas.',
+        actionLabel: 'Tentar novamente',
+        onAction: () => fetchStats(),
+      });
     } finally {
       setLoading(false);
     }
-  }, [user, token]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, token, showToast]);
 
   useEffect(() => {
     fetchStats();

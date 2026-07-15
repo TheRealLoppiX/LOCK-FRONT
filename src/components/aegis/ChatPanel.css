@@ -126,6 +126,58 @@
   border-bottom-left-radius: 4px;
 }
 
+.chat-edit-btn {
+  align-self: center;
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  color: var(--text-secondary);
+  opacity: 0;
+  transition: opacity 0.15s ease, color 0.15s ease, background-color 0.15s ease;
+}
+
+.chat-message.user:hover .chat-edit-btn,
+.chat-message.user:focus-within .chat-edit-btn {
+  opacity: 1;
+}
+
+.chat-edit-btn:hover {
+  color: var(--accent-color);
+  background-color: var(--accent-color-translucent);
+}
+
+.chat-editing-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  background: var(--accent-color-translucent);
+  color: var(--accent-color);
+  font-size: 0.8rem;
+}
+
+.chat-editing-banner button {
+  margin-left: auto;
+  background: transparent;
+  border: 1px solid var(--accent-color);
+  color: var(--accent-color);
+  border-radius: 6px;
+  padding: 2px 10px;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.chat-editing-banner button:hover {
+  background: var(--accent-color);
+  color: #fff;
+}
+
 .chat-markdown p { margin: 0 0 10px; }
 .chat-markdown p:last-child { margin-bottom: 0; }
 .chat-markdown ul,

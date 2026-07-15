@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { Robot, PaperPlaneTilt, Paperclip, CircleNotch, X, FileText, Image as ImageIcon } from '@phosphor-icons/react';
+import { Robot, PaperPlaneTilt, Paperclip, CircleNotch, X, FileText, Image as ImageIcon, PencilSimple } from '@phosphor-icons/react';
 import './ChatPanel.css';
 
 export interface MessageAttachment {
@@ -42,6 +42,9 @@ interface ChatPanelProps {
   onAddAttachments: (files: FileList) => void;
   onRemoveAttachment: (index: number) => void;
   attachmentError: string | null;
+  editingIndex?: number | null;
+  onEditMessage?: (index: number) => void;
+  onCancelEdit?: () => void;
 }
 
 const ChatPanel: React.FC<ChatPanelProps> = ({
@@ -54,6 +57,9 @@ const ChatPanel: React.FC<ChatPanelProps> = ({
   onAddAttachments,
   onRemoveAttachment,
   attachmentError,
+  editingIndex,
+  onEditMessage,
+  onCancelEdit,
 }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -112,6 +118,15 @@ const ChatPanel: React.FC<ChatPanelProps> = ({
           <>
             {messages.map((msg, i) => (
               <div key={i} className={`chat-message ${msg.role}`}>
+                {msg.role === 'user' && onEditMessage && !isLoading && (
+                  <button
+                    className="chat-edit-btn"
+                    title="Editar e reenviar"
+                    onClick={() => onEditMessage(i)}
+                  >
+                    <PencilSimple size={14} />
+                  </button>
+                )}
                 <div className="chat-bubble">
                   {msg.attachments && msg.attachments.length > 0 && (
                     <div className="chat-bubble-attachments">
@@ -146,6 +161,12 @@ const ChatPanel: React.FC<ChatPanelProps> = ({
       </div>
 
       <div className="chat-input-area">
+        {editingIndex != null && (
+          <div className="chat-editing-banner">
+            <PencilSimple size={14} /> Editando mensagem — reenviar vai apagar as respostas seguintes.
+            <button type="button" onClick={onCancelEdit}>Cancelar</button>
+          </div>
+        )}
         {attachmentError && <p className="chat-attachment-error">{attachmentError}</p>}
 
         {attachments.length > 0 && (

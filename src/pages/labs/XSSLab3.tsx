@@ -3,7 +3,13 @@ import { Link } from 'react-router-dom';
 import HexagonBackground from '../../components/hexagonobg';
 import { useAuth } from '../../contexts/authContext';
 import { markLabComplete } from '../../utils/labProgress';
+import HintPanel from '../../components/labs/HintPanel';
 import './LabPage.css';
+
+const HINTS = [
+  'Repare que o campo "Seu Site" vira o link (href) do seu nome nos comentários — pense em outros esquemas de URL além de http/https que um navegador aceita num atributo href.',
+  'Um link com o esquema `javascript:` executaria código ao ser clicado — mas como a palavra "alert" é filtrada, use outra função que abra um popup sem essa palavra, como `confirm()` ou `prompt()`.',
+];
 
 interface Comment {
   author: string;
@@ -69,6 +75,8 @@ const XSSLab3: React.FC = () => {
           <textarea value={comment} onChange={e => setComment(e.target.value)} placeholder="Seu comentário" />
           <button type="submit">Postar</button>
         </form>
+        <HintPanel labTitle="Nível 3: A Evasão de Filtros" hints={HINTS} />
+
          <Link to="/labs/xss" className="back-link">← Voltar</Link>
       </div>
     </div>

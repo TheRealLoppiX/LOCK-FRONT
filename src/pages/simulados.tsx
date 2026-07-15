@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import HexagonBackground from '../components/hexagonobg';
 import { CaretLeft, Certificate, Play, Star, Trophy } from '@phosphor-icons/react';
+import { useToast } from '../contexts/toastContext';
 import './simulados.css';
 
 interface ExamModule {
@@ -15,11 +16,16 @@ interface ExamModule {
 const Simulados: React.FC = () => {
   const [modules, setModules] = useState<ExamModule[]>([]);
   const [loading, setLoading] = useState(true);
+  const { showToast } = useToast();
 
-  useEffect(() => {
+  const fetchModules = useCallback(() => {
+    setLoading(true);
     // Busca a lista de simulados do backend
     fetch(`${process.env.REACT_APP_API_URL}/modules`)
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) throw new Error('Falha ao buscar simulados.');
+        return res.json();
+      })
       .then(data => {
         setModules(data);
         setLoading(false);
@@ -27,8 +33,18 @@ const Simulados: React.FC = () => {
       .catch(err => {
         console.error("Erro ao carregar simulados:", err);
         setLoading(false);
+        showToast({
+          message: 'Não foi possível carregar os simulados.',
+          actionLabel: 'Tentar novamente',
+          onAction: () => fetchModules(),
+        });
       });
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showToast]);
+
+  useEffect(() => {
+    fetchModules();
+  }, [fetchModules]);
 
   // Função auxiliar para renderizar estrelas de dificuldade
   const renderDifficulty = (level: number) => {

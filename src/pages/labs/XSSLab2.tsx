@@ -3,7 +3,13 @@ import { Link } from 'react-router-dom';
 import HexagonBackground from '../../components/hexagonobg';
 import { useAuth } from '../../contexts/authContext';
 import { markLabComplete, looksLikeXssPayload } from '../../utils/labProgress';
+import HintPanel from '../../components/labs/HintPanel';
 import './LabPage.css';
+
+const HINTS = [
+  'O comentário é salvo e exibido pra qualquer visitante depois — o mesmo tipo de payload do laboratório anterior deve funcionar aqui, mas agora ele fica gravado.',
+  'Tente `<img src=x onerror=alert(1)>` no campo de comentário (ou de site) — como não há sanitização, ele executa toda vez que a página do blog é carregada.',
+];
 
 interface Comment {
   author: string;
@@ -66,6 +72,8 @@ const XSSLab2: React.FC = () => {
           <textarea value={comment} onChange={e => setComment(e.target.value)} placeholder="Seu comentário (injete o payload aqui)" />
           <button type="submit">Postar Comentário</button>
         </form>
+        <HintPanel labTitle="Nível 2: A Mensagem Persistente" hints={HINTS} />
+
          <Link to="/labs/xss" className="back-link">← Voltar</Link>
       </div>
     </div>

@@ -1,0 +1,65 @@
+.hint-panel {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px dashed var(--border-color);
+  text-align: left;
+}
+
+.hint-text {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  line-height: 1.5;
+  margin: 0 0 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--accent-color-translucent);
+}
+
+.hint-text svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: #FFD700;
+}
+
+.hint-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.hint-reveal-btn,
+.hint-ask-aegis-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.hint-reveal-btn {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+}
+.hint-reveal-btn:hover {
+  border-color: #FFD700;
+  color: #FFD700;
+}
+
+.hint-ask-aegis-btn {
+  background: transparent;
+  border: 1px solid var(--accent-color);
+  color: var(--accent-color);
+}
+.hint-ask-aegis-btn:hover {
+  background: var(--accent-color-translucent);
+}

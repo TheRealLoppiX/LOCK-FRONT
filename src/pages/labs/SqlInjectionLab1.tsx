@@ -3,7 +3,13 @@ import { Link } from 'react-router-dom';
 import HexagonBackground from '../../components/hexagonobg';
 import { useAuth } from '../../contexts/authContext';
 import { markLabComplete } from '../../utils/labProgress';
+import HintPanel from '../../components/labs/HintPanel';
 import './LabPage.css';
+
+const HINTS = [
+  'Tente inserir um caractere de aspas simples (\') em um dos campos e observe se a resposta do servidor muda.',
+  'Um erro de sintaxe SQL retornado pelo servidor (mesmo que genérico) já confirma que a entrada é usada diretamente numa query, sem sanitização.',
+];
 
 const SqlInjectionLab1: React.FC = () => {
   const { token } = useAuth();
@@ -50,6 +56,8 @@ const SqlInjectionLab1: React.FC = () => {
             {result.message}
           </div>
         )}
+        <HintPanel labTitle="Nível 1: Sondagem Inicial" hints={HINTS} />
+
         <Link to="/labs/sql-injection" className="back-link">← Voltar</Link>
       </div>
     </div>

@@ -3,7 +3,13 @@ import { Link } from 'react-router-dom';
 import HexagonBackground from '../../components/hexagonobg';
 import { useAuth } from '../../contexts/authContext';
 import { markLabComplete } from '../../utils/labProgress';
+import HintPanel from '../../components/labs/HintPanel';
 import './LabPage.css';
+
+const HINTS = [
+  'O bloqueio conta tentativas por IP e só zera o contador depois que o bloqueio é ativado — um script que testa poucas senhas por vez e espera o tempo de bloqueio entre lotes consegue continuar tentando sem travar de vez.',
+  'São só 4 dígitos numéricos (10.000 combinações) — um script paciente que testa algumas por vez, espera o bloqueio passar e repete eventualmente encontra a senha. É lento, mas "furtivo" por nunca disparar um alerta de ataque massivo.',
+];
 
 const BruteForceLab3: React.FC = () => {
   const { token } = useAuth();
@@ -49,6 +55,8 @@ const BruteForceLab3: React.FC = () => {
             {result.message}
           </div>
         )}
+        <HintPanel labTitle="Nível 3: Ataque Furtivo" hints={HINTS} />
+
         <Link to="/labs/brute-force" className="back-link">← Voltar</Link>
       </div>
     </div>

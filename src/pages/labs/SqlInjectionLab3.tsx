@@ -3,7 +3,13 @@ import { Link } from 'react-router-dom';
 import HexagonBackground from '../../components/hexagonobg';
 import { useAuth } from '../../contexts/authContext';
 import { markLabComplete } from '../../utils/labProgress';
+import HintPanel from '../../components/labs/HintPanel';
 import './LabPage.css';
+
+const HINTS = [
+  'Feche a string do campo de usuário e monte um `UNION SELECT` com duas colunas — a query original provavelmente seleciona 2 colunas (usuário e senha), então seu UNION precisa do mesmo número.',
+  'Tente algo como `\' UNION SELECT \'algum_texto\', NULL -- ` no campo de usuário — se o número de colunas bater, o texto que você escolheu aparece na tela como se fosse o resultado do login.',
+];
 
 const SqlInjectionLab3: React.FC = () => {
   const { token } = useAuth();
@@ -50,6 +56,8 @@ const SqlInjectionLab3: React.FC = () => {
             {result.message}
           </div>
         )}
+        <HintPanel labTitle="Nível 3: Exfiltração de Informações" hints={HINTS} />
+
         <Link to="/labs/sql-injection" className="back-link">← Voltar</Link>
       </div>
     </div>

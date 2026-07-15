@@ -3,7 +3,13 @@ import { Link } from 'react-router-dom';
 import HexagonBackground from '../../components/hexagonobg';
 import { useAuth } from '../../contexts/authContext';
 import { markLabComplete } from '../../utils/labProgress';
+import HintPanel from '../../components/labs/HintPanel';
 import './LabPage.css';
+
+const HINTS = [
+  'Se a query monta algo como `SELECT * FROM users WHERE user=\'X\' AND pass=\'Y\'`, fechar a string do usuário com aspas e comentar o resto da query pode pular a checagem de senha.',
+  'Tente terminar o campo de usuário com o nome da conta que você quer acessar seguido de `\'--` (a senha pode ficar em branco) — o `--` comenta a parte da query que checaria a senha.',
+];
 
 const SqlInjectionLab2: React.FC = () => {
   const { token } = useAuth();
@@ -50,6 +56,8 @@ const SqlInjectionLab2: React.FC = () => {
             {result.message}
           </div>
         )}
+        <HintPanel labTitle="Nível 2: Invasão do Painel" hints={HINTS} />
+
         <Link to="/labs/sql-injection" className="back-link">← Voltar</Link>
       </div>
     </div>

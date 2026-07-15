@@ -1,4 +1,5 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useAuth } from '../contexts/authContext';
 import ChatSidebar from '../components/aegis/ChatSidebar';
 import ChatPanel, { AegisMessage, PendingAttachment } from '../components/aegis/ChatPanel';
@@ -49,16 +50,29 @@ function readFileAsBase64(file: File): Promise<string> {
 
 const ChatPage: React.FC = () => {
   const { token } = useAuth();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const askPrefill = searchParams.get('ask');
   const [conversations, setConversations] = useState<AegisConversation[]>(loadConversations);
   const [activeId, setActiveId] = useState<string | null>(() => {
+    // Um link de "Perguntar à Aegis" (ex: vindo de um laboratório) sempre
+    // começa uma conversa nova, em vez de continuar uma antiga sem relação.
+    if (askPrefill) return null;
     const saved = localStorage.getItem(ACTIVE_ID_KEY);
     const list = loadConversations();
     return saved && list.some((c) => c.id === saved) ? saved : null;
   });
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState(() => askPrefill || '');
   const [isLoading, setIsLoading] = useState(false);
   const [attachments, setAttachments] = useState<PendingAttachment[]>([]);
   const [attachmentError, setAttachmentError] = useState<string | null>(null);
+  const [editingIndex, setEditingIndex] = useState<number | null>(null);
+
+  // Consome o parâmetro ?ask= uma vez e limpa a URL, pra um F5 não
+  // reaparecer com o texto pré-preenchido de novo.
+  useEffect(() => {
+    if (askPrefill) setSearchParams({}, { replace: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const persist = useCallback((next: AegisConversation[]) => {
     setConversations(next);
@@ -81,6 +95,20 @@ const ChatPage: React.FC = () => {
     setInput('');
     setAttachments([]);
     setAttachmentError(null);
+    setEditingIndex(null);
+  };
+
+  const handleEditMessage = (index: number) => {
+    const target = activeMessages[index];
+    if (!target) return;
+    setEditingIndex(index);
+    setInput(target.content);
+    setAttachmentError(null);
+  };
+
+  const handleCancelEdit = () => {
+    setEditingIndex(null);
+    setInput('');
   };
 
   const handleDeleteConversation = (id: string) => {
@@ -137,13 +165,24 @@ const ChatPage: React.FC = () => {
     if (!message && pendingAttachments.length === 0) return;
     if (isLoading) return;
 
+    const truncateAt = editingIndex;
+
     setInput('');
     setAttachments([]);
     setAttachmentError(null);
+    setEditingIndex(null);
     setIsLoading(true);
 
     let workingId = activeId;
     let workingList = conversations;
+
+    // Editar uma mensagem antiga reenvia a partir dali — as respostas
+    // seguintes da Aegis não fazem mais sentido com o novo conteúdo.
+    if (truncateAt !== null && workingId) {
+      workingList = conversations.map((c) =>
+        c.id === workingId ? { ...c, messages: c.messages.slice(0, truncateAt) } : c
+      );
+    }
 
     if (!workingId) {
       workingId = `${Date.now()}`;
@@ -222,6 +261,9 @@ const ChatPage: React.FC = () => {
         onAddAttachments={handleAddAttachments}
         onRemoveAttachment={handleRemoveAttachment}
         attachmentError={attachmentError}
+        editingIndex={editingIndex}
+        onEditMessage={handleEditMessage}
+        onCancelEdit={handleCancelEdit}
       />
     </div>
   );
