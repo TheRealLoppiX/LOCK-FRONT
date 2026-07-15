@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/authContext';
+import { ToastProvider } from './contexts/toastContext';
+import { CommandPaletteProvider, useCommandPalette } from './contexts/commandPaletteContext';
+import { ShortcutsHelpProvider, useShortcutsHelp } from './contexts/shortcutsHelpContext';
 
 // Importação das Páginas
 import Home from './pages/home';
@@ -42,6 +45,9 @@ import Footer from './components/Footer';
 import Sidebar from './components/Sidebar';
 import Breadcrumbs from './components/Breadcrumbs';
 import ChatPage from './pages/ChatPage';
+import CommandPalette from './components/CommandPalette';
+import GlobalShortcuts from './components/GlobalShortcuts';
+import ShortcutsHelp from './components/ShortcutsHelp';
 
 // ===================================================================
 // COMPONENTE PARA PROTEGER ROTAS
@@ -174,10 +180,25 @@ function AppRoutes() {
 // ===================================================================
 function AppShell() {
   const { isAuthenticated } = useAuth();
+  const { isOpen: isHelpOpen, close: closeHelp } = useShortcutsHelp();
+  const { close: closePalette } = useCommandPalette();
+
+  // Os providers de busca/atalhos ficam montados mesmo com logout (envolvem
+  // o AppShell inteiro), então o estado "aberto" sobrevive à troca de sessão
+  // se não for resetado explicitamente aqui.
+  useEffect(() => {
+    if (!isAuthenticated) {
+      closeHelp();
+      closePalette();
+    }
+  }, [isAuthenticated, closeHelp, closePalette]);
 
   return (
     <div className={`app-container ${isAuthenticated ? 'with-sidebar' : ''}`}>
       {isAuthenticated && <Sidebar />}
+      {isAuthenticated && <CommandPalette />}
+      {isAuthenticated && <GlobalShortcuts />}
+      {isAuthenticated && <ShortcutsHelp isOpen={isHelpOpen} onClose={closeHelp} />}
       <div className="app-body">
         <main className="main-content">
           {isAuthenticated && <Breadcrumbs />}
@@ -195,9 +216,15 @@ function AppShell() {
 function App() {
   return (
     <Router>
-      <AuthProvider>
-        <AppShell />
-      </AuthProvider>
+      <ToastProvider>
+        <AuthProvider>
+          <CommandPaletteProvider>
+            <ShortcutsHelpProvider>
+              <AppShell />
+            </ShortcutsHelpProvider>
+          </CommandPaletteProvider>
+        </AuthProvider>
+      </ToastProvider>
     </Router>
   );
 }

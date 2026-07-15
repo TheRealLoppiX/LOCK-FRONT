@@ -1,15 +1,50 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../contexts/authContext'; 
+import { useAuth } from '../../contexts/authContext';
 import HexagonBackground from '../../components/hexagonobg';
 import { CaretLeft, CheckCircle, Warning, UploadSimple } from '@phosphor-icons/react';
+import AdminItemsList, { AdminListItem } from '../../components/admin/AdminItemsList';
+import { useToast } from '../../contexts/toastContext';
 import './AdminQuestions.css';
+
+interface MaterialRow {
+  id: string;
+  title: string;
+  author: string;
+  type: string;
+}
 
 const AdminMaterials: React.FC = () => {
   const { token } = useAuth();
   const navigate = useNavigate();
+  const { showToast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [feedback, setFeedback] = useState<{ type: 'success' | 'error', msg: string } | null>(null);
+
+  const [materials, setMaterials] = useState<MaterialRow[]>([]);
+  const [materialsLoading, setMaterialsLoading] = useState(true);
+
+  const fetchMaterials = useCallback(async () => {
+    setMaterialsLoading(true);
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/admin/materials`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (response.ok) {
+        setMaterials(await response.json());
+      } else {
+        showToast({ message: 'Não foi possível carregar os materiais cadastrados.', actionLabel: 'Tentar novamente', onAction: () => fetchMaterials() });
+      }
+    } catch (error) {
+      console.error('Erro ao buscar materiais cadastrados:', error);
+      showToast({ message: 'Não foi possível carregar os materiais cadastrados.', actionLabel: 'Tentar novamente', onAction: () => fetchMaterials() });
+    } finally {
+      setMaterialsLoading(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token, showToast]);
+
+  useEffect(() => { fetchMaterials(); }, [fetchMaterials]);
 
   // Estados do Formulário
   const [formData, setFormData] = useState({
@@ -47,9 +82,10 @@ const AdminMaterials: React.FC = () => {
         setFeedback({ type: 'success', msg: 'Material cadastrado com sucesso!' });
         // Limpar formulário
         setFormData({
-            title: '', author: '', type: 'Livro', 
+            title: '', author: '', type: 'Livro',
             cover_url: '', pdf_url: '', total_pages: '', synopsis: ''
         });
+        fetchMaterials();
       } else {
         setFeedback({ type: 'error', msg: data.message || 'Erro ao cadastrar.' });
       }
@@ -135,6 +171,21 @@ const AdminMaterials: React.FC = () => {
           </button>
 
         </form>
+
+        <AdminItemsList
+          title="Materiais Cadastrados"
+          loading={materialsLoading}
+          items={materials.map((m): AdminListItem => ({
+            id: m.id,
+            primary: m.title,
+            secondary: `${m.author} · ${m.type}`,
+          }))}
+          deleteUrl={(id) => `${process.env.REACT_APP_API_URL}/admin/materials/${id}`}
+          itemLabelSingular="material"
+          itemLabelPlural="materiais"
+          token={token}
+          onDeleted={(deletedIds) => setMaterials((prev) => prev.filter((m) => !deletedIds.includes(m.id)))}
+        />
       </div>
     </div>
   );

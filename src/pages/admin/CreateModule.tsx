@@ -1,15 +1,47 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/authContext';
 import HexagonBackground from '../../components/hexagonobg';
 import { CaretLeft, CheckCircle, Warning, Certificate } from '@phosphor-icons/react';
+import AdminItemsList, { AdminListItem } from '../../components/admin/AdminItemsList';
+import { useToast } from '../../contexts/toastContext';
 import './AdminQuestions.css'; // Reutilizando o CSS de admin
+
+interface ExamModuleRow {
+  id: string;
+  title: string;
+  difficulty_level: number;
+}
 
 const CreateModule: React.FC = () => {
   const { token } = useAuth();
   const navigate = useNavigate();
+  const { showToast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [feedback, setFeedback] = useState<{ type: 'success' | 'error', msg: string } | null>(null);
+
+  const [modules, setModules] = useState<ExamModuleRow[]>([]);
+  const [modulesLoading, setModulesLoading] = useState(true);
+
+  const fetchModules = useCallback(async () => {
+    setModulesLoading(true);
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/modules`);
+      if (response.ok) {
+        setModules(await response.json());
+      } else {
+        showToast({ message: 'Não foi possível carregar os simulados cadastrados.', actionLabel: 'Tentar novamente', onAction: () => fetchModules() });
+      }
+    } catch (error) {
+      console.error('Erro ao buscar simulados cadastrados:', error);
+      showToast({ message: 'Não foi possível carregar os simulados cadastrados.', actionLabel: 'Tentar novamente', onAction: () => fetchModules() });
+    } finally {
+      setModulesLoading(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showToast]);
+
+  useEffect(() => { fetchModules(); }, [fetchModules]);
 
   const [formData, setFormData] = useState({
     title: '',
@@ -42,6 +74,7 @@ const CreateModule: React.FC = () => {
       if (response.ok) {
         setFeedback({ type: 'success', msg: 'Módulo criado com sucesso!' });
         setFormData({ title: '', description: '', cover_url: '', difficulty_level: 1 });
+        fetchModules();
       } else {
         setFeedback({ type: 'error', msg: data.message || 'Erro ao criar módulo.' });
       }
@@ -127,6 +160,21 @@ const CreateModule: React.FC = () => {
           </button>
 
         </form>
+
+        <AdminItemsList
+          title="Simulados Cadastrados"
+          loading={modulesLoading}
+          items={modules.map((m): AdminListItem => ({
+            id: m.id,
+            primary: m.title,
+            secondary: `Dificuldade ${m.difficulty_level}/5`,
+          }))}
+          deleteUrl={(id) => `${process.env.REACT_APP_API_URL}/admin/modules/${id}`}
+          itemLabelSingular="simulado"
+          itemLabelPlural="simulados"
+          token={token}
+          onDeleted={(deletedIds) => setModules((prev) => prev.filter((m) => !deletedIds.includes(m.id)))}
+        />
       </div>
     </div>
   );

@@ -53,6 +53,36 @@
   text-overflow: ellipsis;
 }
 
+.sidebar-search-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  margin-bottom: 16px;
+  padding: 9px 12px;
+  border-radius: 8px;
+  background: var(--background-primary);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  font-family: inherit;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.sidebar-search-btn:hover {
+  color: var(--text-primary);
+  border-color: var(--accent-color);
+}
+
+.sidebar-search-btn kbd {
+  margin-left: auto;
+  font-size: 0.7rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 2px 5px;
+}
+
 .sidebar-links {
   display: flex;
   flex-direction: column;

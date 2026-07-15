@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { SquaresFour, ChatCircleDots, Trophy, Gear, SignOut, List, X } from '@phosphor-icons/react';
+import { SquaresFour, ChatCircleDots, Trophy, Gear, SignOut, List, X, MagnifyingGlass, Keyboard } from '@phosphor-icons/react';
 import { useAuth } from '../contexts/authContext';
+import { useCommandPalette } from '../contexts/commandPaletteContext';
+import { useShortcutsHelp } from '../contexts/shortcutsHelpContext';
 import logoLock from '../assets/Logo lock.png';
 import './Sidebar.css';
 
 const Sidebar: React.FC = () => {
   const { user, logout } = useAuth();
+  const { open: openPalette } = useCommandPalette();
+  const { open: openShortcutsHelp } = useShortcutsHelp();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const closeMobile = () => setIsMobileOpen(false);
 
@@ -31,6 +35,12 @@ const Sidebar: React.FC = () => {
             <span className="sidebar-subtitle">Cybersecurity Training</span>
           </div>
         </div>
+
+        <button type="button" className="sidebar-search-btn" onClick={() => { openPalette(); closeMobile(); }}>
+          <MagnifyingGlass weight="bold" />
+          <span>Buscar</span>
+          <kbd>Ctrl K</kbd>
+        </button>
 
         <nav className="sidebar-links">
           <NavLink
@@ -72,6 +82,15 @@ const Sidebar: React.FC = () => {
             <Gear weight="bold" />
             <span>Configurações</span>
           </NavLink>
+          <button
+            type="button"
+            className="sidebar-icon-btn"
+            title="Atalhos de teclado"
+            onClick={() => { openShortcutsHelp(); closeMobile(); }}
+          >
+            <Keyboard weight="bold" />
+            <span>Atalhos</span>
+          </button>
           <button onClick={logout} className="sidebar-logout-btn" title="Sair">
             <SignOut weight="bold" />
             <span>Sair</span>

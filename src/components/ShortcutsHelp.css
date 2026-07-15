@@ -1,0 +1,91 @@
+.shortcuts-help-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10001;
+}
+
+.shortcuts-help-content {
+  background: var(--background-secondary);
+  border: 1px solid var(--border-color);
+  width: 90%;
+  max-width: 420px;
+  border-radius: 14px;
+  padding: 24px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+}
+
+.shortcuts-help-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--accent-color);
+  margin-bottom: 16px;
+}
+
+.shortcuts-help-header h3 {
+  color: var(--text-primary);
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.shortcuts-help-list {
+  list-style: none;
+  margin: 0 0 16px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.shortcuts-help-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.shortcuts-help-list kbd {
+  font-size: 0.78rem;
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 3px 8px;
+  background: var(--background-primary);
+  white-space: nowrap;
+}
+
+.shortcuts-help-list span {
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  text-align: right;
+}
+
+.shortcuts-help-note {
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  font-style: italic;
+  margin: 0 0 18px;
+}
+
+.shortcuts-help-close {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: transparent;
+  color: var(--text-primary);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.shortcuts-help-close:hover {
+  opacity: 0.8;
+}

@@ -3,12 +3,22 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/authContext';
 import HexagonBackground from '../../components/hexagonobg';
 import { CaretLeft, CheckCircle, Warning, Question, ListBullets, Sparkle, CircleNotch } from '@phosphor-icons/react';
+import AdminItemsList, { AdminListItem } from '../../components/admin/AdminItemsList';
+import { useToast } from '../../contexts/toastContext';
 import './AdminQuestions.css';
 
 // Interface para os módulos (Simulados)
 interface ExamModule {
   id: string;
   title: string;
+}
+
+interface QuestionRow {
+  id: string;
+  question_text: string;
+  topic: string;
+  difficulty: string;
+  module_id: string | null;
 }
 
 interface GeneratedQuestion {
@@ -25,11 +35,16 @@ interface GeneratedQuestion {
 const AdminQuestions: React.FC = () => {
   const { token } = useAuth();
   const navigate = useNavigate();
+  const { showToast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [feedback, setFeedback] = useState<{ type: 'success' | 'error', msg: string } | null>(null);
 
   // Lista de Módulos carregados do banco
   const [modules, setModules] = useState<ExamModule[]>([]);
+
+  // Lista de questões já cadastradas (para exclusão em lote)
+  const [questions, setQuestions] = useState<QuestionRow[]>([]);
+  const [questionsLoading, setQuestionsLoading] = useState(true);
 
   // Estados do Formulário
   const [topic, setTopic] = useState('sql-injection');
@@ -69,6 +84,30 @@ const AdminQuestions: React.FC = () => {
     };
     fetchModules();
   }, []);
+
+  const fetchQuestions = async () => {
+    setQuestionsLoading(true);
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/admin/questions`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (response.ok) {
+        setQuestions(await response.json());
+      } else {
+        showToast({ message: 'Não foi possível carregar as questões cadastradas.', actionLabel: 'Tentar novamente', onAction: fetchQuestions });
+      }
+    } catch (error) {
+      console.error('Erro ao buscar questões cadastradas:', error);
+      showToast({ message: 'Não foi possível carregar as questões cadastradas.', actionLabel: 'Tentar novamente', onAction: fetchQuestions });
+    } finally {
+      setQuestionsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchQuestions();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token]);
 
   const handleGenerateDrafts = async () => {
     if (!aiTema.trim()) {
@@ -150,6 +189,7 @@ const AdminQuestions: React.FC = () => {
         setQuestionText('');
         setOptionA(''); setOptionB(''); setOptionC(''); setOptionD('');
         // Não limpamos o módulo/tópico propositalmente para agilizar o próximo cadastro
+        fetchQuestions();
       } else {
         setFeedback({ type: 'error', msg: data.message || 'Erro ao cadastrar.' });
       }
@@ -332,6 +372,21 @@ const AdminQuestions: React.FC = () => {
           </button>
 
         </form>
+
+        <AdminItemsList
+          title="Questões Cadastradas"
+          loading={questionsLoading}
+          items={questions.map((q): AdminListItem => ({
+            id: q.id,
+            primary: q.question_text,
+            secondary: `${q.topic} · ${q.difficulty}${q.module_id ? ` · ${modules.find(m => m.id === q.module_id)?.title || 'simulado'}` : ''}`,
+          }))}
+          deleteUrl={(id) => `${process.env.REACT_APP_API_URL}/admin/questions/${id}`}
+          itemLabelSingular="questão"
+          itemLabelPlural="questões"
+          token={token}
+          onDeleted={(deletedIds) => setQuestions((prev) => prev.filter((q) => !deletedIds.includes(q.id)))}
+        />
       </div>
     </div>
   );
