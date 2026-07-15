@@ -213,10 +213,6 @@
   padding-top: 10px;
 }
 
-strong {
-  color: #fff;
-}
-
 /* Animações */
 @keyframes fadeInOverlay {
   from { opacity: 0; }

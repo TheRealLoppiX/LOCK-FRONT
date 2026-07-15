@@ -230,7 +230,8 @@ const Dashboard: React.FC = () => {
     exercicios: (
       <div className="card-body">
         <Link to="/exercises/burp" className="list-item"><FilePdf size={18} /> Burp Suite <CaretRight size={14} className="list-item-arrow" /></Link>
-        <Link to="/exercises/tcp" className="list-item"><FilePdf size={18} /> TCPDump <CaretRight size={14} className="list-item-arrow" /></Link>
+        <Link to="/exercises/tcpdump" className="list-item"><FilePdf size={18} /> TCPDump <CaretRight size={14} className="list-item-arrow" /></Link>
+        <Link to="/exercises/nmap" className="list-item"><FilePdf size={18} /> NMap <CaretRight size={14} className="list-item-arrow" /></Link>
       </div>
     ),
     trilha: (

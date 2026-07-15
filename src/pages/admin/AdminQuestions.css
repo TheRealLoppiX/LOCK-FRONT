@@ -112,14 +112,14 @@
 
 .radio-label {
   flex: 1;
-  background: #21262d;
+  background: var(--background-primary);
   padding: 10px;
   border-radius: 6px;
-  border: 1px solid #30363d;
+  border: 1px solid var(--border-color);
   text-align: center;
   cursor: pointer;
   transition: all 0.2s;
-  color: #8b949e;
+  color: var(--text-secondary);
 }
 
 .radio-label input {
@@ -257,7 +257,7 @@
 }
 
 .draft-question-options li {
-  color: #8b949e;
+  color: var(--text-secondary);
   font-size: 0.9rem;
   padding: 4px 8px;
   border-radius: 4px;
@@ -270,7 +270,7 @@
 }
 
 .draft-question-justification {
-  color: #8b949e;
+  color: var(--text-secondary);
   font-size: 0.82rem;
   font-style: italic;
   margin: 0 0 10px;
@@ -293,8 +293,8 @@
 
 .draft-question-actions button.discard {
   background: transparent;
-  border-color: #30363d;
-  color: #8b949e;
+  border-color: var(--border-color);
+  color: var(--text-secondary);
 }
 
 .draft-question-actions button:hover {
