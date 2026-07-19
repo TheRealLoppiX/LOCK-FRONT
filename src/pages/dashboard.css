@@ -436,10 +436,22 @@
 }
 
 .guided-stepper-content strong {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 6px;
   color: var(--text-primary);
   font-size: 0.92rem;
   margin-bottom: 2px;
+}
+
+.guided-stepper-feature-icon {
+  display: inline-flex;
+  color: var(--accent-color);
+  opacity: 0.85;
+}
+
+.guided-stepper-item.done .guided-stepper-feature-icon {
+  opacity: 0.5;
 }
 
 .guided-stepper-item.done .guided-stepper-content strong {

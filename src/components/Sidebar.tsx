@@ -36,7 +36,7 @@ const Sidebar: React.FC = () => {
           </div>
         </div>
 
-        <button type="button" className="sidebar-search-btn" onClick={() => { openPalette(); closeMobile(); }}>
+        <button type="button" className="sidebar-search-btn" data-tour="sidebar-search" onClick={() => { openPalette(); closeMobile(); }}>
           <MagnifyingGlass weight="bold" />
           <span>Buscar</span>
           <kbd>Ctrl K</kbd>
@@ -45,6 +45,7 @@ const Sidebar: React.FC = () => {
         <nav className="sidebar-links">
           <NavLink
             to="/dashboard"
+            data-tour="sidebar-dashboard"
             className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}
             onClick={closeMobile}
           >
@@ -53,6 +54,7 @@ const Sidebar: React.FC = () => {
           </NavLink>
           <NavLink
             to="/chat"
+            data-tour="sidebar-chat"
             className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}
             onClick={closeMobile}
           >
@@ -61,6 +63,7 @@ const Sidebar: React.FC = () => {
           </NavLink>
           <NavLink
             to="/leaderboard"
+            data-tour="sidebar-ranking"
             className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}
             onClick={closeMobile}
           >
@@ -70,7 +73,7 @@ const Sidebar: React.FC = () => {
         </nav>
 
         <div className="sidebar-actions">
-          <NavLink to="/profile" className="sidebar-avatar-link" title="Perfil" onClick={closeMobile}>
+          <NavLink to="/profile" data-tour="sidebar-profile" className="sidebar-avatar-link" title="Perfil" onClick={closeMobile}>
             <img
               src={user?.avatar_url || `https://api.dicebear.com/8.x/initials/svg?seed=${user?.name}`}
               alt="Avatar do usuário"
@@ -78,13 +81,14 @@ const Sidebar: React.FC = () => {
             />
             <span className="sidebar-user-name">{user?.name}</span>
           </NavLink>
-          <NavLink to="/settings" className="sidebar-icon-btn" title="Configurações" onClick={closeMobile}>
+          <NavLink to="/settings" data-tour="sidebar-settings" className="sidebar-icon-btn" title="Configurações" onClick={closeMobile}>
             <Gear weight="bold" />
             <span>Configurações</span>
           </NavLink>
           <button
             type="button"
             className="sidebar-icon-btn"
+            data-tour="sidebar-shortcuts"
             title="Atalhos de teclado"
             onClick={() => { openShortcutsHelp(); closeMobile(); }}
           >

@@ -1,6 +1,6 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { Robot, PaperPlaneTilt, Paperclip, CircleNotch, X, FileText, Image as ImageIcon, PencilSimple } from '@phosphor-icons/react';
+import { Robot, PaperPlaneTilt, Paperclip, CircleNotch, X, FileText, Image as ImageIcon, PencilSimple, Copy, Check } from '@phosphor-icons/react';
 import './ChatPanel.css';
 
 export interface MessageAttachment {
@@ -12,7 +12,66 @@ export interface AegisMessage {
   role: 'user' | 'aegis';
   content: string;
   attachments?: MessageAttachment[];
+  timestamp?: number;
 }
+
+function formatTime(timestamp?: number): string {
+  if (!timestamp) return '';
+  return new Date(timestamp).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+}
+
+// Efeito de "digitação" — a resposta da Aegis já chega inteira e passou pelo
+// filtro de vazamento no servidor; isto só revela o texto progressivamente
+// no cliente para dar sensação de conversa em tempo real, sem re-abrir a
+// janela de segurança de um streaming real token-a-token.
+const TypewriterMarkdown: React.FC<{ text: string; onDone?: () => void }> = ({ text, onDone }) => {
+  const [visibleChars, setVisibleChars] = useState(0);
+
+  useEffect(() => {
+    setVisibleChars(0);
+  }, [text]);
+
+  useEffect(() => {
+    if (visibleChars >= text.length) {
+      if (visibleChars > 0) onDone?.();
+      return;
+    }
+    const id = window.setTimeout(() => {
+      setVisibleChars((v) => Math.min(v + 3, text.length));
+    }, 12);
+    return () => window.clearTimeout(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [visibleChars, text]);
+
+  const done = visibleChars >= text.length;
+
+  return (
+    <div className="chat-markdown">
+      <ReactMarkdown>{text.slice(0, visibleChars)}</ReactMarkdown>
+      {!done && <span className="chat-typing-cursor" />}
+    </div>
+  );
+};
+
+const CopyMessageButton: React.FC<{ text: string }> = ({ text }) => {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1500);
+    } catch {
+      // clipboard indisponível (ex: contexto não seguro) — ignora silenciosamente
+    }
+  };
+
+  return (
+    <button className="chat-copy-btn" title={copied ? 'Copiado!' : 'Copiar mensagem'} onClick={handleCopy} type="button">
+      {copied ? <Check size={14} weight="bold" /> : <Copy size={14} />}
+    </button>
+  );
+};
 
 export interface PendingAttachment {
   name: string;
@@ -45,6 +104,7 @@ interface ChatPanelProps {
   editingIndex?: number | null;
   onEditMessage?: (index: number) => void;
   onCancelEdit?: () => void;
+  conversationId?: string | null;
 }
 
 const ChatPanel: React.FC<ChatPanelProps> = ({
@@ -60,10 +120,33 @@ const ChatPanel: React.FC<ChatPanelProps> = ({
   editingIndex,
   onEditMessage,
   onCancelEdit,
+  conversationId,
 }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Detecta qual mensagem da Aegis (se alguma) acabou de chegar nesta mesma
+  // conversa, pra só essa ganhar o efeito de digitação — trocar de conversa
+  // ou recarregar o histórico mostra tudo pronto, sem replay da animação.
+  const prevConversationIdRef = useRef(conversationId);
+  const prevMessageCountRef = useRef(messages.length);
+  const [animatingIndex, setAnimatingIndex] = useState<number | null>(null);
+
+  useEffect(() => {
+    const conversationChanged = prevConversationIdRef.current !== conversationId;
+    const grew = messages.length > prevMessageCountRef.current;
+    const lastMessage = messages[messages.length - 1];
+
+    if (!conversationChanged && grew && lastMessage?.role === 'aegis') {
+      setAnimatingIndex(messages.length - 1);
+    } else if (conversationChanged) {
+      setAnimatingIndex(null);
+    }
+
+    prevConversationIdRef.current = conversationId;
+    prevMessageCountRef.current = messages.length;
+  }, [messages, conversationId]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -105,7 +188,7 @@ const ChatPanel: React.FC<ChatPanelProps> = ({
               <Robot size={32} weight="duotone" />
             </div>
             <h1>Aegis</h1>
-            <p>Assistente de cibersegurança. Pronta para ajudar com labs, certificações e conceitos de segurança.</p>
+            <p>Assistente de cibersegurança. Disponível para ajudar com labs, certificações e conceitos de segurança.</p>
             <div className="chat-suggestions">
               {SUGGESTED_PROMPTS.map((prompt) => (
                 <button key={prompt} className="chat-suggestion-btn" onClick={() => onSend(prompt)}>
@@ -127,24 +210,34 @@ const ChatPanel: React.FC<ChatPanelProps> = ({
                     <PencilSimple size={14} />
                   </button>
                 )}
-                <div className="chat-bubble">
-                  {msg.attachments && msg.attachments.length > 0 && (
-                    <div className="chat-bubble-attachments">
-                      {msg.attachments.map((att, j) => (
-                        <span key={j} className="chat-attachment-chip">
-                          {att.mimeType.startsWith('image/') ? <ImageIcon size={14} /> : <FileText size={14} />}
-                          {att.name}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                  {msg.role === 'aegis' ? (
-                    <div className="chat-markdown">
-                      <ReactMarkdown>{msg.content}</ReactMarkdown>
-                    </div>
-                  ) : (
-                    msg.content
-                  )}
+                <div className="chat-bubble-wrap">
+                  <div className="chat-bubble">
+                    {msg.attachments && msg.attachments.length > 0 && (
+                      <div className="chat-bubble-attachments">
+                        {msg.attachments.map((att, j) => (
+                          <span key={j} className="chat-attachment-chip">
+                            {att.mimeType.startsWith('image/') ? <ImageIcon size={14} /> : <FileText size={14} />}
+                            {att.name}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                    {msg.role === 'aegis' ? (
+                      i === animatingIndex ? (
+                        <TypewriterMarkdown text={msg.content} onDone={() => setAnimatingIndex(null)} />
+                      ) : (
+                        <div className="chat-markdown">
+                          <ReactMarkdown>{msg.content}</ReactMarkdown>
+                        </div>
+                      )
+                    ) : (
+                      msg.content
+                    )}
+                  </div>
+                  <div className="chat-bubble-meta">
+                    {msg.timestamp && <span className="chat-message-time">{formatTime(msg.timestamp)}</span>}
+                    {msg.role === 'aegis' && msg.content && <CopyMessageButton text={msg.content} />}
+                  </div>
                 </div>
               </div>
             ))}

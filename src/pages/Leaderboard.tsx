@@ -26,6 +26,11 @@ const Leaderboard: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Marca o passo "Suba no Ranking" do Aprendizado Guiado como visto.
+  useEffect(() => {
+    localStorage.setItem('lock-guided-ranking-viewed', 'true');
+  }, []);
+
   useEffect(() => {
     if (!token) return;
     const fetchLeaderboard = async () => {

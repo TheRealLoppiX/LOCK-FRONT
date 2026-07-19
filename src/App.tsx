@@ -48,6 +48,7 @@ import ChatPage from './pages/ChatPage';
 import CommandPalette from './components/CommandPalette';
 import GlobalShortcuts from './components/GlobalShortcuts';
 import ShortcutsHelp from './components/ShortcutsHelp';
+import OnboardingTour from './components/OnboardingTour';
 
 // ===================================================================
 // COMPONENTE PARA PROTEGER ROTAS
@@ -199,6 +200,7 @@ function AppShell() {
       {isAuthenticated && <CommandPalette />}
       {isAuthenticated && <GlobalShortcuts />}
       {isAuthenticated && <ShortcutsHelp isOpen={isHelpOpen} onClose={closeHelp} />}
+      {isAuthenticated && <OnboardingTour />}
       <div className="app-body">
         <main className="main-content">
           {isAuthenticated && <Breadcrumbs />}

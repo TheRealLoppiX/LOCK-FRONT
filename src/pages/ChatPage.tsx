@@ -14,6 +14,7 @@ interface AegisConversation {
 
 const CONVERSATIONS_KEY = 'lock-aegis-conversations';
 const ACTIVE_ID_KEY = 'lock-aegis-active-id';
+const GUIDED_CHAT_USED_KEY = 'lock-guided-chat-used';
 
 const ACCEPTED_MIME_TYPES = ['image/png', 'image/jpeg', 'image/webp', 'application/pdf', 'text/plain'];
 const MAX_ATTACHMENTS = 3;
@@ -202,12 +203,14 @@ const ChatPage: React.FC = () => {
       attachments: pendingAttachments.length > 0
         ? pendingAttachments.map(({ name, mimeType }) => ({ name, mimeType }))
         : undefined,
+      timestamp: Date.now(),
     };
 
     const withUserMessage = workingList.map((c) =>
       c.id === workingId ? { ...c, messages: [...c.messages, userMessage] } : c
     );
     persist(withUserMessage);
+    localStorage.setItem(GUIDED_CHAT_USED_KEY, 'true');
 
     try {
       const res = await fetch(`${process.env.REACT_APP_API_URL}/ai/chat`, {
@@ -229,12 +232,14 @@ const ChatPage: React.FC = () => {
         content: res.ok
           ? data.response || 'Não consegui processar sua mensagem. Tente novamente.'
           : data.message || 'Não consegui processar sua mensagem. Tente novamente.',
+        timestamp: Date.now(),
       };
       persist(withUserMessage.map((c) => (c.id === workingId ? { ...c, messages: [...c.messages, reply] } : c)));
     } catch {
       const reply: AegisMessage = {
         role: 'aegis',
         content: 'Erro de conexão com o servidor. Verifique se a API está rodando.',
+        timestamp: Date.now(),
       };
       persist(withUserMessage.map((c) => (c.id === workingId ? { ...c, messages: [...c.messages, reply] } : c)));
     } finally {
@@ -264,6 +269,7 @@ const ChatPage: React.FC = () => {
         editingIndex={editingIndex}
         onEditMessage={handleEditMessage}
         onCancelEdit={handleCancelEdit}
+        conversationId={activeId}
       />
     </div>
   );

@@ -5,7 +5,8 @@ import {
   Flask, BookOpen, Exam,
   Question, Info, Shuffle,
   RocketLaunch, FilePdf, Crown, ListPlus, Certificate,
-  User, PencilSimple, Check, DotsSixVertical, CaretRight, X, Plus, CircleDashed
+  User, PencilSimple, Check, DotsSixVertical, CaretRight, X, Plus, CircleDashed,
+  ChatCircleDots, Trophy
 } from '@phosphor-icons/react';
 import HexagonBackground from '../components/hexagonobg';
 import InfoModal from '../components/InfoModal';
@@ -27,6 +28,9 @@ const DEFAULT_CARD_ORDER = [
 const ORDER_STORAGE_KEY = 'lock-dashboard-order';
 const HIDDEN_STORAGE_KEY = 'lock-dashboard-hidden';
 const GUIDED_INFO_KEY = 'lock-guided-info-viewed';
+const GUIDED_PROFILE_KEY = 'lock-guided-profile-viewed';
+const GUIDED_CHAT_KEY = 'lock-guided-chat-used';
+const GUIDED_RANKING_KEY = 'lock-guided-ranking-viewed';
 
 function loadCardOrder(): string[] {
   try {
@@ -84,10 +88,22 @@ const Dashboard: React.FC = () => {
   };
 
   // Passos do "Aprendizado Guiado" — auto-detectados a partir de dados que já
-  // existem (stats do servidor + se o usuário já abriu o modal de missão),
-  // sem checkboxes manuais que o usuário precisava marcar sozinho.
+  // existem (stats do servidor + flags de "já visitei essa área", gravadas
+  // pelas próprias páginas em localStorage), sem checkboxes manuais que o
+  // usuário precisava marcar sozinho. Cobre agora todas as áreas principais
+  // do site (perfil, biblioteca, quiz, labs, chat, simulados, ranking), não
+  // só labs/quiz/biblioteca como na versão anterior.
   const [infoViewed, setInfoViewed] = useState<boolean>(
     () => localStorage.getItem(GUIDED_INFO_KEY) === 'true'
+  );
+  const [profileViewed] = useState<boolean>(
+    () => localStorage.getItem(GUIDED_PROFILE_KEY) === 'true'
+  );
+  const [chatUsed] = useState<boolean>(
+    () => localStorage.getItem(GUIDED_CHAT_KEY) === 'true'
+  );
+  const [rankingViewed] = useState<boolean>(
+    () => localStorage.getItem(GUIDED_RANKING_KEY) === 'true'
   );
 
   const openInfoModal = () => {
@@ -99,13 +115,23 @@ const Dashboard: React.FC = () => {
   const guidedSteps = useMemo(() => [
     {
       key: 'mission',
+      icon: <Info weight="bold" />,
       title: 'Conheça a Missão',
       description: 'Entenda o projeto e seus objetivos.',
       done: infoViewed,
       cta: { label: 'Ver Missão', linkTo: undefined as string | undefined, onClick: openInfoModal as (() => void) | undefined },
     },
     {
+      key: 'profile',
+      icon: <User weight="bold" />,
+      title: 'Configure seu Perfil',
+      description: 'Visite seu perfil, ajuste avatar e acompanhe seu XP e rank.',
+      done: profileViewed,
+      cta: { label: 'Ir para o Perfil', linkTo: '/profile' as string | undefined, onClick: undefined as (() => void) | undefined },
+    },
+    {
       key: 'theory',
+      icon: <BookOpen weight="bold" />,
       title: 'Base Teórica',
       description: 'Leia um livro na Biblioteca para construir sua base teórica.',
       done: stats.completedBooks > 0,
@@ -113,6 +139,7 @@ const Dashboard: React.FC = () => {
     },
     {
       key: 'quiz',
+      icon: <Exam weight="bold" />,
       title: 'Teste seu Conhecimento',
       description: 'Faça um quiz para testar o que você aprendeu.',
       done: stats.completedQuizzes > 0,
@@ -120,19 +147,45 @@ const Dashboard: React.FC = () => {
     },
     {
       key: 'practice',
+      icon: <Flask weight="bold" />,
       title: 'Primeira Prática',
       description: 'Resolva seu primeiro laboratório prático.',
       done: stats.completedLabs > 0,
       cta: { label: 'Escolher um Laboratório', linkTo: '/labs/sql-injection' as string | undefined, onClick: undefined as (() => void) | undefined },
     },
     {
+      key: 'chat',
+      icon: <ChatCircleDots weight="bold" />,
+      title: 'Converse com a Aegis',
+      description: 'Tire uma dúvida de cibersegurança com a IA da plataforma.',
+      done: chatUsed,
+      cta: { label: 'Abrir o Chat', linkTo: '/chat' as string | undefined, onClick: undefined as (() => void) | undefined },
+    },
+    {
+      key: 'simulados',
+      icon: <Certificate weight="bold" />,
+      title: 'Seja Aprovado em um Simulado',
+      description: 'Treine para certificações reais (CompTIA, CEH, LPI).',
+      done: stats.passedExams > 0,
+      cta: { label: 'Ir para Simulados', linkTo: '/simulados' as string | undefined, onClick: undefined as (() => void) | undefined },
+    },
+    {
+      key: 'ranking',
+      icon: <Trophy weight="bold" />,
+      title: 'Suba no Ranking',
+      description: 'Veja sua posição frente aos outros usuários da plataforma.',
+      done: rankingViewed,
+      cta: { label: 'Ver o Ranking', linkTo: '/leaderboard' as string | undefined, onClick: undefined as (() => void) | undefined },
+    },
+    {
       key: 'mastery',
-      title: 'Explore os Desafios',
-      description: 'Complete pelo menos 3 laboratórios para dominar o hacking ético.',
+      icon: <Crown weight="bold" />,
+      title: 'Domine o Hacking Ético',
+      description: 'Complete pelo menos 3 laboratórios para dominar os fundamentos práticos.',
       done: stats.completedLabs >= 3,
       cta: { label: 'Continuar Praticando', linkTo: '/labs/sql-injection' as string | undefined, onClick: undefined as (() => void) | undefined },
     },
-  ], [infoViewed, stats]);
+  ], [infoViewed, profileViewed, chatUsed, rankingViewed, stats]);
 
   const guidedDoneCount = guidedSteps.filter((s) => s.done).length;
   const guidedPercent = Math.round((guidedDoneCount / guidedSteps.length) * 100);
@@ -248,7 +301,7 @@ const Dashboard: React.FC = () => {
                   {step.done ? <Check weight="bold" /> : <CircleDashed weight="bold" />}
                 </span>
                 <div className="guided-stepper-content">
-                  <strong>{i + 1}. {step.title}</strong>
+                  <strong><span className="guided-stepper-feature-icon">{step.icon}</span>{i + 1}. {step.title}</strong>
                   <p>{step.description}</p>
                   {!step.done && (
                     step.cta.linkTo ? (
@@ -277,7 +330,7 @@ const Dashboard: React.FC = () => {
     quizzes: { icon: <Exam weight="bold" />, title: 'Quizzes', subtitle: 'Teste sua compreensão teórica dos temas.' },
     exercicios: { icon: <Exam weight="bold" />, title: 'Exercícios', subtitle: 'Exercite o conhecimento adquirido nos laboratórios.' },
     biblioteca: { icon: <BookOpen weight="bold" />, title: 'Biblioteca', subtitle: 'Acesse guias, artigos e livros para aprofundar seu conhecimento.', linkTo: '/biblioteca' },
-    trilha: { icon: <RocketLaunch weight="bold" />, title: 'Aprendizado Guiado', subtitle: `Siga estes 5 passos para começar no hacking ético. (${guidedPercent}%)` },
+    trilha: { icon: <RocketLaunch weight="bold" />, title: 'Aprendizado Guiado', subtitle: `Um passo a passo por todas as áreas do LOCK. (${guidedPercent}%)` },
     simulados: { icon: <Certificate weight="bold" />, title: 'Simulados', subtitle: 'Treine para certificações reais (CompTIA, CEH, LPI).', color: '#009dff', linkTo: '/simulados' },
   };
 
@@ -302,12 +355,14 @@ const Dashboard: React.FC = () => {
             className="icon-button"
             onClick={openInfoModal}
             title="Sobre o Projeto"
+            data-tour="dashboard-info"
           >
             <Info weight="bold" />
           </button>
           <button
             className={`edit-dashboard-btn ${isEditMode ? 'active' : ''}`}
             onClick={() => setIsEditMode((v) => !v)}
+            data-tour="dashboard-edit"
           >
             {isEditMode ? <Check weight="bold" /> : <PencilSimple weight="bold" />}
             {isEditMode ? 'Concluir Edição' : 'Editar Dashboard'}
@@ -355,6 +410,7 @@ const Dashboard: React.FC = () => {
           return (
             <div
               key={id}
+              data-tour={`dashboard-card-${id}`}
               className={`dashboard-card ${id === 'admin' ? 'admin-card' : ''} ${isEditMode ? 'edit-mode' : ''}`}
               draggable={isEditMode}
               onDragStart={() => handleDragStart(id)}
