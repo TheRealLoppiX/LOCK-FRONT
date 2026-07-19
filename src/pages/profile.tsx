@@ -1,16 +1,32 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../contexts/authContext';
 import { computeRank } from '../hooks/useProfileStats';
 import { useToast } from '../contexts/toastContext';
 import HexagonBackground from '../components/hexagonobg';
-import { 
-  User, ShieldCheck, BookBookmark, Gear, 
-  Trophy, DownloadSimple, Camera, FloppyDisk, 
-  Cpu, TerminalWindow 
+import {
+  User, ShieldCheck, BookBookmark, Gear,
+  Trophy, DownloadSimple, Camera, FloppyDisk,
+  Cpu, TerminalWindow, CircleNotch
 } from '@phosphor-icons/react';
 import { jsPDF } from 'jspdf';
 import lockLogo from '../assets/Logo lock.png';
 import './profile.css';
+
+const AVATAR_ACCEPTED_TYPES = ['image/png', 'image/jpeg'];
+const MAX_AVATAR_MB = 5;
+
+function readFileAsBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result as string;
+      // remove o prefixo "data:mime;base64,"
+      resolve(result.slice(result.indexOf(',') + 1));
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
 
 const getBase64ImageFromURL = (url: string): Promise<string> => {
   return new Promise((resolve, reject) => {
@@ -67,6 +83,8 @@ const Profile: React.FC = () => {
   const [editName, setEditName] = useState('');
   const [editAvatar, setEditAvatar] = useState('');
   const [isSaving, setIsSaving] = useState(false);
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
+  const avatarInputRef = useRef<HTMLInputElement>(null);
 
   // Configurações Visuais (Lê do localStorage)
   const [terminalMode, setTerminalMode] = useState(() => {
@@ -85,6 +103,11 @@ const Profile: React.FC = () => {
   useEffect(() => {
     localStorage.setItem('lock-theme', terminalMode ? 'terminal' : 'cyberpunk');
   }, [terminalMode]);
+
+  // Marca o passo "Configure seu Perfil" do Aprendizado Guiado como visto.
+  useEffect(() => {
+    localStorage.setItem('lock-guided-profile-viewed', 'true');
+  }, []);
 
   const fetchUserData = async () => {
     if (!user || !token) return;
@@ -134,8 +157,10 @@ const Profile: React.FC = () => {
         // Passa pela rota autenticada do backend em vez de escrever direto
         // no Supabase com a chave anônima — o backend valida o dono do
         // token antes de atualizar, a chave anônima não teria como.
-        const body: { name?: string; avatar_url?: string } = { name: editName };
-        if (editAvatar) body.avatar_url = editAvatar;
+        // A foto de perfil tem seu próprio fluxo (POST /profile/avatar, com
+        // moderação de conteúdo) e já salva assim que é escolhida — aqui só
+        // o nome é enviado.
+        const body: { name?: string } = { name: editName };
 
         const response = await fetch(`${process.env.REACT_APP_API_URL}/profile/update`, {
             method: 'PUT',
@@ -157,6 +182,48 @@ const Profile: React.FC = () => {
         alert("Erro ao atualizar. Tente novamente.");
     } finally {
         setIsSaving(false);
+    }
+  };
+
+  // Foto de perfil: diferente do nome (que só salva ao clicar em "Salvar
+  // Alterações"), o upload já sobe e atualiza o avatar imediatamente — o
+  // arquivo passa por moderação de conteúdo no backend antes de ser aceito.
+  const handleAvatarFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = ''; // permite selecionar o mesmo arquivo de novo
+
+    if (!file) return;
+    if (!AVATAR_ACCEPTED_TYPES.includes(file.type)) {
+      showToast({ message: 'Use uma imagem PNG ou JPEG.' });
+      return;
+    }
+    if (file.size > MAX_AVATAR_MB * 1024 * 1024) {
+      showToast({ message: `A imagem passa do limite de ${MAX_AVATAR_MB}MB.` });
+      return;
+    }
+
+    setIsUploadingAvatar(true);
+    try {
+      const base64 = await readFileAsBase64(file);
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/profile/avatar`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ data: base64, mimeType: file.type }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message || 'Não foi possível atualizar a foto de perfil.');
+
+      setEditAvatar(data.avatar_url);
+      setUser(data.user);
+      localStorage.setItem('lock-user', JSON.stringify(data.user));
+      showToast({ type: 'success', message: 'Foto de perfil atualizada!' });
+    } catch (error: any) {
+      showToast({ message: error.message || 'Erro ao enviar a imagem. Tente novamente.' });
+    } finally {
+      setIsUploadingAvatar(false);
     }
   };
 
@@ -279,10 +346,28 @@ const Profile: React.FC = () => {
         <aside className="profile-sidebar">
             <div className="profile-card-main">
                 <div className="avatar-wrapper">
-                    <img 
-                        src={editAvatar || `https://api.dicebear.com/8.x/initials/svg?seed=${editName}`} 
-                        alt="Avatar" 
-                        className="user-avatar-large"
+                    <button
+                        type="button"
+                        className="avatar-edit-trigger"
+                        onClick={() => avatarInputRef.current?.click()}
+                        disabled={isUploadingAvatar}
+                        title="Alterar foto de perfil"
+                    >
+                        <img
+                            src={editAvatar || `https://api.dicebear.com/8.x/initials/svg?seed=${editName}`}
+                            alt="Avatar"
+                            className="user-avatar-large"
+                        />
+                        <span className="avatar-edit-overlay">
+                            {isUploadingAvatar ? <CircleNotch size={22} className="spin" /> : <Camera size={22} weight="bold" />}
+                        </span>
+                    </button>
+                    <input
+                        ref={avatarInputRef}
+                        type="file"
+                        accept="image/png,image/jpeg"
+                        hidden
+                        onChange={handleAvatarFileChange}
                     />
                     <div className="rank-badge">{stats.rank}</div>
                 </div>
@@ -414,8 +499,17 @@ const Profile: React.FC = () => {
                             <input type="text" value={editName} onChange={e => setEditName(e.target.value)} />
                         </div>
                         <div className="input-group-profile">
-                            <label>URL do Avatar</label>
-                            <input type="text" value={editAvatar} onChange={e => setEditAvatar(e.target.value)} placeholder="https://..." />
+                            <label>Foto de Perfil</label>
+                            <button
+                                type="button"
+                                className="change-avatar-btn"
+                                onClick={() => avatarInputRef.current?.click()}
+                                disabled={isUploadingAvatar}
+                            >
+                                <Camera size={16} weight="bold" />
+                                {isUploadingAvatar ? 'Verificando imagem...' : 'Escolher Arquivo (PNG ou JPEG)'}
+                            </button>
+                            <p className="input-hint">Até 5MB. A imagem passa por uma verificação automática de conteúdo antes de ser aceita.</p>
                         </div>
                     </div>
 

@@ -54,6 +54,47 @@
   box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
 }
 
+.avatar-edit-trigger {
+  position: relative;
+  display: block;
+  padding: 0;
+  border: none;
+  background: none;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.avatar-edit-trigger:disabled {
+  cursor: wait;
+}
+
+.avatar-edit-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.avatar-edit-trigger:hover .avatar-edit-overlay,
+.avatar-edit-trigger:disabled .avatar-edit-overlay {
+  opacity: 1;
+}
+
+.avatar-edit-overlay .spin {
+  animation: profileSpin 0.9s linear infinite;
+}
+
+@keyframes profileSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
 .rank-badge {
   position: absolute;
   bottom: 0;
@@ -301,6 +342,36 @@ h1 {
   color: var(--text-primary);
   padding: 10px;
   border-radius: 6px;
+}
+
+.change-avatar-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--background-secondary);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.change-avatar-btn:hover:not(:disabled) {
+  border-color: #00f0ff;
+  background-color: rgba(0, 240, 255, 0.08);
+}
+
+.change-avatar-btn:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.input-hint {
+  margin: 6px 2px 0;
+  color: var(--text-secondary);
+  font-size: 0.78rem;
 }
 
 .toggle-option {
