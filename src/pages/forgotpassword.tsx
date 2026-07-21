@@ -1,69 +1,85 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import HexagonBackground from '../components/hexagonobg';
-import './auth.css'; // Reutiliza o estilo das páginas de autenticação
+import { EnvelopeSimple } from '@phosphor-icons/react';
+import './auth.css';
 
-const ForgotPassword = () => {
+const ForgotPassword: React.FC = () => {
   const [email, setEmail] = useState('');
-  const [message, setMessage] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [sent, setSent] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-    setMessage('');
+    setLoading(true);
+    setError(null);
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/forgot-password`, { // <-- CORREÇÃO AQUI
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/forgot-password`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Algo correu mal');
+        throw new Error(data.error || data.message || 'Não foi possível enviar o link.');
       }
-      
-      setMessage(data.message);
 
-    } catch (error) {
-      setMessage('Erro ao enviar o pedido. Tente novamente.');
-      console.error(error);
+      setSent(true);
+    } catch (err: any) {
+      setError(err.message || 'Erro ao enviar o pedido. Tente novamente.');
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
   return (
-    <div className="auth-page">
+    <div className="auth-page-container">
       <HexagonBackground />
-      <div className="auth-card">
-        <h1>Redefinir Palavra-passe</h1>
-        <p className="auth-subtitle">Digite o seu e-mail para receber o link de redefinição.</p>
+      <div className="auth-container">
+        {sent ? (
+          <div className="auth-form">
+            <div className="auth-success-icon">
+              <EnvelopeSimple size={40} weight="bold" />
+            </div>
+            <h1>Verifique seu e-mail</h1>
+            <p>
+              Se existir uma conta com o e-mail <strong>{email}</strong>, enviamos um link
+              para redefinir sua senha. O link expira em 1 hora.
+            </p>
+            <div className="switch-link">
+              <Link to="/login">← Voltar para o Login</Link>
+            </div>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="auth-form">
+            <h1>Redefinir Senha</h1>
+            <p>Digite seu e-mail para receber o link de redefinição.</p>
 
-        <form onSubmit={handleSubmit} className="auth-form">
-          <input
-            type="email"
-            placeholder="O seu e-mail"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="auth-input"
-            required
-          />
-          <button type="submit" className="auth-button" disabled={isLoading}>
-            {isLoading ? 'A Enviar...' : 'Enviar Link'}
-          </button>
-        </form>
+            {error && <div className="error-message">{error}</div>}
 
-        {message && <p className="message-feedback">{message}</p>}
+            <div className="input-group">
+              <input
+                type="email"
+                placeholder="Seu e-mail"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
 
-        <div className="auth-links">
-          <Link to="/login">← Voltar para o Login</Link>
-        </div>
+            <button type="submit" className="auth-btn" disabled={loading}>
+              {loading ? 'Enviando...' : 'Enviar Link'}
+            </button>
+
+            <div className="switch-link">
+              <Link to="/login">← Voltar para o Login</Link>
+            </div>
+          </form>
+        )}
       </div>
     </div>
   );
