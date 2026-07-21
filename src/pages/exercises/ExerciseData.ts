@@ -49,47 +49,47 @@ export const BurpExercises: ExerciseInfo[] = [
   }
 ];
 
-// === LISTA DE EXERCÍCIOS TCP ===
+// === LISTA DE EXERCÍCIOS TCPDUMP ===
 export const TCPDumpExercises: ExerciseInfo[] = [
-  { 
-    id: '1', 
-    title: 'Exercício de Fixação I - TCPDump', 
-    path: '/exercises/tcp/1' 
+  {
+    id: '1',
+    title: 'Exercício de Fixação I - TCPDump',
+    path: '/exercises/tcpdump/1'
   },
-  { 
-    id: '2', 
-    title: 'Exercício de Fixação II - TCPDump', 
-    path: '/exercises/tcp/2' 
+  {
+    id: '2',
+    title: 'Exercício de Fixação II - TCPDump',
+    path: '/exercises/tcpdump/2'
   },
-  { 
-    id: '3', 
-    title: 'Exercício de Fixação III - TCPDump', 
-    path: '/exercises/tcp/3' 
+  {
+    id: '3',
+    title: 'Exercício de Fixação III - TCPDump',
+    path: '/exercises/tcpdump/3'
   },
-  { 
-    id: '4', 
-    title: 'Exercício de Fixação IV - TCPDump', 
-    path: '/exercises/tcp/4' 
+  {
+    id: '4',
+    title: 'Exercício de Fixação IV - TCPDump',
+    path: '/exercises/tcpdump/4'
   },
-  { 
-    id: '5', 
-    title: 'Exercício de Fixação V - TCPDump', 
-    path: '/exercises/tcp/5' 
+  {
+    id: '5',
+    title: 'Exercício de Fixação V - TCPDump',
+    path: '/exercises/tcpdump/5'
   },
-  { 
-    id: '6', 
-    title: 'Exercício de Fixação VI - TCPDump', 
-    path: '/exercises/tcp/6' 
+  {
+    id: '6',
+    title: 'Exercício de Fixação VI - TCPDump',
+    path: '/exercises/tcpdump/6'
   },
-  { 
-    id: '7', 
-    title: 'Exercício de Fixação VII - TCPDump', 
-    path: '/exercises/tcp/7' 
+  {
+    id: '7',
+    title: 'Exercício de Fixação VII - TCPDump',
+    path: '/exercises/tcpdump/7'
   },
-  { 
-    id: '8', 
-    title: 'Exercício de Fixação VIII - TCPDump', 
-    path: '/exercises/tcp/8' 
+  {
+    id: '8',
+    title: 'Exercício de Fixação VIII - TCPDump',
+    path: '/exercises/tcpdump/8'
   }
 ];
 

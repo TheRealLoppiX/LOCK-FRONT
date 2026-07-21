@@ -64,3 +64,35 @@
   background-color: #dc3545;
   color: #fff;
 }
+
+.settings-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.settings-inline-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px 0 20px;
+}
+
+.settings-inline-form input {
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background-color: var(--background-primary);
+  color: var(--text-primary);
+}
+
+.settings-inline-form-warning {
+  color: #dc3545;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.settings-inline-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}

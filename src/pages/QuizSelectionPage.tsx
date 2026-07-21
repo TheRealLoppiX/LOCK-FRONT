@@ -27,7 +27,7 @@ const QuizSelectionPage: React.FC = () => {
           {modes.map((mode) => (
             <Link 
               key={mode.name} 
-              to={`/quiz/player/${topic}/${mode.difficulty}`}
+              to={`/quizzes/${topic}/${mode.difficulty}`}
               className="mode-card"
             >
               <div className="mode-icon">{mode.icon}</div>

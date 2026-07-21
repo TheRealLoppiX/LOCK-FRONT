@@ -14,8 +14,6 @@ const SEGMENT_LABELS: Record<string, string> = {
   chat: 'Chat — Aegis',
   leaderboard: 'Ranking',
   quizzes: 'Quizzes',
-  quiz: 'Quiz',
-  player: 'Jogar',
   play: 'Jogar',
   exercises: 'Exercícios',
   labs: 'Laboratórios',
@@ -42,9 +40,9 @@ const PARENT_ID_LABELS: Record<string, string> = {
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-// Segmentos puramente estruturais da rota — não agregam valor como item
-// de trilha próprio (ex.: "player" em /quiz/player/:topic/:difficulty).
-const HIDDEN_SEGMENTS = new Set(['player']);
+// Segmentos puramente estruturais da rota — não agregam valor como item de
+// trilha próprio, caso alguma rota futura precise disso.
+const HIDDEN_SEGMENTS = new Set<string>([]);
 
 function humanize(segment: string): string {
   return segment

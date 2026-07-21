@@ -25,24 +25,35 @@ const XSSLab2: React.FC = () => {
   const [comment, setComment] = useState('');
   
   const fetchComments = async () => {
-    const response = await fetch(`${process.env.REACT_APP_API_URL}/labs/xss/2/comments`);
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/labs/xss/2/comments`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
     const data = await response.json();
     setComments(data);
   };
 
   useEffect(() => {
     fetchComments();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     await fetch(`${process.env.REACT_APP_API_URL}/labs/xss/2`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
       body: JSON.stringify({ author, site, comment }),
     });
     if (looksLikeXssPayload(comment) || looksLikeXssPayload(site)) markLabComplete(token, 'xss-2');
     setAuthor(''); setSite(''); setComment('');
+    fetchComments();
+  };
+
+  const handleReset = async () => {
+    await fetch(`${process.env.REACT_APP_API_URL}/labs/xss/2/comments`, {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${token}` },
+    });
     fetchComments();
   };
 
@@ -56,7 +67,10 @@ const XSSLab2: React.FC = () => {
           Deixe um comentário que execute um `alert()` para qualquer um que visitar a página.
         </p>
         <div className="comment-section">
-          <h3>Comentários</h3>
+          <div className="comment-section-header">
+            <h3>Comentários</h3>
+            <button type="button" className="lab-reset-btn" onClick={handleReset}>Resetar Laboratório</button>
+          </div>
           {comments.map((c, i) => (
             <div key={i} className="comment-box">
               <p><strong>{c.author} diz:</strong></p>

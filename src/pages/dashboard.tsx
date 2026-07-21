@@ -156,7 +156,7 @@ const Dashboard: React.FC = () => {
     {
       key: 'chat',
       icon: <ChatCircleDots weight="bold" />,
-      title: 'Converse com a Aegis',
+      title: 'Converse com Aegis',
       description: 'Tire uma dúvida de cibersegurança com a IA da plataforma.',
       done: chatUsed,
       cta: { label: 'Abrir o Chat', linkTo: '/chat' as string | undefined, onClick: undefined as (() => void) | undefined },

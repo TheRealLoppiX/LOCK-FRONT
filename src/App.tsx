@@ -29,6 +29,8 @@ import XSSLab2 from './pages/labs/XSSLab2';
 import XSSLab3 from './pages/labs/XSSLab3';
 import FormViewer from './pages/FormViewer';
 import ExercisePage from './pages/exercises/ExercisePage';
+import ExerciseCategoryIndexPage from './pages/exercises/ExerciseCategoryIndexPage';
+import LabCategoryIndexPage from './pages/labs/LabCategoryIndexPage';
 import AdminQuestions from './pages/admin/AdminQuestions';
 import BookDetails from './pages/BookDetails';
 import AdminMaterials from './pages/admin/AdminMaterials';
@@ -115,13 +117,14 @@ function AppRoutes() {
 
       {/* Rotas do Quiz */}
       <Route path="/quizzes/:topic" element={<PrivateRoute><QuizSelectionPage /></PrivateRoute>} />
-      <Route path="/quiz/player/:topic/:difficulty" element={<PrivateRoute><QuizPlayer /></PrivateRoute>} />
+      <Route path="/quizzes/:topic/:difficulty" element={<PrivateRoute><QuizPlayer /></PrivateRoute>} />
       
       {/* Rotas dos Exercícios */}
+      <Route path="/exercises" element={<PrivateRoute><ExerciseCategoryIndexPage /></PrivateRoute>} />
       <Route path="/exercises/:topic" element={<PrivateRoute><ExercisePage /></PrivateRoute>} />
-      <Route 
-            path="/exercises/burp/1" 
-            element={<FormViewer src={quizformsburp1} title="Exercício de Fixação I - Burp Suite" />} 
+      <Route
+            path="/exercises/burp/1"
+            element={<FormViewer src={quizformsburp1} title="Exercício de Fixação I - Burp Suite" />}
           />
       <Route 
             path="/exercises/burp/2" 
@@ -147,12 +150,24 @@ function AppRoutes() {
             path="/exercises/burp/7" 
             element={<FormViewer src={quizformsburp7} title="Exercício de Fixação VII - Burp Suite" />} 
           />
-      <Route 
-            path="/exercises/burp/8" 
-            element={<FormViewer src={quizformsburp8} title="Exercício de Fixação VIII - Burp Suite" />} 
+      <Route
+            path="/exercises/burp/8"
+            element={<FormViewer src={quizformsburp8} title="Exercício de Fixação VIII - Burp Suite" />}
           />
+      {/* TCPDump/NMap: rotas já registradas, aguardando os links dos
+          formulários (FormViewer mostra um estado "em breve" sem src). */}
+      <Route path="/exercises/tcpdump/1" element={<FormViewer title="Exercício de Fixação I - TCPDump" />} />
+      <Route path="/exercises/tcpdump/2" element={<FormViewer title="Exercício de Fixação II - TCPDump" />} />
+      <Route path="/exercises/tcpdump/3" element={<FormViewer title="Exercício de Fixação III - TCPDump" />} />
+      <Route path="/exercises/tcpdump/4" element={<FormViewer title="Exercício de Fixação IV - TCPDump" />} />
+      <Route path="/exercises/tcpdump/5" element={<FormViewer title="Exercício de Fixação V - TCPDump" />} />
+      <Route path="/exercises/tcpdump/6" element={<FormViewer title="Exercício de Fixação VI - TCPDump" />} />
+      <Route path="/exercises/tcpdump/7" element={<FormViewer title="Exercício de Fixação VII - TCPDump" />} />
+      <Route path="/exercises/tcpdump/8" element={<FormViewer title="Exercício de Fixação VIII - TCPDump" />} />
+      <Route path="/exercises/nmap/1" element={<FormViewer title="Exercício de Fixação I - NMap" />} />
 
       {/* Rotas dos Laboratórios */}
+      <Route path="/labs" element={<PrivateRoute><LabCategoryIndexPage /></PrivateRoute>} />
       <Route path="/labs/:topic" element={<PrivateRoute><LabSelectionPage /></PrivateRoute>} />
       <Route path="/labs/sql-injection/1" element={<PrivateRoute><SqlInjectionLab1 /></PrivateRoute>} />
       <Route path="/labs/sql-injection/2" element={<PrivateRoute><SqlInjectionLab2 /></PrivateRoute>} />

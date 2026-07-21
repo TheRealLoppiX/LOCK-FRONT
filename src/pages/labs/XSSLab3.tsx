@@ -25,20 +25,23 @@ const XSSLab3: React.FC = () => {
   const [comment, setComment] = useState('');
   
   const fetchComments = async () => {
-    const response = await fetch(`${process.env.REACT_APP_API_URL}/labs/xss/3/comments`);
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/labs/xss/3/comments`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
     const data = await response.json();
     setComments(data);
   };
 
   useEffect(() => {
     fetchComments();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     await fetch(`${process.env.REACT_APP_API_URL}/labs/xss/3`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
       body: JSON.stringify({ author, site, comment }),
     });
     // Nível 3 filtra "alert" e "<script>" no servidor — o vetor esperado é
@@ -51,6 +54,14 @@ const XSSLab3: React.FC = () => {
     fetchComments();
   };
 
+  const handleReset = async () => {
+    await fetch(`${process.env.REACT_APP_API_URL}/labs/xss/3/comments`, {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    fetchComments();
+  };
+
   return (
     <div className="lab-page-container">
       <HexagonBackground />
@@ -60,7 +71,10 @@ const XSSLab3: React.FC = () => {
           O sistema agora remove as palavras `alert` e a tag `script`. Encontre um vetor de ataque diferente para executar um script.
         </p>
         <div className="comment-section">
-          <h3>Comentários</h3>
+          <div className="comment-section-header">
+            <h3>Comentários</h3>
+            <button type="button" className="lab-reset-btn" onClick={handleReset}>Resetar Laboratório</button>
+          </div>
           {comments.map((c, i) => (
             <div key={i} className="comment-box">
               {/* A vulnerabilidade está no Href da tag A */}

@@ -206,6 +206,12 @@ const ChatPage: React.FC = () => {
       timestamp: Date.now(),
     };
 
+    // Histórico da própria conversa, antes da mensagem que está sendo enviada
+    // agora — é o que dá à Aegis memória do que já foi dito nesta conversa.
+    const conversationHistory = (workingList.find((c) => c.id === workingId)?.messages || [])
+      .filter((m) => m.content.trim().length > 0)
+      .map((m) => ({ role: m.role, content: m.content }));
+
     const withUserMessage = workingList.map((c) =>
       c.id === workingId ? { ...c, messages: [...c.messages, userMessage] } : c
     );
@@ -224,6 +230,7 @@ const ChatPage: React.FC = () => {
           attachments: pendingAttachments.length > 0
             ? pendingAttachments.map(({ name, mimeType, data }) => ({ name, mimeType, data }))
             : undefined,
+          history: conversationHistory.length > 0 ? conversationHistory : undefined,
         }),
       });
       const data = await res.json();

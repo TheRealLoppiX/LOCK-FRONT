@@ -32,7 +32,7 @@ const Sidebar: React.FC = () => {
           <img src={logoLock} alt="LOCK" className="sidebar-logo" />
           <div className="sidebar-brand-text">
             <span className="sidebar-title">LOCK</span>
-            <span className="sidebar-subtitle">Cybersecurity Training</span>
+            <span className="sidebar-subtitle">Laboratório Online de Cibersegurança com Kali Linux</span>
           </div>
         </div>
 
