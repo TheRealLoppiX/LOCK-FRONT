@@ -90,6 +90,16 @@ const quizformsburp6 = "https://forms.gle/UKtVz6XZ7C2ydNVb6"
 const quizformsburp7 = "https://forms.gle/g5eaRGAojtjMrqcK9"
 const quizformsburp8 = "https://forms.gle/7p75hyGuQZ2NQLzZ8"
 
+const quizformstcp1 = "https://forms.gle/oSwf8n6Zc2Zsoom67"
+const quizformstcp2 = "https://forms.gle/WrWy3k7drxpXbRrs8"
+const quizformstcp3 = "https://forms.gle/nuffuSRQa1WUrU569"
+const quizformstcp4 = "https://forms.gle/XSh6mNyFE9bzvW4NA"
+const quizformstcp5 = "https://forms.gle/bxVsf6Ykmjju8ncD6"
+const quizformstcp6 = "https://forms.gle/HTrdEPCpkRAn2Ee28"
+const quizformstcp7 = "https://forms.gle/v1vE4jAbJuvkaNZR6"
+const quizformstcp8 = "https://forms.gle/bMBJ9LxKdb45YKL6A"
+const quizformsnmap1 = "https://forms.gle/8ngfJycwWGT2ey8F9"
+
 // ===================================================================
 // COMPONENTE QUE CONTÉM AS ROTAS
 // ===================================================================
@@ -154,17 +164,15 @@ function AppRoutes() {
             path="/exercises/burp/8"
             element={<FormViewer src={quizformsburp8} title="Exercício de Fixação VIII - Burp Suite" />}
           />
-      {/* TCPDump/NMap: rotas já registradas, aguardando os links dos
-          formulários (FormViewer mostra um estado "em breve" sem src). */}
-      <Route path="/exercises/tcpdump/1" element={<FormViewer title="Exercício de Fixação I - TCPDump" />} />
-      <Route path="/exercises/tcpdump/2" element={<FormViewer title="Exercício de Fixação II - TCPDump" />} />
-      <Route path="/exercises/tcpdump/3" element={<FormViewer title="Exercício de Fixação III - TCPDump" />} />
-      <Route path="/exercises/tcpdump/4" element={<FormViewer title="Exercício de Fixação IV - TCPDump" />} />
-      <Route path="/exercises/tcpdump/5" element={<FormViewer title="Exercício de Fixação V - TCPDump" />} />
-      <Route path="/exercises/tcpdump/6" element={<FormViewer title="Exercício de Fixação VI - TCPDump" />} />
-      <Route path="/exercises/tcpdump/7" element={<FormViewer title="Exercício de Fixação VII - TCPDump" />} />
-      <Route path="/exercises/tcpdump/8" element={<FormViewer title="Exercício de Fixação VIII - TCPDump" />} />
-      <Route path="/exercises/nmap/1" element={<FormViewer title="Exercício de Fixação I - NMap" />} />
+      <Route path="/exercises/tcpdump/1" element={<FormViewer src={quizformstcp1} title="Exercício de Fixação I - TCPDump" />} />
+      <Route path="/exercises/tcpdump/2" element={<FormViewer src={quizformstcp2} title="Exercício de Fixação II - TCPDump" />} />
+      <Route path="/exercises/tcpdump/3" element={<FormViewer src={quizformstcp3} title="Exercício de Fixação III - TCPDump" />} />
+      <Route path="/exercises/tcpdump/4" element={<FormViewer src={quizformstcp4} title="Exercício de Fixação IV - TCPDump" />} />
+      <Route path="/exercises/tcpdump/5" element={<FormViewer src={quizformstcp5} title="Exercício de Fixação V - TCPDump" />} />
+      <Route path="/exercises/tcpdump/6" element={<FormViewer src={quizformstcp6} title="Exercício de Fixação VI - TCPDump" />} />
+      <Route path="/exercises/tcpdump/7" element={<FormViewer src={quizformstcp7} title="Exercício de Fixação VII - TCPDump" />} />
+      <Route path="/exercises/tcpdump/8" element={<FormViewer src={quizformstcp8} title="Exercício de Fixação VIII - TCPDump" />} />
+      <Route path="/exercises/nmap/1" element={<FormViewer src={quizformsnmap1} title="Exercício de Fixação I - NMap" />} />
 
       {/* Rotas dos Laboratórios */}
       <Route path="/labs" element={<PrivateRoute><LabCategoryIndexPage /></PrivateRoute>} />
