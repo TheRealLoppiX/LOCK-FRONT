@@ -1,15 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap');
 
-/* Keyframes para as animações */
 @keyframes spin-pseudo-3d { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
 @keyframes pulse-glow-img { from { filter: drop-shadow(0 0 10px rgba(0, 191, 255, 0.4)); opacity: 0.8; } to { filter: drop-shadow(0 0 20px rgba(0, 191, 255, 0.8)); opacity: 1; } }
 @keyframes blink { 50% { opacity: 0; } }
 
-.home-container {
+/* ========================================
+ * ESTRUTURA — logo à direita, formulário à esquerda
+ * ======================================== */
+.home-shell {
   display: flex;
-  justify-content: center;
-  align-items: center;
   min-height: 100vh;
   position: relative;
   overflow: hidden;
@@ -18,50 +18,66 @@
   font-family: 'Inter', sans-serif;
 }
 
-.home-container > div:first-child { /* Alvo para o HexagonBackground */
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
+.home-panel {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  position: relative;
+  z-index: 1;
 }
 
-.home-content {
+.home-panel-card {
+  background: rgba(13, 17, 23, 0.75);
+  border: 1px solid #30363d;
+  border-radius: 12px;
+  padding: 32px;
+  width: 100%;
+  max-width: 420px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.home-visual {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   position: relative;
   z-index: 1;
   text-align: center;
   padding: 20px;
-  max-width: 650px;
 }
 
-.home-content h1 {
+.home-visual h1 {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 3.8rem;
+  font-size: 3.4rem;
   font-weight: 700;
   color: var(--accent-color);
-  margin-bottom: 15px;
+  margin: 0 0 15px;
   text-shadow: 0 0 15px rgba(0, 191, 255, 0.7);
   letter-spacing: 0.5px;
 }
 
 /* O texto do terminal é intencionalmente verde em ambos os temas */
-.home-content p {
+.home-visual p {
   font-family: 'VT323', monospace;
-  font-size: 1.8rem;
+  font-size: 1.6rem;
   color: #39FF14;
-  margin-bottom: 30px;
+  margin: 0;
   text-shadow: 0 0 5px #39FF14;
-  height: 54px; /* Altura para evitar que o layout salte */
+  height: 48px;
   text-align: left;
   display: inline-block;
-  white-space: nowrap; /* Impede que o texto quebre a linha durante a digitação */
+  white-space: nowrap;
 }
 
 .typing-cursor {
   display: inline-block;
   width: 10px;
-  height: 1.8rem;
+  height: 1.6rem;
   background-color: #39FF14;
   margin-left: 5px;
   animation: blink 1s infinite;
@@ -70,30 +86,46 @@
 }
 
 .home-hexagon-logo {
-  width: 150px;
+  width: 190px;
   height: auto;
-  margin: 0 auto 40px auto;
-  animation: 
+  margin: 0 auto 30px auto;
+  animation:
     spin-pseudo-3d 20s infinite linear,
     pulse-glow-img 3s infinite alternate;
+}
+
+/* ========================================
+ * PAINEL DE BOAS-VINDAS (modo landing)
+ * ======================================== */
+.landing-form {
+  text-align: center;
+}
+
+.landing-form h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.8rem;
+  color: #fff;
+  margin: 0 0 10px;
+}
+
+.landing-form p {
+  color: #c9d1d9;
+  margin: 0 0 30px;
 }
 
 .button-container {
   display: flex;
   justify-content: center;
-  gap: 20px;
-  margin-top: 40px;
+  gap: 16px;
 }
 
 .btn-primary, .btn-secondary {
   padding: 14px 28px;
   border: none;
   border-radius: 8px;
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   cursor: pointer;
   transition: all 0.3s ease;
-  text-decoration: none;
-  display: inline-block;
   font-family: 'Space Grotesk', sans-serif;
   font-weight: 500;
 }
@@ -120,4 +152,110 @@
   transform: translateY(-3px);
   background: rgba(0, 191, 255, 0.1);
   box-shadow: 0 8px 25px rgba(0, 191, 255, 0.4), 0 0 30px rgba(0, 191, 255, 0.4);
+}
+
+/* ========================================
+ * ELEMENTOS reaproveitados das telas antigas de login/registro
+ * ======================================== */
+.forgot-password-link {
+  text-align: right;
+  margin-top: -10px;
+  margin-bottom: 15px;
+}
+
+.terms-container {
+  display: flex;
+  align-items: flex-start;
+  margin: 15px 0 10px 0;
+  width: 100%;
+}
+
+.terms-container input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  margin-right: 12px;
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+
+.terms-container label {
+  font-size: 14px;
+  color: #c9d1d9;
+  line-height: 1.5;
+  text-align: left;
+  flex-grow: 1;
+}
+
+.terms-container label a {
+  color: #00e5ff;
+  text-decoration: underline;
+  margin: 0 4px;
+  cursor: pointer;
+}
+
+.terms-container label a:hover {
+  color: #fff;
+  text-shadow: 0 0 5px #00e5ff;
+}
+
+/* Botões que substituem os antigos <Link> de troca de modo — mesma
+   aparência textual, sem navegação de página de verdade. */
+.link-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: #00e5ff;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.link-btn:hover {
+  text-decoration: underline;
+}
+
+.forgot-password-link .link-btn {
+  font-size: 14px;
+}
+
+.home-back-btn {
+  display: block;
+  margin: 18px auto 0;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.home-back-btn:hover {
+  color: var(--accent-color);
+}
+
+/* ========================================
+ * RESPONSIVO — empilha em telas estreitas
+ * ======================================== */
+@media (max-width: 900px) {
+  .home-shell {
+    flex-direction: column;
+  }
+
+  .home-visual {
+    padding-top: 48px;
+    padding-bottom: 24px;
+  }
+
+  .home-hexagon-logo {
+    width: 130px;
+    margin-bottom: 18px;
+  }
+
+  .home-visual h1 {
+    font-size: 2.4rem;
+  }
+
+  .home-visual p {
+    font-size: 1.2rem;
+    height: 36px;
+  }
 }

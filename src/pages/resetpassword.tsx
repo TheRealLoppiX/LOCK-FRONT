@@ -18,8 +18,8 @@ const ResetPassword: React.FC = () => {
     e.preventDefault();
     setError(null);
 
-    if (password.length < 6) {
-      setError('A senha precisa ter pelo menos 6 caracteres.');
+    if (password.length < 8) {
+      setError('A senha precisa ter pelo menos 8 caracteres.');
       return;
     }
     if (password !== confirmPassword) {

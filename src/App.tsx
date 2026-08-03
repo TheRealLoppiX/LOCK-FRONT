@@ -7,9 +7,6 @@ import { ShortcutsHelpProvider, useShortcutsHelp } from './contexts/shortcutsHel
 
 // Importação das Páginas
 import Home from './pages/home';
-import Login from './pages/login';
-import Register from './pages/register';
-import ForgotPassword from './pages/forgotpassword';
 import ResetPassword from './pages/resetpassword';
 import Dashboard from './pages/dashboard';
 import Settings from './pages/settings';
@@ -130,9 +127,9 @@ function AppRoutes() {
     <Routes>
       {/* Rotas Públicas */}
       <Route path="/" element={<Home />} />
-      <Route path="/login" element={<PublicOnlyRoute><Login /></PublicOnlyRoute>} />
-      <Route path="/register" element={<PublicOnlyRoute><Register /></PublicOnlyRoute>} />
-      <Route path="/forgot-password" element={<PublicOnlyRoute><ForgotPassword /></PublicOnlyRoute>} />
+      <Route path="/login" element={<PublicOnlyRoute><Home /></PublicOnlyRoute>} />
+      <Route path="/register" element={<PublicOnlyRoute><Home /></PublicOnlyRoute>} />
+      <Route path="/forgot-password" element={<PublicOnlyRoute><Home /></PublicOnlyRoute>} />
       <Route path="/reset-password/:token" element={<PublicOnlyRoute><ResetPassword /></PublicOnlyRoute>} />
 
       {/* Rotas Protegidas */}
