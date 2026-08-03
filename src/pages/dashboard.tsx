@@ -6,7 +6,7 @@ import {
   Question, Info, Shuffle,
   RocketLaunch, FilePdf, Crown, ListPlus, Certificate,
   User, PencilSimple, Check, DotsSixVertical, CaretRight, X, Plus, CircleDashed,
-  ChatCircleDots, Trophy
+  ChatCircleDots, Trophy, Sparkle
 } from '@phosphor-icons/react';
 import HexagonBackground from '../components/hexagonobg';
 import InfoModal from '../components/InfoModal';
@@ -23,8 +23,10 @@ interface UserWithRole {
 }
 
 const DEFAULT_CARD_ORDER = [
-  'perfil', 'admin', 'laboratorios', 'quizzes', 'exercicios', 'biblioteca', 'trilha', 'simulados',
+  'perfil', 'lockia', 'admin', 'laboratorios', 'quizzes', 'exercicios', 'biblioteca', 'trilha', 'simulados',
 ];
+
+const LOCKIA_URL = process.env.REACT_APP_LOCKIA_URL || 'https://lockia.onrender.com';
 const ORDER_STORAGE_KEY = 'lock-dashboard-order';
 const HIDDEN_STORAGE_KEY = 'lock-dashboard-hidden';
 const GUIDED_INFO_KEY = 'lock-guided-info-viewed';
@@ -57,7 +59,7 @@ function loadHiddenCards(): string[] {
 }
 
 const Dashboard: React.FC = () => {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const { stats } = useProfileStats();
 
   // Cast para acessar a propriedade is_admin com segurança
@@ -265,6 +267,18 @@ const Dashboard: React.FC = () => {
         </Link>
       </div>
     ) : null,
+    lockia: (
+      <div className="card-body">
+        <a
+          href={token ? `${LOCKIA_URL}/#token=${token}` : LOCKIA_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="list-item"
+        >
+          <Sparkle size={18} /> Abrir o LOCKIA (já logado) <CaretRight size={14} className="list-item-arrow" />
+        </a>
+      </div>
+    ),
     laboratorios: (
       <div className="card-body">
         <Link to="/labs/sql-injection" className="list-item">SQL Injection <CaretRight size={14} className="list-item-arrow" /></Link>
@@ -321,10 +335,11 @@ const Dashboard: React.FC = () => {
         </ol>
       </div>
     ),
-  }), [user, stats, xpPercent, isAdmin, guidedSteps, nextGuidedStepKey]);
+  }), [user, token, stats, xpPercent, isAdmin, guidedSteps, nextGuidedStepKey]);
 
   const cardMeta: Record<string, { icon: React.ReactNode; title: string; subtitle: string; color?: string; linkTo?: string }> = {
     perfil: { icon: <User weight="bold" />, title: 'Perfil', subtitle: '', linkTo: '/profile' },
+    lockia: { icon: <Sparkle weight="bold" />, title: 'LOCKIA', subtitle: 'Chat de IA standalone para cibersegurança — mesma conta, sem precisar logar de novo.', color: '#00e5ff' },
     admin: { icon: <Crown weight="bold" />, title: 'Painel Admin', subtitle: 'Gerenciamento do sistema.', color: '#FFD700' },
     laboratorios: { icon: <Flask weight="bold" />, title: 'Laboratórios', subtitle: 'Coloque seus conhecimentos em prática.' },
     quizzes: { icon: <Exam weight="bold" />, title: 'Quizzes', subtitle: 'Teste sua compreensão teórica dos temas.' },

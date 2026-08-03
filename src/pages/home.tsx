@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/authContext';
 import HexagonBackground from '../components/hexagonobg';
-import { Eye, EyeSlash, EnvelopeSimple, LockSimple, User } from '@phosphor-icons/react';
+import { Eye, EyeSlash, EnvelopeSimple, LockSimple, User, Sparkle } from '@phosphor-icons/react';
 import NotFound from './NotFound';
 import './auth.css';
 import './home.css';
@@ -56,6 +56,8 @@ const BrandPanel: React.FC<{ mode: Mode }> = ({ mode }) => {
   );
 };
 
+const LOCKIA_URL = process.env.REACT_APP_LOCKIA_URL || 'https://lockia.onrender.com';
+
 const LandingPanel: React.FC<{ onSwitch: (mode: Mode) => void }> = ({ onSwitch }) => (
   <div className="home-form landing-form">
     <h2>Bem-vindo(a)</h2>
@@ -64,6 +66,9 @@ const LandingPanel: React.FC<{ onSwitch: (mode: Mode) => void }> = ({ onSwitch }
       <button className="btn-primary" onClick={() => onSwitch('login')}>Entrar</button>
       <button className="btn-secondary" onClick={() => onSwitch('register')}>Cadastre-se</button>
     </div>
+    <a href={LOCKIA_URL} target="_blank" rel="noopener noreferrer" className="lockia-teaser">
+      <Sparkle size={14} weight="fill" /> Experimente também o LOCKIA
+    </a>
   </div>
 );
 
