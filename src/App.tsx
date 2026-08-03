@@ -126,10 +126,11 @@ function AppRoutes() {
   return (
     <Routes>
       {/* Rotas Públicas */}
-      <Route path="/" element={<Home />} />
-      <Route path="/login" element={<PublicOnlyRoute><Home /></PublicOnlyRoute>} />
-      <Route path="/register" element={<PublicOnlyRoute><Home /></PublicOnlyRoute>} />
-      <Route path="/forgot-password" element={<PublicOnlyRoute><Home /></PublicOnlyRoute>} />
+      {/* Uma rota só pras 4 variantes da home (landing/login/register/forgot) —
+          são a MESMA instância de componente por baixo (só o parâmetro muda),
+          então trocar de modo não remonta a página nem reinicia a animação
+          da tagline. Ver Home.tsx: authMode inválido cai no NotFound. */}
+      <Route path="/:authMode?" element={<PublicOnlyRoute><Home /></PublicOnlyRoute>} />
       <Route path="/reset-password/:token" element={<PublicOnlyRoute><ResetPassword /></PublicOnlyRoute>} />
 
       {/* Rotas Protegidas */}

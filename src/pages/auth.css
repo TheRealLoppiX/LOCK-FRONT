@@ -1,5 +1,7 @@
 /* ========================================
- * CONTAINER PRINCIPAL (FUNDO)
+ * CONTAINER PRINCIPAL (usado só por resetpassword.tsx — home.tsx tem seu
+ * próprio layout em home.css, mas reaproveita os estilos de campo/botão
+ * abaixo)
  * ======================================== */
 .auth-page-container {
   min-height: 100vh;
@@ -8,22 +10,20 @@
   justify-content: center;
   padding: 20px;
   position: relative;
-  overflow: hidden; /* Garante que o HexagonBackground não vaze */
+  overflow: hidden;
 }
 
-/* ========================================
- * CAIXA DO FORMULÁRIO (Glassmorphism)
- * ======================================== */
 .auth-container {
-  background: rgba(13, 17, 23, 0.75); /* Fundo escuro semi-transparente */
-  border: 1px solid #30363d;
-  border-radius: 12px;
-  padding: 32px;
+  position: relative;
+  background: linear-gradient(180deg, rgba(22, 27, 34, 0.85), rgba(13, 17, 23, 0.85));
+  border: 1px solid rgba(0, 191, 255, 0.25);
+  border-radius: 18px;
+  padding: 36px;
   width: 100%;
   max-width: 420px;
   z-index: 2;
-  backdrop-filter: blur(10px); /* O efeito "vidro fosco" */
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(0, 191, 255, 0.05) inset;
 }
 
 .auth-form {
@@ -34,144 +34,172 @@
 .auth-form h1 {
   color: #fff;
   text-align: center;
-  font-size: 2rem;
-  margin-bottom: 10px;
+  font-size: 1.9rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  letter-spacing: 0.2px;
 }
 
 .auth-form p {
-  color: #c9d1d9;
+  color: #9aa7b2;
   text-align: center;
-  margin-bottom: 24px;
+  margin-bottom: 26px;
+  font-size: 0.92rem;
 }
 
 /* ========================================
- * ÍCONE DE SUCESSO (ex.: link enviado, senha redefinida)
+ * ÍCONE DE SUCESSO
  * ======================================== */
 .auth-success-icon {
-  width: 72px;
-  height: 72px;
+  width: 76px;
+  height: 76px;
   margin: 0 auto 20px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background: rgba(0, 229, 255, 0.12);
+  background: radial-gradient(circle, rgba(0, 229, 255, 0.18), rgba(0, 229, 255, 0.04));
   color: #00e5ff;
-  box-shadow: 0 0 20px rgba(0, 229, 255, 0.3);
+  box-shadow: 0 0 30px rgba(0, 229, 255, 0.35);
 }
 
 /* ========================================
  * MENSAGEM DE ERRO
  * ======================================== */
-.error-message {
-  background-color: #d73a4933; /* Vermelho transparente */
-  color: #f85149; /* Vermelho claro */
-  border: 1px solid #d73a49;
-  border-radius: 6px;
-  padding: 12px;
-  margin-bottom: 16px;
+.auth-error-message {
+  background: linear-gradient(180deg, rgba(248, 81, 73, 0.14), rgba(248, 81, 73, 0.06));
+  color: #ff8a80;
+  border: 1px solid rgba(248, 81, 73, 0.4);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-bottom: 18px;
   text-align: center;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
 }
 
 /* ========================================
- * GRUPO DE INPUTS
+ * GRUPO DE INPUTS — com ícone à esquerda
  * ======================================== */
-.input-group {
+.auth-input-group {
   margin-bottom: 16px;
   position: relative;
 }
 
-.input-group input {
-  width: 100%;
-  padding: 12px 15px;
-  background-color: var(--background-primary); /* Fundo do input */
-  border: 1px solid var(--border-color); /* Borda padrão */
-  border-radius: 6px;
-  color: var(--text-secondary); /* Cor do texto digitado */
-  font-size: 1rem;
-  box-sizing: border-box; /* Garante que o padding não mude o tamanho */
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.input-group input:focus {
-  outline: none;
-  border-color: #00e5ff; /* Borda neon ao focar */
-  box-shadow: 0 0 10px rgba(0, 229, 255, 0.5); /* Brilho neon */
-}
-
-/* ========================================
- * GRUPO DE SENHA (com ícone)
- * ======================================== */
-.password-group {
-  position: relative;
-}
-
-.password-group input {
-  padding-right: 45px; /* Abre espaço para o ícone do olho */
-}
-
-.password-toggle-icon {
+.auth-input-icon {
   position: absolute;
   top: 50%;
-  right: 15px;
+  left: 15px;
   transform: translateY(-50%);
-  color: #8b949e; /* Cinza do ícone */
-  cursor: pointer;
-  z-index: 3;
+  color: #5b6b78;
+  pointer-events: none;
+  transition: color 0.25s ease;
+  z-index: 1;
 }
 
-.password-toggle-icon:hover {
+.auth-input-group input {
+  width: 100%;
+  padding: 13px 15px 13px 44px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  color: var(--text-primary);
+  font-size: 0.96rem;
+  box-sizing: border-box;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+}
+
+.auth-input-group input::placeholder {
+  color: #5b6b78;
+}
+
+.auth-input-group input:focus {
+  outline: none;
+  border-color: #00e5ff;
+  background: rgba(0, 229, 255, 0.04);
+  box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.12), 0 0 18px rgba(0, 229, 255, 0.25);
+}
+
+.auth-input-group input:focus ~ .auth-input-icon,
+.auth-input-group:focus-within .auth-input-icon {
   color: #00e5ff;
 }
 
 /* ========================================
- * BOTÃO PRINCIPAL (NEON)
+ * GRUPO DE SENHA (ícone da esquerda + olho à direita)
  * ======================================== */
-.auth-btn {
-  width: 100%;
-  padding: 12px;
-  background: linear-gradient(90deg, #00e5ff, #00b8cc);
-  border: none;
-  border-radius: 6px;
-  color: #0d1117; /* Cor do texto (escura) */
-  font-size: 1rem;
-  font-weight: 600;
+.auth-password-group input {
+  padding-right: 46px;
+}
+
+.auth-password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 15px;
+  transform: translateY(-50%);
+  color: #5b6b78;
   cursor: pointer;
-  transition: all 0.3s ease;
-  margin-top: 10px;
-  box-shadow: 0 0 15px rgba(0, 229, 255, 0.3);
+  z-index: 2;
+  transition: color 0.2s ease;
 }
 
-.auth-btn:hover {
-  box-shadow: 0 0 25px rgba(0, 229, 255, 0.7);
-  transform: translateY(-2px);
-}
-
-.auth-btn:disabled {
-  background: #333;
-  color: #888;
-  cursor: not-allowed;
-  box-shadow: none;
-  transform: none;
+.auth-password-toggle:hover {
+  color: #00e5ff;
 }
 
 /* ========================================
- * LINK INFERIOR (Troca de página)
+ * BOTÃO PRINCIPAL
+ * ======================================== */
+.auth-btn {
+  width: 100%;
+  padding: 13px;
+  background: linear-gradient(135deg, #00e5ff, #0091b3);
+  border: none;
+  border-radius: 10px;
+  color: #04222a;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+  margin-top: 8px;
+  box-shadow: 0 6px 20px rgba(0, 229, 255, 0.25);
+}
+
+.auth-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(0, 229, 255, 0.4);
+  filter: brightness(1.05);
+}
+
+.auth-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.auth-btn:disabled {
+  background: #2a333b;
+  color: #667680;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* ========================================
+ * LINK INFERIOR
  * ======================================== */
 .switch-link {
   text-align: center;
-  margin-top: 20px;
+  margin-top: 22px;
   font-size: 14px;
-  color: #c9d1d9;
+  color: #9aa7b2;
 }
 
-.switch-link a {
-  color: #00e5ff; /* Cor neon */
+.switch-link a,
+.switch-link .link-btn {
+  color: #00e5ff;
   text-decoration: none;
   font-weight: 600;
 }
 
-.switch-link a:hover {
+.switch-link a:hover,
+.switch-link .link-btn:hover {
   text-decoration: underline;
 }

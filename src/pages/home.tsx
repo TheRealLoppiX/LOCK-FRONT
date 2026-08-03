@@ -1,35 +1,38 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/authContext';
 import HexagonBackground from '../components/hexagonobg';
-import { Eye, EyeSlash, EnvelopeSimple } from '@phosphor-icons/react';
+import { Eye, EyeSlash, EnvelopeSimple, LockSimple, User } from '@phosphor-icons/react';
+import NotFound from './NotFound';
 import './auth.css';
 import './home.css';
 import logo from '../assets/Logo lock.png';
 
 type Mode = 'landing' | 'login' | 'register' | 'forgot';
 
-const PATH_TO_MODE: Record<string, Mode> = {
-  '/': 'landing',
-  '/login': 'login',
-  '/register': 'register',
-  '/forgot-password': 'forgot',
+const AUTH_MODE_TO_MODE: Record<string, Mode> = {
+  login: 'login',
+  register: 'register',
+  'forgot-password': 'forgot',
 };
 
-const MODE_TO_PATH: Record<Mode, string> = {
-  landing: '/',
-  login: '/login',
-  register: '/register',
-  forgot: '/forgot-password',
+const MODE_TO_AUTH_MODE: Record<Mode, string | undefined> = {
+  landing: undefined,
+  login: 'login',
+  register: 'register',
+  forgot: 'forgot-password',
 };
 
 // Painel visual (logo hexagonal girando + fundo animado) — fica sempre
-// visível, só o painel ao lado troca de conteúdo conforme o modo.
-const BrandPanel: React.FC = () => {
+// visível, só o painel ao lado troca de conteúdo conforme o modo. A
+// animação de digitação só reinicia quando volta pro modo landing — nos
+// outros modos ela fica parada no que já tinha digitado.
+const BrandPanel: React.FC<{ mode: Mode }> = ({ mode }) => {
   const fullText = 'Seu Laboratório Online de Cibersegurança';
   const [typedText, setTypedText] = useState('');
 
   useEffect(() => {
+    if (mode !== 'landing') return;
     setTypedText('');
     const intervalId = setInterval(() => {
       setTypedText((current) => {
@@ -39,7 +42,7 @@ const BrandPanel: React.FC = () => {
       });
     }, 100);
     return () => clearInterval(intervalId);
-  }, []);
+  }, [mode]);
 
   return (
     <div className="home-visual">
@@ -99,13 +102,15 @@ const LoginPanel: React.FC<{ onSwitch: (mode: Mode) => void }> = ({ onSwitch }) 
     <form onSubmit={handleSubmit} className="home-form">
       <h1>Login</h1>
       <p>Bem-vindo de volta ao LOCK.</p>
-      {error && <div className="error-message">{error}</div>}
-      <div className="input-group">
+      {error && <div className="auth-error-message">{error}</div>}
+      <div className="auth-input-group">
+        <EnvelopeSimple size={18} className="auth-input-icon" />
         <input type="text" placeholder="Email" value={identifier} onChange={(e) => setIdentifier(e.target.value)} required />
       </div>
-      <div className="input-group password-group">
+      <div className="auth-input-group auth-password-group">
+        <LockSimple size={18} className="auth-input-icon" />
         <input type={showPassword ? 'text' : 'password'} placeholder="Senha" value={password} onChange={(e) => setPassword(e.target.value)} required />
-        <span className="password-toggle-icon" onClick={() => setShowPassword(!showPassword)}>
+        <span className="auth-password-toggle" onClick={() => setShowPassword(!showPassword)}>
           {showPassword ? <EyeSlash size={20} /> : <Eye size={20} />}
         </span>
       </div>
@@ -151,16 +156,19 @@ const RegisterPanel: React.FC<{ onSwitch: (mode: Mode) => void }> = ({ onSwitch 
     <form onSubmit={handleSubmit} className="home-form">
       <h1>Criar Conta</h1>
       <p>Junte-se ao LOCK e comece sua jornada na cibersegurança.</p>
-      {error && <div className="error-message">{error}</div>}
-      <div className="input-group">
+      {error && <div className="auth-error-message">{error}</div>}
+      <div className="auth-input-group">
+        <User size={18} className="auth-input-icon" />
         <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Nome Completo" required />
       </div>
-      <div className="input-group">
+      <div className="auth-input-group">
+        <EnvelopeSimple size={18} className="auth-input-icon" />
         <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="E-mail" required />
       </div>
-      <div className="input-group password-group">
+      <div className="auth-input-group auth-password-group">
+        <LockSimple size={18} className="auth-input-icon" />
         <input type={showPassword ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Senha (mín. 8 caracteres)" minLength={8} required />
-        <span className="password-toggle-icon" onClick={() => setShowPassword(!showPassword)}>
+        <span className="auth-password-toggle" onClick={() => setShowPassword(!showPassword)}>
           {showPassword ? <EyeSlash size={20} /> : <Eye size={20} />}
         </span>
       </div>
@@ -223,8 +231,9 @@ const ForgotPanel: React.FC<{ onSwitch: (mode: Mode) => void }> = ({ onSwitch })
     <form onSubmit={handleSubmit} className="home-form">
       <h1>Redefinir Senha</h1>
       <p>Digite seu e-mail para receber o link de redefinição.</p>
-      {error && <div className="error-message">{error}</div>}
-      <div className="input-group">
+      {error && <div className="auth-error-message">{error}</div>}
+      <div className="auth-input-group">
+        <EnvelopeSimple size={18} className="auth-input-icon" />
         <input type="email" placeholder="Seu e-mail" value={email} onChange={(e) => setEmail(e.target.value)} required />
       </div>
       <button type="submit" className="auth-btn" disabled={loading}>{loading ? 'Enviando...' : 'Enviar Link'}</button>
@@ -236,42 +245,42 @@ const ForgotPanel: React.FC<{ onSwitch: (mode: Mode) => void }> = ({ onSwitch })
 };
 
 const Home: React.FC = () => {
-  const location = useLocation();
+  const { authMode } = useParams<{ authMode?: string }>();
   const navigate = useNavigate();
-  const [mode, setMode] = useState<Mode>(PATH_TO_MODE[location.pathname] ?? 'landing');
-  const skipNextSync = useRef(false);
 
-  // Mantém o modo em sincronia com a URL — cobre navegação direta (link
-  // externo, favorito, botão voltar/avançar do navegador).
-  useEffect(() => {
-    if (skipNextSync.current) {
-      skipNextSync.current = false;
-      return;
-    }
-    setMode(PATH_TO_MODE[location.pathname] ?? 'landing');
-  }, [location.pathname]);
+  // "/", "/login", "/register" e "/forgot-password" são todos a MESMA rota
+  // (path="/:authMode?") — só o parâmetro muda, então React não remonta o
+  // componente ao trocar de modo (é o mesmo caso clássico de navegar entre
+  // "/users/1" e "/users/2" sem remontar). Isso é o que mantém a animação
+  // da tagline e qualquer outro estado do painel visual intactos.
+  const mode: Mode | 'notfound' = authMode === undefined ? 'landing' : (AUTH_MODE_TO_MODE[authMode] ?? 'notfound');
 
   const switchMode = (next: Mode) => {
-    skipNextSync.current = true;
-    setMode(next);
-    navigate(MODE_TO_PATH[next]);
+    const path = MODE_TO_AUTH_MODE[next];
+    navigate(path ? `/${path}` : '/');
   };
+
+  if (mode === 'notfound') {
+    return <NotFound />;
+  }
 
   return (
     <div className="home-shell">
       <HexagonBackground />
       <div className="home-panel">
         <div className="home-panel-card">
-          {mode === 'landing' && <LandingPanel onSwitch={switchMode} />}
-          {mode === 'login' && <LoginPanel onSwitch={switchMode} />}
-          {mode === 'register' && <RegisterPanel onSwitch={switchMode} />}
-          {mode === 'forgot' && <ForgotPanel onSwitch={switchMode} />}
-          {mode !== 'landing' && (
-            <button type="button" className="home-back-btn" onClick={() => switchMode('landing')}>← Voltar</button>
-          )}
+          <div key={mode} className="home-mode-transition">
+            {mode === 'landing' && <LandingPanel onSwitch={switchMode} />}
+            {mode === 'login' && <LoginPanel onSwitch={switchMode} />}
+            {mode === 'register' && <RegisterPanel onSwitch={switchMode} />}
+            {mode === 'forgot' && <ForgotPanel onSwitch={switchMode} />}
+            {mode !== 'landing' && (
+              <button type="button" className="home-back-btn" onClick={() => switchMode('landing')}>← Voltar</button>
+            )}
+          </div>
         </div>
       </div>
-      <BrandPanel />
+      <BrandPanel mode={mode} />
     </div>
   );
 };

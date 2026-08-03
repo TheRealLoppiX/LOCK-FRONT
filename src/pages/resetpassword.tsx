@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import HexagonBackground from '../components/hexagonobg';
-import { Eye, EyeSlash, CheckCircle } from '@phosphor-icons/react';
+import { Eye, EyeSlash, CheckCircle, LockSimple } from '@phosphor-icons/react';
 import './auth.css';
 
 const ResetPassword: React.FC = () => {
@@ -67,9 +67,10 @@ const ResetPassword: React.FC = () => {
             <h1>Crie uma Nova Senha</h1>
             <p>Escolha uma nova senha para acessar sua conta.</p>
 
-            {error && <div className="error-message">{error}</div>}
+            {error && <div className="auth-error-message">{error}</div>}
 
-            <div className="input-group password-group">
+            <div className="auth-input-group auth-password-group">
+              <LockSimple size={18} className="auth-input-icon" />
               <input
                 type={showPassword ? 'text' : 'password'}
                 placeholder="Nova senha (mín. 8 caracteres)"
@@ -78,12 +79,13 @@ const ResetPassword: React.FC = () => {
                 minLength={8}
                 required
               />
-              <span className="password-toggle-icon" onClick={() => setShowPassword(!showPassword)}>
+              <span className="auth-password-toggle" onClick={() => setShowPassword(!showPassword)}>
                 {showPassword ? <EyeSlash size={20} /> : <Eye size={20} />}
               </span>
             </div>
 
-            <div className="input-group password-group">
+            <div className="auth-input-group auth-password-group">
+              <LockSimple size={18} className="auth-input-icon" />
               <input
                 type={showPassword ? 'text' : 'password'}
                 placeholder="Confirme a nova senha"
