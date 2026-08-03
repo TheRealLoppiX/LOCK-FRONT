@@ -46,8 +46,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const storedUser = localStorage.getItem('lock-user');
     const storedToken = localStorage.getItem('lock-token');
     if (storedUser && storedToken) {
-      setUser(JSON.parse(storedUser));
-      setToken(storedToken);
+      try {
+        setUser(JSON.parse(storedUser));
+        setToken(storedToken);
+      } catch {
+        // localStorage corrompido/editado manualmente — trata como deslogado
+        localStorage.removeItem('lock-user');
+        localStorage.removeItem('lock-token');
+      }
     }
     setLoading(false);
   }, []);

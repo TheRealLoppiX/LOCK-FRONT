@@ -228,11 +228,11 @@ const Profile: React.FC = () => {
   };
 
   // --- GERADOR DE CERTIFICADO PDF ---
-  const generateCertificate = async (examTitle: string, dateStr: string) => {
+  const generateCertificate = async (examTitle: string, dateStr: string, buttonEl: HTMLButtonElement) => {
     // Feedback visual simples para o usuário saber que está processando
-    const originalText = (document.activeElement as HTMLButtonElement).innerText;
-    (document.activeElement as HTMLButtonElement).innerText = "Gerando PDF...";
-    (document.activeElement as HTMLButtonElement).disabled = true;
+    const originalText = buttonEl.innerText;
+    buttonEl.innerText = "Gerando PDF...";
+    buttonEl.disabled = true;
 
     try {
         // 1. PREPARAR A IMAGEM (Carrega antes de desenhar o PDF)
@@ -328,10 +328,8 @@ const Profile: React.FC = () => {
         alert("Erro ao gerar o certificado. Verifique se a imagem da logo existe.");
     } finally {
         // Restaura o botão
-        if (document.activeElement instanceof HTMLButtonElement) {
-            (document.activeElement as HTMLButtonElement).innerText = originalText;
-            (document.activeElement as HTMLButtonElement).disabled = false;
-        }
+        buttonEl.innerText = originalText;
+        buttonEl.disabled = false;
     }
   };
   if (loading) return <div className="loading-screen">Decriptando identidade...</div>;
@@ -458,7 +456,7 @@ const Profile: React.FC = () => {
                                     <div className="cert-info">
                                         <h3>{attempt.module.title}</h3>
                                         <p>Aprovado em {new Date(attempt.completed_at).toLocaleDateString()}</p>
-                                        <button onClick={() => generateCertificate(attempt.module.title, attempt.completed_at)}>
+                                        <button onClick={(e) => generateCertificate(attempt.module.title, attempt.completed_at, e.currentTarget)}>
                                             <DownloadSimple size={18} /> Baixar Certificado
                                         </button>
                                     </div>

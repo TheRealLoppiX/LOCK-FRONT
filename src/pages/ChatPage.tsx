@@ -94,6 +94,9 @@ const ChatPage: React.FC = () => {
   const handleNewChat = () => {
     setActive(null);
     setInput('');
+    attachments.forEach((a) => {
+      if (a.previewUrl) URL.revokeObjectURL(a.previewUrl);
+    });
     setAttachments([]);
     setAttachmentError(null);
     setEditingIndex(null);
@@ -167,6 +170,10 @@ const ChatPage: React.FC = () => {
     if (isLoading) return;
 
     const truncateAt = editingIndex;
+
+    pendingAttachments.forEach((a) => {
+      if (a.previewUrl) URL.revokeObjectURL(a.previewUrl);
+    });
 
     setInput('');
     setAttachments([]);

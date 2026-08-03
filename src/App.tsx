@@ -68,6 +68,28 @@ const PrivateRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 };
 
 // ===================================================================
+// COMPONENTE PARA PROTEGER ROTAS ADMINISTRATIVAS (autenticado + is_admin)
+// ===================================================================
+interface UserWithRole {
+  is_admin?: boolean;
+}
+
+const AdminRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { isAuthenticated, loading, user } = useAuth();
+
+  if (loading) {
+    return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', backgroundColor: '#0d1117', color: 'white' }}>Carregando...</div>;
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" />;
+  }
+
+  const isAdmin = (user as unknown as UserWithRole)?.is_admin === true;
+  return isAdmin ? children : <Navigate to="/dashboard" />;
+};
+
+// ===================================================================
 // COMPONENTE PARA PÁGINAS SÓ-DESLOGADO (login, registro, etc.)
 // Evita que um usuário já autenticado veja a Sidebar sobreposta ao
 // formulário de login/registro ao navegar manualmente para essas rotas.
@@ -188,9 +210,9 @@ function AppRoutes() {
       <Route path="/labs/xss/3" element={<PrivateRoute><XSSLab3 /></PrivateRoute>} />
 
       {/* Rotas de Admin */}
-      <Route path="/admin/questions" element={<PrivateRoute><AdminQuestions /></PrivateRoute>} />
-      <Route path="/admin/materials" element={<PrivateRoute><AdminMaterials /></PrivateRoute>} />
-      <Route path="/admin/modules" element={<PrivateRoute><CreateModule /></PrivateRoute>} />
+      <Route path="/admin/questions" element={<AdminRoute><AdminQuestions /></AdminRoute>} />
+      <Route path="/admin/materials" element={<AdminRoute><AdminMaterials /></AdminRoute>} />
+      <Route path="/admin/modules" element={<AdminRoute><CreateModule /></AdminRoute>} />
 
       {/* Rota Coringa (404) */}
       <Route path="*" element={<NotFound />} />
