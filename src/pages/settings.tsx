@@ -136,11 +136,11 @@ const Settings: React.FC = () => {
               />
               <input
                 type="password"
-                placeholder="Nova senha (mín. 6 caracteres)"
+                placeholder="Nova senha (mín. 8 caracteres)"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 autoComplete="new-password"
-                minLength={6}
+                minLength={8}
                 required
               />
               <input
@@ -149,7 +149,7 @@ const Settings: React.FC = () => {
                 value={confirmNewPassword}
                 onChange={(e) => setConfirmNewPassword(e.target.value)}
                 autoComplete="new-password"
-                minLength={6}
+                minLength={8}
                 required
               />
               <div className="settings-inline-form-actions">

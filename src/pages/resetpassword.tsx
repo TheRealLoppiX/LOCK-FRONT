@@ -72,9 +72,10 @@ const ResetPassword: React.FC = () => {
             <div className="input-group password-group">
               <input
                 type={showPassword ? 'text' : 'password'}
-                placeholder="Nova senha (mín. 6 caracteres)"
+                placeholder="Nova senha (mín. 8 caracteres)"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                minLength={8}
                 required
               />
               <span className="password-toggle-icon" onClick={() => setShowPassword(!showPassword)}>

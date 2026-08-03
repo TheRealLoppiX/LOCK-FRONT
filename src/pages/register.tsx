@@ -74,7 +74,8 @@ const Register: React.FC = () => {
               type={showPassword ? 'text' : 'password'}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Senha (mín. 6 caracteres)"
+              placeholder="Senha (mín. 8 caracteres)"
+              minLength={8}
               required
             />
             <span 
