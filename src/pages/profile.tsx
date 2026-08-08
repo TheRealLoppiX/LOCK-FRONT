@@ -53,6 +53,7 @@ interface UserStats {
   passedExams: number;
   totalXp: number;
   rank: string;
+  nextRankXp: number | null;
 }
 
 interface ExamAttempt {
@@ -75,7 +76,7 @@ const Profile: React.FC = () => {
   const [loading, setLoading] = useState(true);
   
   // Dados do Usuário
-  const [stats, setStats] = useState<UserStats>({ completedLabs: 0, completedBooks: 0, passedExams: 0, totalXp: 0, rank: 'Neophyte' });
+  const [stats, setStats] = useState<UserStats>({ completedLabs: 0, completedBooks: 0, passedExams: 0, totalXp: 0, rank: 'Neophyte', nextRankXp: null });
   const [attempts, setAttempts] = useState<ExamAttempt[]>([]);
   const [readBooks, setReadBooks] = useState<CompletedBook[]>([]);
   
@@ -127,7 +128,7 @@ const Profile: React.FC = () => {
 
       // O XP é sempre calculado no servidor — o front só exibe.
       const totalXp: number = data.totalXp ?? 0;
-      const { rank } = computeRank(totalXp);
+      const { rank, nextRankXp } = computeRank(totalXp);
 
       setReadBooks(booksData);
       setAttempts(passedExams);
@@ -136,7 +137,8 @@ const Profile: React.FC = () => {
         completedBooks: booksData.length,
         passedExams: passedExams.length,
         totalXp,
-        rank
+        rank,
+        nextRankXp
       });
 
     } catch (error) {
@@ -375,10 +377,10 @@ const Profile: React.FC = () => {
                 <div className="xp-bar-container">
                     <div className="xp-info">
                         <span>XP</span>
-                        <span>{stats.totalXp} / 5000</span>
+                        <span>{stats.totalXp} / {stats.nextRankXp ?? stats.totalXp}</span>
                     </div>
                     <div className="xp-track">
-                        <div className="xp-fill" style={{width: `${Math.min(100, (stats.totalXp/5000)*100)}%`}}></div>
+                        <div className="xp-fill" style={{width: `${stats.nextRankXp ? Math.min(100, (stats.totalXp / stats.nextRankXp) * 100) : 100}%`}}></div>
                     </div>
                 </div>
             </div>

@@ -27,16 +27,18 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const showToast = useCallback(
     ({ type = 'error', message, actionLabel, onAction }: ShowToastOptions) => {
+      // Gera o id ANTES do updater e reusa a mesma constante nos dois
+      // lugares — o updater roda de forma assíncrona (inclusive duas vezes
+      // em StrictMode), então ler `nextId.current` de novo lá dentro pegaria
+      // o valor já incrementado por esta linha, descasando do id agendado
+      // para o auto-dismiss abaixo e fazendo o toast nunca sumir sozinho.
+      const id = nextId.current++;
       setToasts((prev) => {
         // Evita empilhar avisos idênticos (ex: duas telas buscando o mesmo
         // recurso falho ao mesmo tempo).
         if (prev.some((t) => t.type === type && t.message === message)) return prev;
-        return [...prev, { id: nextId.current, type, message, actionLabel, onAction }];
+        return [...prev, { id, type, message, actionLabel, onAction }];
       });
-      // Efeitos colaterais (gerar id, agendar timeout) ficam fora do updater
-      // funcional acima — o StrictMode do React invoca updaters duas vezes
-      // em dev, o que duplicaria o id e o timer se estivessem lá dentro.
-      const id = nextId.current++;
       window.setTimeout(() => dismiss(id), actionLabel ? AUTO_DISMISS_WITH_ACTION_MS : AUTO_DISMISS_MS);
     },
     [dismiss]

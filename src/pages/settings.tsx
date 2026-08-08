@@ -30,8 +30,8 @@ const Settings: React.FC = () => {
   };
 
   const handleChangePassword = async () => {
-    if (newPassword.length < 6) {
-      showToast({ type: 'error', message: 'A nova senha precisa ter pelo menos 6 caracteres.' });
+    if (newPassword.length < 8) {
+      showToast({ type: 'error', message: 'A nova senha precisa ter pelo menos 8 caracteres.' });
       return;
     }
     if (newPassword !== confirmNewPassword) {

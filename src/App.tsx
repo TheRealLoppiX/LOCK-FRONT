@@ -33,7 +33,6 @@ import BookDetails from './pages/BookDetails';
 import AdminMaterials from './pages/admin/AdminMaterials';
 import Simulados from './pages/simulados';
 import CreateModule from './pages/admin/CreateModule';
-import AdminModules from './pages/admin/AdminModules';
 import SimuladoPlayer from './pages/SimuladoPlayer';
 import ManualPage from './pages/ManualPage';
 import Leaderboard from './pages/Leaderboard';
