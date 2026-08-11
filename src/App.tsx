@@ -108,14 +108,15 @@ const quizformsburp6 = "https://forms.gle/UKtVz6XZ7C2ydNVb6"
 const quizformsburp7 = "https://forms.gle/g5eaRGAojtjMrqcK9"
 const quizformsburp8 = "https://forms.gle/7p75hyGuQZ2NQLzZ8"
 
-const quizformstcp1 = "https://forms.gle/oSwf8n6Zc2Zsoom67"
-const quizformstcp2 = "https://forms.gle/WrWy3k7drxpXbRrs8"
-const quizformstcp3 = "https://forms.gle/nuffuSRQa1WUrU569"
-const quizformstcp4 = "https://forms.gle/XSh6mNyFE9bzvW4NA"
-const quizformstcp5 = "https://forms.gle/bxVsf6Ykmjju8ncD6"
-const quizformstcp6 = "https://forms.gle/HTrdEPCpkRAn2Ee28"
+const quizformstcp1 = "https://forms.gle/ArJpQDbmKFT1bqSBA"
+const quizformstcp2 = "https://forms.gle/SvHujiP1xZUTMoN38"
+const quizformstcp3 = "https://docs.google.com/forms/d/e/1FAIpQLSeTl2uEc7jj16XQravxq6mHePJ7b9kzCdVkHJRuhIsc4CO3MA/viewform?usp=sharing&ouid=116481828861022233090"
+const quizformstcp4 = "https://forms.gle/mRWyNYk83Bwk4kXJ7"
+const quizformstcp5 = "https://forms.gle/6SzLMEKR9ELVSxM27"
+const quizformstcp6 = "https://forms.gle/MKjkB9ntxVdJMkfZ9"
 const quizformstcp7 = "https://forms.gle/v1vE4jAbJuvkaNZR6"
 const quizformstcp8 = "https://forms.gle/bMBJ9LxKdb45YKL6A"
+
 const quizformsnmap1 = "https://forms.gle/8ngfJycwWGT2ey8F9"
 
 // ===================================================================
