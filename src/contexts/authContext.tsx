@@ -38,6 +38,16 @@ interface DecodedToken {
   name: string;
   email: string;
   avatar_url: string;
+  exp: number;
+}
+
+function isTokenExpired(token: string): boolean {
+  try {
+    const decoded: DecodedToken = jwtDecode(token);
+    return !decoded.exp || decoded.exp * 1000 < Date.now();
+  } catch {
+    return true;
+  }
 }
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
@@ -51,6 +61,31 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   // Efeito que "lembra" do usuário ao recarregar a página
   useEffect(() => {
+    // Handoff de sessão vindo do LOCKIA (botão "Ir para o LOCK" na sidebar) —
+    // o token chega no fragmento da URL (ex: #token=eyJ...), nunca numa query
+    // string, porque fragmentos não são enviados ao servidor nem aparecem em
+    // logs/Referer. Mesmo padrão já usado no sentido LOCK → LOCKIA.
+    const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ''));
+    const handoffToken = hashParams.get('token');
+    if (handoffToken) {
+      // Limpa a URL sempre que houver um token no fragmento, mesmo se ele já
+      // estiver expirado — senão o JWT (com nome/e-mail decodificáveis) fica
+      // exposto na barra de endereço/histórico do navegador indefinidamente.
+      window.history.replaceState(null, '', window.location.pathname + window.location.search);
+      if (!isTokenExpired(handoffToken)) {
+        const decoded: DecodedToken = jwtDecode(handoffToken);
+        const userData: User = {
+          id: decoded.sub,
+          name: decoded.name,
+          email: decoded.email,
+          avatar_url: decoded.avatar_url,
+        };
+        login(userData, handoffToken);
+        setLoading(false);
+        return;
+      }
+    }
+
     const storedUser = localStorage.getItem('lock-user');
     const storedToken = localStorage.getItem('lock-token');
     if (storedUser && storedToken) {
@@ -64,6 +99,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       }
     }
     setLoading(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const login = (userData: User, receivedToken: string) => {
