@@ -27,7 +27,12 @@ interface AuthContextType {
   login: (userData: User, token: string) => void;
   logout: () => void;
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
-  register: (name: string, email: string, password: string) => Promise<void>; // NOVO: Adiciona a função ao "contrato"
+  // O cadastro não pede mais senha — o servidor gera uma e manda por
+  // e-mail, junto com o código de verificação. Por isso não loga
+  // automaticamente mais (ver verifyEmail).
+  register: (name: string, email: string) => Promise<void>;
+  verifyEmail: (email: string, code: string) => Promise<void>;
+  resendVerificationCode: (email: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -153,50 +158,64 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     };
   }, [apiBaseUrl]);
 
-  // ======================================================
-  // NOVO: A FUNÇÃO DE REGISTRO QUE ESTAVA FALTANDO
-  // ======================================================
-  const register = async (name: string, email: string, password: string) => {
+  // O cadastro cria a conta (senha gerada pelo servidor, mandada por
+  // e-mail) mas não loga automaticamente — a conta só fica utilizável
+  // depois de confirmada via verifyEmail. Não decodifica token nenhum
+  // porque a resposta de /register não traz mais um.
+  const register = async (name: string, email: string) => {
     const response = await fetch(`${apiBaseUrl}/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, password }),
+      body: JSON.stringify({ name, email }),
     });
-
+    const data = await response.json();
     if (!response.ok) {
-      // Se a API retornar um erro (ex: "Email já cadastrado"),
-      // pega a mensagem e a joga para a página de registro
-      const errorData = await response.json();
-      throw new Error(errorData.message || 'Falha no registro');
+      throw new Error(data.message || 'Falha no registro');
     }
+  };
 
-    const { token } = await response.json();
+  // Confirma o código de 6 dígitos enviado por e-mail — só a partir daqui
+  // a conta vira utilizável. A resposta tem o mesmo formato do /login
+  // (user + token), então reaproveita o 'login' existente pra aplicar a
+  // sessão.
+  const verifyEmail = async (email: string, code: string) => {
+    const response = await fetch(`${apiBaseUrl}/verify-email`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, code }),
+    });
+    const data = await response.json();
+    if (!response.ok || !data.token) {
+      throw new Error(data.message || 'Código inválido ou expirado.');
+    }
+    login(data.user, data.token);
+  };
 
-    // Decodifica o token para obter os dados do usuário
-    const decodedToken: DecodedToken = jwtDecode(token);
-    
-    const userData: User = {
-      id: decodedToken.sub,
-      name: decodedToken.name,
-      email: decodedToken.email,
-      avatar_url: decodedToken.avatar_url
-    };
-    
-    // Chama a função 'login' existente para salvar o estado e o token
-    login(userData, token);
+  const resendVerificationCode = async (email: string) => {
+    const response = await fetch(`${apiBaseUrl}/resend-verification`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email }),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || 'Não foi possível reenviar o código.');
+    }
   };
 
   return (
-    <AuthContext.Provider 
-      value={{ 
-        user, 
-        token, 
-        setUser, 
+    <AuthContext.Provider
+      value={{
+        user,
+        token,
+        setUser,
         isAuthenticated: !!user && !!token,
         loading,
-        login, 
+        login,
         logout,
-        register // NOVO: Fornece a função para o resto do app
+        register,
+        verifyEmail,
+        resendVerificationCode,
       }}
     >
       {!loading && children} {/* MODIFICADO: Garante que o app só renderize depois de carregar o user */}

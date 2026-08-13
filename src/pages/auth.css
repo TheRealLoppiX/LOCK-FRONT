@@ -78,6 +78,20 @@
 }
 
 /* ========================================
+ * MENSAGEM DE SUCESSO (ex: código reenviado)
+ * ======================================== */
+.auth-success-message {
+  background: linear-gradient(180deg, rgba(46, 204, 113, 0.14), rgba(46, 204, 113, 0.06));
+  color: #6ee7a8;
+  border: 1px solid rgba(46, 204, 113, 0.4);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-bottom: 18px;
+  text-align: center;
+  font-size: 0.88rem;
+}
+
+/* ========================================
  * GRUPO DE INPUTS — com ícone à esquerda
  * ======================================== */
 .auth-input-group {

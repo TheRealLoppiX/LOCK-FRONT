@@ -8,12 +8,13 @@ import './auth.css';
 import './home.css';
 import logo from '../assets/Logo lock.png';
 
-type Mode = 'landing' | 'login' | 'register' | 'forgot';
+type Mode = 'landing' | 'login' | 'register' | 'forgot' | 'verify';
 
 const AUTH_MODE_TO_MODE: Record<string, Mode> = {
   login: 'login',
   register: 'register',
   'forgot-password': 'forgot',
+  'verify-email': 'verify',
 };
 
 const MODE_TO_AUTH_MODE: Record<Mode, string | undefined> = {
@@ -21,6 +22,7 @@ const MODE_TO_AUTH_MODE: Record<Mode, string | undefined> = {
   login: 'login',
   register: 'register',
   forgot: 'forgot-password',
+  verify: 'verify-email',
 };
 
 // Painel visual (logo hexagonal girando + fundo animado) — fica sempre
@@ -72,7 +74,7 @@ const LandingPanel: React.FC<{ onSwitch: (mode: Mode) => void }> = ({ onSwitch }
   </div>
 );
 
-const LoginPanel: React.FC<{ onSwitch: (mode: Mode) => void }> = ({ onSwitch }) => {
+const LoginPanel: React.FC<{ onSwitch: (mode: Mode) => void; onNeedsVerification: (email: string) => void }> = ({ onSwitch, onNeedsVerification }) => {
   const { login } = useAuth();
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
@@ -93,6 +95,11 @@ const LoginPanel: React.FC<{ onSwitch: (mode: Mode) => void }> = ({ onSwitch }) 
       const data = await response.json();
       if (response.ok && data.token) {
         login(data.user, data.token);
+      } else if (data.code === 'EMAIL_NOT_VERIFIED') {
+        // O identifier pode ser o nome de usuário, não o e-mail — a tela de
+        // verificação precisa do e-mail de verdade pra chamar
+        // /verify-email e /resend-verification.
+        onNeedsVerification(identifier.includes('@') ? identifier : '');
       } else {
         setError(data.message || 'Email ou senha inválidos.');
       }
@@ -130,12 +137,10 @@ const LoginPanel: React.FC<{ onSwitch: (mode: Mode) => void }> = ({ onSwitch }) 
   );
 };
 
-const RegisterPanel: React.FC<{ onSwitch: (mode: Mode) => void }> = ({ onSwitch }) => {
+const RegisterPanel: React.FC<{ onSwitch: (mode: Mode) => void; onRegistered: (email: string) => void }> = ({ onSwitch, onRegistered }) => {
   const { register } = useAuth();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
@@ -149,7 +154,8 @@ const RegisterPanel: React.FC<{ onSwitch: (mode: Mode) => void }> = ({ onSwitch 
     setError(null);
     setLoading(true);
     try {
-      await register(name, email, password);
+      await register(name, email);
+      onRegistered(email);
     } catch (err: any) {
       setError(err.message || 'Erro ao criar conta. Verifique seus dados.');
     } finally {
@@ -160,7 +166,7 @@ const RegisterPanel: React.FC<{ onSwitch: (mode: Mode) => void }> = ({ onSwitch 
   return (
     <form onSubmit={handleSubmit} className="home-form">
       <h1>Criar Conta</h1>
-      <p>Junte-se ao LOCK e comece sua jornada na cibersegurança.</p>
+      <p>Junte-se ao LOCK e comece sua jornada na cibersegurança. A sua senha de acesso é gerada automaticamente e enviada para o seu e-mail.</p>
       {error && <div className="auth-error-message">{error}</div>}
       <div className="auth-input-group">
         <User size={18} className="auth-input-icon" />
@@ -169,13 +175,6 @@ const RegisterPanel: React.FC<{ onSwitch: (mode: Mode) => void }> = ({ onSwitch 
       <div className="auth-input-group">
         <EnvelopeSimple size={18} className="auth-input-icon" />
         <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="E-mail" required />
-      </div>
-      <div className="auth-input-group auth-password-group">
-        <LockSimple size={18} className="auth-input-icon" />
-        <input type={showPassword ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Senha (mín. 8 caracteres)" minLength={8} required />
-        <span className="auth-password-toggle" onClick={() => setShowPassword(!showPassword)}>
-          {showPassword ? <EyeSlash size={20} /> : <Eye size={20} />}
-        </span>
       </div>
       <div className="terms-container">
         <input type="checkbox" id="terms" checked={agreedToTerms} onChange={(e) => setAgreedToTerms(e.target.checked)} />
@@ -188,6 +187,90 @@ const RegisterPanel: React.FC<{ onSwitch: (mode: Mode) => void }> = ({ onSwitch 
       <button type="submit" className="auth-btn" disabled={loading || !agreedToTerms}>{loading ? 'Cadastrando...' : 'Cadastrar'}</button>
       <div className="switch-link">
         Já tem uma conta? <button type="button" className="link-btn" onClick={() => onSwitch('login')}>Faça Login</button>
+      </div>
+    </form>
+  );
+};
+
+const VerifyPanel: React.FC<{ email: string; onSwitch: (mode: Mode) => void }> = ({ email, onSwitch }) => {
+  const { verifyEmail, resendVerificationCode } = useAuth();
+  const [emailInput, setEmailInput] = useState(email);
+  const [code, setCode] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const [resendMessage, setResendMessage] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [resending, setResending] = useState(false);
+
+  // Se a tela abrir com um e-mail vindo do cadastro/login (prop `email`),
+  // preenche o campo — mas mantém editável, porque também é possível chegar
+  // aqui direto pela URL /verify-email sem esse dado (ex: F5 na própria
+  // tela perde o estado, já que ele só vive na Home).
+  useEffect(() => {
+    if (email) setEmailInput(email);
+  }, [email]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    setResendMessage(null);
+    setLoading(true);
+    try {
+      await verifyEmail(emailInput, code);
+    } catch (err: any) {
+      setError(err.message || 'Código inválido ou expirado.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleResend = async () => {
+    if (!emailInput) {
+      setError('Informe o seu e-mail para reenviar o código.');
+      return;
+    }
+    setError(null);
+    setResendMessage(null);
+    setResending(true);
+    try {
+      await resendVerificationCode(emailInput);
+      setResendMessage('Se a conta existir e ainda não estiver verificada, um novo código foi enviado.');
+    } catch (err: any) {
+      setError(err.message || 'Não foi possível reenviar o código.');
+    } finally {
+      setResending(false);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="home-form">
+      <h1>Confirme o seu e-mail</h1>
+      <p>Enviamos um código de 6 dígitos para o seu e-mail. Ele vale por 30 minutos.</p>
+      {error && <div className="auth-error-message">{error}</div>}
+      {resendMessage && <div className="auth-success-message">{resendMessage}</div>}
+      <div className="auth-input-group">
+        <EnvelopeSimple size={18} className="auth-input-icon" />
+        <input type="email" value={emailInput} onChange={(e) => setEmailInput(e.target.value)} placeholder="Seu e-mail" required />
+      </div>
+      <div className="auth-input-group">
+        <input
+          type="text"
+          value={code}
+          onChange={(e) => setCode(e.target.value)}
+          placeholder="Código de 6 dígitos"
+          maxLength={6}
+          required
+          style={{ letterSpacing: '4px', textTransform: 'uppercase' }}
+        />
+      </div>
+      <button type="submit" className="auth-btn" disabled={loading}>{loading ? 'Confirmando...' : 'Confirmar'}</button>
+      <div className="switch-link">
+        Não recebeu?{' '}
+        <button type="button" className="link-btn" onClick={handleResend} disabled={resending}>
+          {resending ? 'Enviando...' : 'Reenviar código'}
+        </button>
+      </div>
+      <div className="switch-link">
+        <button type="button" className="link-btn" onClick={() => onSwitch('login')}>← Voltar para o Login</button>
       </div>
     </form>
   );
@@ -252,6 +335,10 @@ const ForgotPanel: React.FC<{ onSwitch: (mode: Mode) => void }> = ({ onSwitch })
 const Home: React.FC = () => {
   const { authMode } = useParams<{ authMode?: string }>();
   const navigate = useNavigate();
+  // Carrega o e-mail do cadastro/login pra tela de verificação — só vive
+  // aqui (não é persistido), então um F5 na tela de verificação perde esse
+  // preenchimento automático, mas o campo continua editável nesse caso.
+  const [pendingVerifyEmail, setPendingVerifyEmail] = useState('');
 
   // "/", "/login", "/register" e "/forgot-password" são todos a MESMA rota
   // (path="/:authMode?") — só o parâmetro muda, então React não remonta o
@@ -276,9 +363,26 @@ const Home: React.FC = () => {
         <div className="home-panel-card">
           <div key={mode} className="home-mode-transition">
             {mode === 'landing' && <LandingPanel onSwitch={switchMode} />}
-            {mode === 'login' && <LoginPanel onSwitch={switchMode} />}
-            {mode === 'register' && <RegisterPanel onSwitch={switchMode} />}
+            {mode === 'login' && (
+              <LoginPanel
+                onSwitch={switchMode}
+                onNeedsVerification={(email) => {
+                  setPendingVerifyEmail(email);
+                  switchMode('verify');
+                }}
+              />
+            )}
+            {mode === 'register' && (
+              <RegisterPanel
+                onSwitch={switchMode}
+                onRegistered={(email) => {
+                  setPendingVerifyEmail(email);
+                  switchMode('verify');
+                }}
+              />
+            )}
             {mode === 'forgot' && <ForgotPanel onSwitch={switchMode} />}
+            {mode === 'verify' && <VerifyPanel email={pendingVerifyEmail} onSwitch={switchMode} />}
             {mode !== 'landing' && (
               <button type="button" className="home-back-btn" onClick={() => switchMode('landing')}>← Voltar</button>
             )}
