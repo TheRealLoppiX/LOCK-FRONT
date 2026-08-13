@@ -106,9 +106,12 @@ const Profile: React.FC = () => {
   }, [terminalMode]);
 
   // Marca o passo "Configure seu Perfil" do Aprendizado Guiado como visto.
+  // Escopado por userId (mesmo prefixo usado em dashboard.tsx) — sem isso,
+  // um segundo usuário no mesmo navegador herdava esse passo já marcado.
   useEffect(() => {
-    localStorage.setItem('lock-guided-profile-viewed', 'true');
-  }, []);
+    if (!user) return;
+    localStorage.setItem(`lock-guided-profile-viewed-${user.id}`, 'true');
+  }, [user]);
 
   const fetchUserData = async () => {
     if (!user || !token) return;

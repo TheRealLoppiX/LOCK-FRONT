@@ -22,7 +22,7 @@ const ACTIVE_ID_KEY_PREFIX = 'lock-aegis-active-id:';
 // conversa de outro usuário parado no localStorage do navegador.
 const LEGACY_CONVERSATIONS_KEY = 'lock-aegis-conversations';
 const LEGACY_ACTIVE_ID_KEY = 'lock-aegis-active-id';
-const GUIDED_CHAT_USED_KEY = 'lock-guided-chat-used';
+const GUIDED_CHAT_USED_KEY_PREFIX = 'lock-guided-chat-used-';
 
 const ACCEPTED_MIME_TYPES = ['image/png', 'image/jpeg', 'image/webp', 'application/pdf', 'text/plain'];
 const MAX_ATTACHMENTS = 3;
@@ -246,7 +246,7 @@ const ChatPage: React.FC = () => {
       c.id === workingId ? { ...c, messages: [...c.messages, userMessage] } : c
     );
     persist(withUserMessage);
-    localStorage.setItem(GUIDED_CHAT_USED_KEY, 'true');
+    localStorage.setItem(`${GUIDED_CHAT_USED_KEY_PREFIX}${userId}`, 'true');
 
     try {
       const res = await fetch(`${process.env.REACT_APP_API_URL}/ai/chat`, {

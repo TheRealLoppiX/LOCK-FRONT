@@ -154,45 +154,45 @@ function AppRoutes() {
       <Route path="/exercises/:topic" element={<PrivateRoute><ExercisePage /></PrivateRoute>} />
       <Route
             path="/exercises/burp/1"
-            element={<FormViewer src={quizformsburp1} title="Exercício de Fixação I - Burp Suite" />}
+            element={<PrivateRoute><FormViewer src={quizformsburp1} title="Exercício de Fixação I - Burp Suite" /></PrivateRoute>}
           />
-      <Route 
-            path="/exercises/burp/2" 
-            element={<FormViewer src={quizformsburp2} title="Exercício de Fixação II - Burp Suite" />} 
+      <Route
+            path="/exercises/burp/2"
+            element={<PrivateRoute><FormViewer src={quizformsburp2} title="Exercício de Fixação II - Burp Suite" /></PrivateRoute>}
           />
-      <Route 
-            path="/exercises/burp/3" 
-            element={<FormViewer src={quizformsburp3} title="Exercício de Fixação III - Burp Suite" />} 
+      <Route
+            path="/exercises/burp/3"
+            element={<PrivateRoute><FormViewer src={quizformsburp3} title="Exercício de Fixação III - Burp Suite" /></PrivateRoute>}
           />
-      <Route 
-            path="/exercises/burp/4" 
-            element={<FormViewer src={quizformsburp4} title="Exercício de Fixação IV - Burp Suite" />} 
+      <Route
+            path="/exercises/burp/4"
+            element={<PrivateRoute><FormViewer src={quizformsburp4} title="Exercício de Fixação IV - Burp Suite" /></PrivateRoute>}
           />
-      <Route 
-            path="/exercises/burp/5" 
-            element={<FormViewer src={quizformsburp5} title="Exercício de Fixação V - Burp Suite" />} 
-          />    
-      <Route 
-            path="/exercises/burp/6" 
-            element={<FormViewer src={quizformsburp6} title="Exercício de Fixação VI - Burp Suite" />} 
+      <Route
+            path="/exercises/burp/5"
+            element={<PrivateRoute><FormViewer src={quizformsburp5} title="Exercício de Fixação V - Burp Suite" /></PrivateRoute>}
           />
-      <Route 
-            path="/exercises/burp/7" 
-            element={<FormViewer src={quizformsburp7} title="Exercício de Fixação VII - Burp Suite" />} 
+      <Route
+            path="/exercises/burp/6"
+            element={<PrivateRoute><FormViewer src={quizformsburp6} title="Exercício de Fixação VI - Burp Suite" /></PrivateRoute>}
+          />
+      <Route
+            path="/exercises/burp/7"
+            element={<PrivateRoute><FormViewer src={quizformsburp7} title="Exercício de Fixação VII - Burp Suite" /></PrivateRoute>}
           />
       <Route
             path="/exercises/burp/8"
-            element={<FormViewer src={quizformsburp8} title="Exercício de Fixação VIII - Burp Suite" />}
+            element={<PrivateRoute><FormViewer src={quizformsburp8} title="Exercício de Fixação VIII - Burp Suite" /></PrivateRoute>}
           />
-      <Route path="/exercises/tcpdump/1" element={<FormViewer src={quizformstcp1} title="Exercício de Fixação I - TCPDump" />} />
-      <Route path="/exercises/tcpdump/2" element={<FormViewer src={quizformstcp2} title="Exercício de Fixação II - TCPDump" />} />
-      <Route path="/exercises/tcpdump/3" element={<FormViewer src={quizformstcp3} title="Exercício de Fixação III - TCPDump" />} />
-      <Route path="/exercises/tcpdump/4" element={<FormViewer src={quizformstcp4} title="Exercício de Fixação IV - TCPDump" />} />
-      <Route path="/exercises/tcpdump/5" element={<FormViewer src={quizformstcp5} title="Exercício de Fixação V - TCPDump" />} />
-      <Route path="/exercises/tcpdump/6" element={<FormViewer src={quizformstcp6} title="Exercício de Fixação VI - TCPDump" />} />
-      <Route path="/exercises/tcpdump/7" element={<FormViewer src={quizformstcp7} title="Exercício de Fixação VII - TCPDump" />} />
-      <Route path="/exercises/tcpdump/8" element={<FormViewer src={quizformstcp8} title="Exercício de Fixação VIII - TCPDump" />} />
-      <Route path="/exercises/nmap/1" element={<FormViewer src={quizformsnmap1} title="Exercício de Fixação I - NMap" />} />
+      <Route path="/exercises/tcpdump/1" element={<PrivateRoute><FormViewer src={quizformstcp1} title="Exercício de Fixação I - TCPDump" /></PrivateRoute>} />
+      <Route path="/exercises/tcpdump/2" element={<PrivateRoute><FormViewer src={quizformstcp2} title="Exercício de Fixação II - TCPDump" /></PrivateRoute>} />
+      <Route path="/exercises/tcpdump/3" element={<PrivateRoute><FormViewer src={quizformstcp3} title="Exercício de Fixação III - TCPDump" /></PrivateRoute>} />
+      <Route path="/exercises/tcpdump/4" element={<PrivateRoute><FormViewer src={quizformstcp4} title="Exercício de Fixação IV - TCPDump" /></PrivateRoute>} />
+      <Route path="/exercises/tcpdump/5" element={<PrivateRoute><FormViewer src={quizformstcp5} title="Exercício de Fixação V - TCPDump" /></PrivateRoute>} />
+      <Route path="/exercises/tcpdump/6" element={<PrivateRoute><FormViewer src={quizformstcp6} title="Exercício de Fixação VI - TCPDump" /></PrivateRoute>} />
+      <Route path="/exercises/tcpdump/7" element={<PrivateRoute><FormViewer src={quizformstcp7} title="Exercício de Fixação VII - TCPDump" /></PrivateRoute>} />
+      <Route path="/exercises/tcpdump/8" element={<PrivateRoute><FormViewer src={quizformstcp8} title="Exercício de Fixação VIII - TCPDump" /></PrivateRoute>} />
+      <Route path="/exercises/nmap/1" element={<PrivateRoute><FormViewer src={quizformsnmap1} title="Exercício de Fixação I - NMap" /></PrivateRoute>} />
 
       {/* Rotas dos Laboratórios */}
       <Route path="/labs" element={<PrivateRoute><LabCategoryIndexPage /></PrivateRoute>} />

@@ -169,7 +169,13 @@ const QuizPlayer: React.FC = () => {
           <h1>Quiz Finalizado!</h1>
           <p>Sua pontuação final foi:</p>
           <div className="final-score">{score}</div>
-          <p>Você acertou {score} de {isTimedMode || isTrainingMode ? score : questions.length} perguntas.</p>
+          {/* Nos modos Temporizado/Treinamento o total de perguntas do banco
+              (questions.length) não é o total efetivamente respondido — o
+              denominador certo é acertos + erros registrados até aqui. */}
+          <p>
+            Você acertou {score} de{' '}
+            {isTimedMode || isTrainingMode ? score + wrongAnswersRef.current.length : questions.length} perguntas.
+          </p>
 
           {wrongAnswersRef.current.length > 0 && (
             <div className="ai-analysis-box">

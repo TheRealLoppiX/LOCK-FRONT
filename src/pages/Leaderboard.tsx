@@ -27,9 +27,12 @@ const Leaderboard: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   // Marca o passo "Suba no Ranking" do Aprendizado Guiado como visto.
+  // Escopado por userId (mesmo prefixo usado em dashboard.tsx) — sem isso,
+  // um segundo usuário no mesmo navegador herdava esse passo já marcado.
   useEffect(() => {
-    localStorage.setItem('lock-guided-ranking-viewed', 'true');
-  }, []);
+    if (!user) return;
+    localStorage.setItem(`lock-guided-ranking-viewed-${user.id}`, 'true');
+  }, [user]);
 
   useEffect(() => {
     if (!token) return;

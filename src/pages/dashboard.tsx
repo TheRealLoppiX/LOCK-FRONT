@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { useAuth } from '../contexts/authContext';
 import { Link } from 'react-router-dom';
 import {
@@ -27,16 +27,19 @@ const DEFAULT_CARD_ORDER = [
 ];
 
 const LOCKIA_URL = process.env.REACT_APP_LOCKIA_URL || 'https://lockia.onrender.com';
-const ORDER_STORAGE_KEY = 'lock-dashboard-order';
-const HIDDEN_STORAGE_KEY = 'lock-dashboard-hidden';
-const GUIDED_INFO_KEY = 'lock-guided-info-viewed';
-const GUIDED_PROFILE_KEY = 'lock-guided-profile-viewed';
-const GUIDED_CHAT_KEY = 'lock-guided-chat-used';
-const GUIDED_RANKING_KEY = 'lock-guided-ranking-viewed';
+// Escopadas por userId — sem isso, num navegador compartilhado, um segundo
+// usuário herdava a ordem/cards ocultos do dashboard e os passos do
+// "Aprendizado Guiado" já marcados como concluídos pelo usuário anterior.
+const ORDER_STORAGE_KEY_PREFIX = 'lock-dashboard-order-';
+const HIDDEN_STORAGE_KEY_PREFIX = 'lock-dashboard-hidden-';
+const GUIDED_INFO_KEY_PREFIX = 'lock-guided-info-viewed-';
+const GUIDED_PROFILE_KEY_PREFIX = 'lock-guided-profile-viewed-';
+const GUIDED_CHAT_KEY_PREFIX = 'lock-guided-chat-used-';
+const GUIDED_RANKING_KEY_PREFIX = 'lock-guided-ranking-viewed-';
 
-function loadCardOrder(): string[] {
+function loadCardOrder(key: string): string[] {
   try {
-    const saved = JSON.parse(localStorage.getItem(ORDER_STORAGE_KEY) || 'null');
+    const saved = JSON.parse(localStorage.getItem(key) || 'null');
     if (Array.isArray(saved)) {
       const known = saved.filter((id) => DEFAULT_CARD_ORDER.includes(id));
       const missing = DEFAULT_CARD_ORDER.filter((id) => !known.includes(id));
@@ -48,9 +51,9 @@ function loadCardOrder(): string[] {
   return DEFAULT_CARD_ORDER;
 }
 
-function loadHiddenCards(): string[] {
+function loadHiddenCards(key: string): string[] {
   try {
-    const saved = JSON.parse(localStorage.getItem(HIDDEN_STORAGE_KEY) || '[]');
+    const saved = JSON.parse(localStorage.getItem(key) || '[]');
     if (Array.isArray(saved)) return saved.filter((id) => DEFAULT_CARD_ORDER.includes(id));
   } catch {
     // ignora e usa a lista vazia
@@ -65,18 +68,27 @@ const Dashboard: React.FC = () => {
   // Cast para acessar a propriedade is_admin com segurança
   const currentUser = user as UserWithRole;
   const isAdmin = currentUser?.is_admin === true;
+  // PrivateRoute só monta o Dashboard autenticado, então user já está
+  // resolvido aqui — o fallback 'anon' nunca é de fato usado.
+  const userId = currentUser?.id || 'anon';
+  const orderStorageKey = `${ORDER_STORAGE_KEY_PREFIX}${userId}`;
+  const hiddenStorageKey = `${HIDDEN_STORAGE_KEY_PREFIX}${userId}`;
+  const guidedInfoKey = `${GUIDED_INFO_KEY_PREFIX}${userId}`;
+  const guidedProfileKey = `${GUIDED_PROFILE_KEY_PREFIX}${userId}`;
+  const guidedChatKey = `${GUIDED_CHAT_KEY_PREFIX}${userId}`;
+  const guidedRankingKey = `${GUIDED_RANKING_KEY_PREFIX}${userId}`;
 
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
-  const [cardOrder, setCardOrder] = useState<string[]>(loadCardOrder);
-  const [hiddenCards, setHiddenCards] = useState<string[]>(loadHiddenCards);
+  const [cardOrder, setCardOrder] = useState<string[]>(() => loadCardOrder(orderStorageKey));
+  const [hiddenCards, setHiddenCards] = useState<string[]>(() => loadHiddenCards(hiddenStorageKey));
   const draggedIdRef = useRef<string | null>(null);
 
   const handleHideCard = (id: string) => {
     setHiddenCards((prev) => {
       if (prev.includes(id)) return prev;
       const next = [...prev, id];
-      localStorage.setItem(HIDDEN_STORAGE_KEY, JSON.stringify(next));
+      localStorage.setItem(hiddenStorageKey, JSON.stringify(next));
       return next;
     });
   };
@@ -84,7 +96,7 @@ const Dashboard: React.FC = () => {
   const handleRestoreCard = (id: string) => {
     setHiddenCards((prev) => {
       const next = prev.filter((cardId) => cardId !== id);
-      localStorage.setItem(HIDDEN_STORAGE_KEY, JSON.stringify(next));
+      localStorage.setItem(hiddenStorageKey, JSON.stringify(next));
       return next;
     });
   };
@@ -96,23 +108,23 @@ const Dashboard: React.FC = () => {
   // do site (perfil, biblioteca, quiz, labs, chat, simulados, ranking), não
   // só labs/quiz/biblioteca como na versão anterior.
   const [infoViewed, setInfoViewed] = useState<boolean>(
-    () => localStorage.getItem(GUIDED_INFO_KEY) === 'true'
+    () => localStorage.getItem(guidedInfoKey) === 'true'
   );
   const [profileViewed] = useState<boolean>(
-    () => localStorage.getItem(GUIDED_PROFILE_KEY) === 'true'
+    () => localStorage.getItem(guidedProfileKey) === 'true'
   );
   const [chatUsed] = useState<boolean>(
-    () => localStorage.getItem(GUIDED_CHAT_KEY) === 'true'
+    () => localStorage.getItem(guidedChatKey) === 'true'
   );
   const [rankingViewed] = useState<boolean>(
-    () => localStorage.getItem(GUIDED_RANKING_KEY) === 'true'
+    () => localStorage.getItem(guidedRankingKey) === 'true'
   );
 
-  const openInfoModal = () => {
+  const openInfoModal = useCallback(() => {
     setIsInfoModalOpen(true);
     setInfoViewed(true);
-    localStorage.setItem(GUIDED_INFO_KEY, 'true');
-  };
+    localStorage.setItem(guidedInfoKey, 'true');
+  }, [guidedInfoKey]);
 
   const guidedSteps = useMemo(() => [
     {
@@ -187,7 +199,7 @@ const Dashboard: React.FC = () => {
       done: stats.completedLabs >= 3,
       cta: { label: 'Continuar Praticando', linkTo: '/labs/sql-injection' as string | undefined, onClick: undefined as (() => void) | undefined },
     },
-  ], [infoViewed, profileViewed, chatUsed, rankingViewed, stats]);
+  ], [infoViewed, profileViewed, chatUsed, rankingViewed, stats, openInfoModal]);
 
   const guidedDoneCount = guidedSteps.filter((s) => s.done).length;
   const guidedPercent = Math.round((guidedDoneCount / guidedSteps.length) * 100);
@@ -220,7 +232,7 @@ const Dashboard: React.FC = () => {
       if (from === -1 || to === -1) return prev;
       next.splice(from, 1);
       next.splice(to, 0, draggedId);
-      localStorage.setItem(ORDER_STORAGE_KEY, JSON.stringify(next));
+      localStorage.setItem(orderStorageKey, JSON.stringify(next));
       return next;
     });
   };
