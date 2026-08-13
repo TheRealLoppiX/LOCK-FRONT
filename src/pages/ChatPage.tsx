@@ -12,17 +12,25 @@ interface AegisConversation {
   messages: AegisMessage[];
 }
 
-const CONVERSATIONS_KEY = 'lock-aegis-conversations';
-const ACTIVE_ID_KEY = 'lock-aegis-active-id';
+// Escopadas por userId — sem isso, um segundo usuário logando no mesmo
+// navegador herdava as conversas do usuário anterior via localStorage
+// compartilhado (o bug reportado).
+const CONVERSATIONS_KEY_PREFIX = 'lock-aegis-conversations:';
+const ACTIVE_ID_KEY_PREFIX = 'lock-aegis-active-id:';
+// Chaves antigas (sem escopo por usuário) de antes desta correção — nunca
+// mais lidas, só removidas na primeira montagem para não deixar histórico de
+// conversa de outro usuário parado no localStorage do navegador.
+const LEGACY_CONVERSATIONS_KEY = 'lock-aegis-conversations';
+const LEGACY_ACTIVE_ID_KEY = 'lock-aegis-active-id';
 const GUIDED_CHAT_USED_KEY = 'lock-guided-chat-used';
 
 const ACCEPTED_MIME_TYPES = ['image/png', 'image/jpeg', 'image/webp', 'application/pdf', 'text/plain'];
 const MAX_ATTACHMENTS = 3;
 const MAX_ATTACHMENT_BYTES = 5 * 1024 * 1024;
 
-function loadConversations(): AegisConversation[] {
+function loadConversations(key: string): AegisConversation[] {
   try {
-    const saved = JSON.parse(localStorage.getItem(CONVERSATIONS_KEY) || '[]');
+    const saved = JSON.parse(localStorage.getItem(key) || '[]');
     if (Array.isArray(saved)) return saved;
   } catch {
     // ignora dados corrompidos
@@ -50,16 +58,31 @@ function readFileAsBase64(file: File): Promise<string> {
 }
 
 const ChatPage: React.FC = () => {
-  const { token } = useAuth();
+  const { token, user } = useAuth();
+  // PrivateRoute só monta esta página com isAuthenticated true, então user já
+  // está resolvido aqui — o fallback 'anon' nunca é de fato usado, só
+  // satisfaz o tipo (User | null) do contexto.
+  const userId = user?.id || 'anon';
+  const conversationsKey = `${CONVERSATIONS_KEY_PREFIX}${userId}`;
+  const activeIdKey = `${ACTIVE_ID_KEY_PREFIX}${userId}`;
+
+  // Remove as chaves antigas (sem escopo por usuário) uma única vez — elas
+  // podem ter histórico de conversa de outro usuário que já usou este
+  // navegador antes desta correção.
+  useEffect(() => {
+    localStorage.removeItem(LEGACY_CONVERSATIONS_KEY);
+    localStorage.removeItem(LEGACY_ACTIVE_ID_KEY);
+  }, []);
+
   const [searchParams, setSearchParams] = useSearchParams();
   const askPrefill = searchParams.get('ask');
-  const [conversations, setConversations] = useState<AegisConversation[]>(loadConversations);
+  const [conversations, setConversations] = useState<AegisConversation[]>(() => loadConversations(conversationsKey));
   const [activeId, setActiveId] = useState<string | null>(() => {
     // Um link de "Perguntar à Aegis" (ex: vindo de um laboratório) sempre
     // começa uma conversa nova, em vez de continuar uma antiga sem relação.
     if (askPrefill) return null;
-    const saved = localStorage.getItem(ACTIVE_ID_KEY);
-    const list = loadConversations();
+    const saved = localStorage.getItem(activeIdKey);
+    const list = loadConversations(conversationsKey);
     return saved && list.some((c) => c.id === saved) ? saved : null;
   });
   const [input, setInput] = useState(() => askPrefill || '');
@@ -77,14 +100,14 @@ const ChatPage: React.FC = () => {
 
   const persist = useCallback((next: AegisConversation[]) => {
     setConversations(next);
-    localStorage.setItem(CONVERSATIONS_KEY, JSON.stringify(next));
-  }, []);
+    localStorage.setItem(conversationsKey, JSON.stringify(next));
+  }, [conversationsKey]);
 
   const setActive = useCallback((id: string | null) => {
     setActiveId(id);
-    if (id) localStorage.setItem(ACTIVE_ID_KEY, id);
-    else localStorage.removeItem(ACTIVE_ID_KEY);
-  }, []);
+    if (id) localStorage.setItem(activeIdKey, id);
+    else localStorage.removeItem(activeIdKey);
+  }, [activeIdKey]);
 
   const activeMessages = useMemo(
     () => conversations.find((c) => c.id === activeId)?.messages || [],
