@@ -33,6 +33,7 @@ interface AuthContextType {
   register: (name: string, email: string) => Promise<void>;
   verifyEmail: (email: string, code: string) => Promise<void>;
   resendVerificationCode: (email: string) => Promise<void>;
+  activateAdminInvite: (email: string, code: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -203,6 +204,22 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
+  // Confirma o código de convite de administrador — mesmo formato de
+  // resposta do /login e do /verify-email (user + token), então reaproveita
+  // o 'login' existente pra aplicar a sessão direto.
+  const activateAdminInvite = async (email: string, code: string) => {
+    const response = await fetch(`${apiBaseUrl}/admin/admins/activate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, code }),
+    });
+    const data = await response.json();
+    if (!response.ok || !data.token) {
+      throw new Error(data.message || 'Código inválido ou expirado.');
+    }
+    login(data.user, data.token);
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -216,6 +233,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         register,
         verifyEmail,
         resendVerificationCode,
+        activateAdminInvite,
       }}
     >
       {!loading && children} {/* MODIFICADO: Garante que o app só renderize depois de carregar o user */}

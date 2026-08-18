@@ -277,6 +277,9 @@ const Dashboard: React.FC = () => {
         <Link to="/admin/materials" className="list-item" style={{ color: '#FFD700' }}>
           <BookOpen size={20} /> Cadastrar Material <CaretRight size={14} className="list-item-arrow" />
         </Link>
+        <Link to="/admin/admins" className="list-item" style={{ color: '#FFD700' }}>
+          <Crown size={20} /> Gerenciar Admins <CaretRight size={14} className="list-item-arrow" />
+        </Link>
       </div>
     ) : null,
     lockia: (

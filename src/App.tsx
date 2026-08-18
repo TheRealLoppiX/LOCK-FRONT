@@ -7,6 +7,7 @@ import { ShortcutsHelpProvider, useShortcutsHelp } from './contexts/shortcutsHel
 
 // Importação das Páginas
 import Home from './pages/home';
+import ActivateAdmin from './pages/ActivateAdmin';
 import Dashboard from './pages/dashboard';
 import Settings from './pages/settings';
 import Profile from './pages/profile';
@@ -30,6 +31,7 @@ import LabCategoryIndexPage from './pages/labs/LabCategoryIndexPage';
 import AdminQuestions from './pages/admin/AdminQuestions';
 import BookDetails from './pages/BookDetails';
 import AdminMaterials from './pages/admin/AdminMaterials';
+import AdminAdmins from './pages/admin/AdminAdmins';
 import Simulados from './pages/simulados';
 import CreateModule from './pages/admin/CreateModule';
 import SimuladoPlayer from './pages/SimuladoPlayer';
@@ -130,6 +132,7 @@ function AppRoutes() {
           então trocar de modo não remonta a página nem reinicia a animação
           da tagline. Ver Home.tsx: authMode inválido cai no NotFound. */}
       <Route path="/:authMode?" element={<PublicOnlyRoute><Home /></PublicOnlyRoute>} />
+      <Route path="/activate-admin" element={<PublicOnlyRoute><ActivateAdmin /></PublicOnlyRoute>} />
 
       {/* Rotas Protegidas */}
       <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
@@ -209,6 +212,7 @@ function AppRoutes() {
       <Route path="/admin/questions" element={<AdminRoute><AdminQuestions /></AdminRoute>} />
       <Route path="/admin/materials" element={<AdminRoute><AdminMaterials /></AdminRoute>} />
       <Route path="/admin/modules" element={<AdminRoute><CreateModule /></AdminRoute>} />
+      <Route path="/admin/admins" element={<AdminRoute><AdminAdmins /></AdminRoute>} />
 
       {/* Rota Coringa (404) */}
       <Route path="*" element={<NotFound />} />
