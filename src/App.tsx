@@ -7,7 +7,6 @@ import { ShortcutsHelpProvider, useShortcutsHelp } from './contexts/shortcutsHel
 
 // Importação das Páginas
 import Home from './pages/home';
-import ResetPassword from './pages/resetpassword';
 import Dashboard from './pages/dashboard';
 import Settings from './pages/settings';
 import Profile from './pages/profile';
@@ -131,7 +130,6 @@ function AppRoutes() {
           então trocar de modo não remonta a página nem reinicia a animação
           da tagline. Ver Home.tsx: authMode inválido cai no NotFound. */}
       <Route path="/:authMode?" element={<PublicOnlyRoute><Home /></PublicOnlyRoute>} />
-      <Route path="/reset-password/:token" element={<PublicOnlyRoute><ResetPassword /></PublicOnlyRoute>} />
 
       {/* Rotas Protegidas */}
       <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />

@@ -307,7 +307,7 @@ const ForgotPanel: React.FC<{ onSwitch: (mode: Mode) => void }> = ({ onSwitch })
       <div className="home-form">
         <div className="auth-success-icon"><EnvelopeSimple size={40} weight="bold" /></div>
         <h1>Verifique seu e-mail</h1>
-        <p>Se existir uma conta com o e-mail <strong>{email}</strong>, enviamos um link para redefinir sua senha. O link expira em 1 hora.</p>
+        <p>Se existir uma conta com o e-mail <strong>{email}</strong>, enviamos um e-mail de confirmação seguido de uma nova senha de acesso gerada automaticamente. Use essa senha para entrar — você pode trocá-la depois em Configurações.</p>
         <div className="switch-link">
           <button type="button" className="link-btn" onClick={() => onSwitch('login')}>← Voltar para o Login</button>
         </div>
@@ -318,13 +318,13 @@ const ForgotPanel: React.FC<{ onSwitch: (mode: Mode) => void }> = ({ onSwitch })
   return (
     <form onSubmit={handleSubmit} className="home-form">
       <h1>Redefinir Senha</h1>
-      <p>Digite seu e-mail para receber o link de redefinição.</p>
+      <p>Digite seu e-mail para receber uma nova senha de acesso gerada automaticamente.</p>
       {error && <div className="auth-error-message">{error}</div>}
       <div className="auth-input-group">
         <EnvelopeSimple size={18} className="auth-input-icon" />
         <input type="email" placeholder="Seu e-mail" value={email} onChange={(e) => setEmail(e.target.value)} required />
       </div>
-      <button type="submit" className="auth-btn" disabled={loading}>{loading ? 'Enviando...' : 'Enviar Link'}</button>
+      <button type="submit" className="auth-btn" disabled={loading}>{loading ? 'Enviando...' : 'Enviar Nova Senha'}</button>
       <div className="switch-link">
         <button type="button" className="link-btn" onClick={() => onSwitch('login')}>← Voltar para o Login</button>
       </div>
